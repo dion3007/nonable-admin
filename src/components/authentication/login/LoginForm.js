@@ -45,7 +45,7 @@ export default function LoginForm() {
       const login = await firebase.auth().signInWithEmailAndPassword(values.email, values.password);
       authDataSet(login);
       authDataGet();
-      navigate('/booking', { replace: true });
+      navigate('/', { replace: true });
     }
   });
 
