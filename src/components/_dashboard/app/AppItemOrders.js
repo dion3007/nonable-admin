@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import windowsFilled from '@iconify/icons-ant-design/windows-filled';
+import windowsFilled from '@iconify/icons-ant-design/car-filled';
 // material
 import { alpha, styled } from '@material-ui/core/styles';
 import { Card, Typography } from '@material-ui/core';
@@ -44,7 +44,7 @@ export default function AppItemOrders() {
       </IconWrapperStyle>
       <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        Item Orders
+        Total KMS (dummy)
       </Typography>
     </RootStyle>
   );

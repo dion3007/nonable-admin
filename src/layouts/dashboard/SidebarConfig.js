@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import pieChart2Fill from '@iconify/icons-eva/pie-chart-2-fill';
+// import pieChart2Fill from '@iconify/icons-eva/pie-chart-2-fill';
 import peopleFill from '@iconify/icons-eva/people-fill';
 import personAddFill from '@iconify/icons-eva/person-add-fill';
 import pricetagsFill from '@iconify/icons-eva/pricetags-fill';
@@ -13,10 +13,15 @@ import briefcaseOutline from '@iconify/icons-eva/bookmark-outline';
 const getIcon = (name) => <Icon icon={name} width={22} height={22} />;
 
 const sidebarConfig = [
+  // {
+  //   title: 'dashboard',
+  //   path: '/dashboard/app',
+  //   icon: getIcon(pieChart2Fill)
+  // },
   {
-    title: 'dashboard',
-    path: '/dashboard/app',
-    icon: getIcon(pieChart2Fill)
+    title: 'booking',
+    path: '/dashboard/booking',
+    icon: getIcon(briefcaseOutline)
   },
   {
     title: 'user',
@@ -32,11 +37,6 @@ const sidebarConfig = [
     title: 'client',
     path: '/dashboard/client',
     icon: getIcon(pricetagsFill)
-  },
-  {
-    title: 'booking',
-    path: '/dashboard/booking',
-    icon: getIcon(briefcaseOutline)
   }
   // {
   //   title: 'login',

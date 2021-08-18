@@ -13,6 +13,9 @@ import { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useLocation } from 'react-router-dom';
+import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
+import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
+import DateTimePicker from '@material-ui/lab/DateTimePicker';
 // components
 import useQuery from '../utils/useQuery';
 import Page from '../components/Page';
@@ -22,12 +25,11 @@ import { jobDataGet, clientDataGet, driverDataGet } from '../utils/cache';
 
 const UserSchemaValidations = Yup.object().shape({
   customer: Yup.string().required('Required'),
-  bookingDate: Yup.date().required('Required'),
+  bookingDate: Yup.string().required('Required'),
   pickUp: Yup.string().required('Required'),
   dropOff: Yup.string().required('Required'),
   price: Yup.string().required('Required'),
   profit: Yup.string().required('Required'),
-  driver: Yup.string().required('Required'),
   distance: Yup.number().required('Required'),
   hour: Yup.number().required('Required')
 });
@@ -105,52 +107,45 @@ export default function AddEditJobs() {
       status: 'active'
     });
     if (act === 'Add') {
-      firebase
-        .firestore()
-        .collection('jobs')
-        .add({
-          customer: values.customer,
-          driver: values.driver,
-          notes: values.notes,
-          pickUp: values.pickUp,
-          price: values.price,
-          profit: values.profit,
-          driverPaid,
-          bookingDate: new Date(values.bookingDate),
-          dropOff: values.dropOff,
-          expensePrice: 0,
-          expenseReason: 'none',
-          hour: values.hour,
-          distance: values.distance,
-          date: new Date(),
-          duplicate: true,
-          paid: false,
-          jobStat: 0
-        });
+      firebase.firestore().collection('jobs').add({
+        customer: values.customer,
+        driver: values.driver,
+        notes: values.notes,
+        pickUp: values.pickUp,
+        price: values.price,
+        profit: values.profit,
+        driverPaid,
+        bookingDate: values.bookingDate.toString(),
+        dropOff: values.dropOff,
+        expensePrice: 0,
+        expenseReason: 'none',
+        hour: values.hour,
+        distance: values.distance,
+        date: new Date(),
+        duplicate: true,
+        paid: false,
+        jobStat: 0
+      });
     } else {
-      firebase
-        .firestore()
-        .collection('jobs')
-        .doc(filteredJobs[0].id)
-        .set({
-          customer: values?.customer,
-          driver: values?.driver,
-          notes: values?.notes,
-          pickUp: values?.pickUp,
-          price: values?.price,
-          profit: values?.profit,
-          driverPaid,
-          bookingDate: new Date(values?.bookingDate),
-          dropOff: values?.dropOff,
-          expensePrice: 0,
-          expenseReason: 'none',
-          hour: values?.hour,
-          distance: values?.distance,
-          date: new Date(),
-          duplicate: true,
-          paid: false,
-          jobStat: 0
-        });
+      firebase.firestore().collection('jobs').doc(filteredJobs[0].id).set({
+        customer: values?.customer,
+        driver: values?.driver,
+        notes: values?.notes,
+        pickUp: values?.pickUp,
+        price: values?.price,
+        profit: values?.profit,
+        driverPaid,
+        bookingDate: values?.bookingDate.toString(),
+        dropOff: values?.dropOff,
+        expensePrice: 0,
+        expenseReason: 'none',
+        hour: values?.hour,
+        distance: values?.distance,
+        date: new Date(),
+        duplicate: true,
+        paid: false,
+        jobStat: 0
+      });
     }
   };
 
@@ -188,7 +183,7 @@ export default function AddEditJobs() {
                 }, 400);
               }}
             >
-              {({ values, errors, handleChange, handleSubmit, isSubmitting }) => (
+              {({ values, errors, handleChange, handleSubmit, setFieldValue, isSubmitting }) => (
                 <form onSubmit={handleSubmit} style={{ padding: 20, textAlign: 'center' }}>
                   <Grid container justifyContent="space-between" spacing={2}>
                     <Grid item xs={6}>
@@ -210,21 +205,28 @@ export default function AddEditJobs() {
                           </MenuItem>
                         ))}
                       </TextField>
-                      <TextField
-                        id="bookingDate"
-                        label="Booking Date & Time"
-                        type="datetime-local"
-                        fullWidth
-                        error={errors?.bookingDate && true}
-                        style={{ marginBottom: 15 }}
-                        helperText={errors?.bookingDate}
-                        onChange={handleChange('bookingDate')}
-                        value={values.bookingDate}
-                        defaultValue="2017-05-24T10:30"
-                        InputLabelProps={{
-                          shrink: true
-                        }}
-                      />
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DateTimePicker
+                          renderInput={(props) => (
+                            <TextField
+                              {...props}
+                              helperText={errors?.bookingDate}
+                              fullWidth
+                              style={{ marginBottom: 15 }}
+                            />
+                          )}
+                          id="bookingDate"
+                          label="Booking Date & Time"
+                          error={errors?.bookingDate && true}
+                          onChange={(value) => setFieldValue('bookingDate', value)}
+                          value={values?.bookingDate}
+                          inputFormat="dd/MM/yyyy hh:mm a"
+                          defaultValue="2017-05-24T10:30"
+                          InputLabelProps={{
+                            shrink: true
+                          }}
+                        />
+                      </LocalizationProvider>
                       <TextField
                         required
                         error={errors?.pickUp && true}
@@ -286,11 +288,8 @@ export default function AddEditJobs() {
                       />
                       <TextField
                         select
-                        required
-                        error={errors?.driver && true}
                         style={{ marginBottom: 15, textAlign: 'left' }}
                         fullWidth
-                        helperText={errors?.driver}
                         onChange={handleChange('driver')}
                         value={values.driver}
                         id="driver"

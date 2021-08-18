@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import appleFilled from '@iconify/icons-ant-design/apple-filled';
+import appleFilled from '@iconify/icons-ant-design/field-time-outlined';
 // material
 import { alpha, styled } from '@material-ui/core/styles';
 import { Card, Typography } from '@material-ui/core';
@@ -44,7 +44,7 @@ export default function AppNewUsers() {
       </IconWrapperStyle>
       <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        New Users
+        Total Hours (dummy)
       </Typography>
     </RootStyle>
   );

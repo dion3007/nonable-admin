@@ -3,6 +3,7 @@ import { Icon } from '@iconify/react';
 import { useState, useEffect } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
+import moment from 'moment';
 // material
 import {
   Card,
@@ -15,6 +16,7 @@ import {
   TableCell,
   Container,
   Typography,
+  Grid,
   TableContainer,
   TablePagination
 } from '@material-ui/core';
@@ -25,6 +27,7 @@ import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
 import { jobDataSet, driverDataSet, clientDataSet } from '../utils/cache';
+import { AppNewUsers, AppItemOrders, AppWeeklySales } from '../components/_dashboard/app';
 
 // ----------------------------------------------------------------------
 
@@ -262,10 +265,10 @@ export default function Job() {
                           </TableCell>
                           <TableCell align="left">{paid ? 'paid' : 'no paid'}</TableCell>
                           <TableCell align="left">
-                            {new Date(bookingDate.seconds * 1000).toLocaleDateString('en-US')}
+                            {moment(bookingDate).format('DD-MM-YYYY')}
                           </TableCell>
                           <TableCell align="left">
-                            {new Date(bookingDate * 1000).toLocaleTimeString('en-US')}
+                            {moment(bookingDate).format('hh:mm A')}
                           </TableCell>
                           <TableCell align="right">
                             <UserMoreMenu
@@ -304,6 +307,19 @@ export default function Job() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
+      </Container>
+      <Container style={{ marginTop: 20 }}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6} md={4}>
+            <AppWeeklySales />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <AppNewUsers />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <AppItemOrders />
+          </Grid>
+        </Grid>
       </Container>
     </Page>
   );
