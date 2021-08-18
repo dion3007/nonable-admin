@@ -36,20 +36,17 @@ const MainStyle = styled('div')(({ theme }) => ({
 export default function DashboardLayout() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [auth, setAuth] = useState();
-  const handleAuth = () => {
-    const auth = authDataGet();
-    if (!auth) {
-      navigate('/login', { replace: true });
-    }
-    return auth;
-  };
 
   useEffect(() => {
-    if (!auth) {
-      setAuth(handleAuth());
+    handleAuth();
+  });
+
+  const handleAuth = () => {
+    const authData = authDataGet();
+    if (!authData) {
+      navigate('/login', { replace: true });
     }
-  }, [auth]);
+  };
 
   return (
     <RootStyle>
