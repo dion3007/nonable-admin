@@ -3,6 +3,7 @@ import pieChart2Fill from '@iconify/icons-eva/pie-chart-2-fill';
 import peopleFill from '@iconify/icons-eva/people-fill';
 import personAddFill from '@iconify/icons-eva/person-add-fill';
 import pricetagsFill from '@iconify/icons-eva/pricetags-fill';
+import briefcaseOutline from '@iconify/icons-eva/bookmark-outline';
 // import fileTextFill from '@iconify/icons-eva/file-text-fill';
 // import lockFill from '@iconify/icons-eva/lock-fill';
 // import alertTriangleFill from '@iconify/icons-eva/alert-triangle-fill';
@@ -31,12 +32,12 @@ const sidebarConfig = [
     title: 'client',
     path: '/dashboard/client',
     icon: getIcon(pricetagsFill)
+  },
+  {
+    title: 'booking',
+    path: '/dashboard/booking',
+    icon: getIcon(briefcaseOutline)
   }
-  // {
-  //   title: 'blog',
-  //   path: '/dashboard/blog',
-  //   icon: getIcon(fileTextFill)
-  // },
   // {
   //   title: 'login',
   //   path: '/login',
