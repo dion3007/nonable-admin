@@ -56,6 +56,7 @@ export default function AddEditDrivers() {
 
   const handleSubmit = (values) => {
     if (act === 'Add') {
+      firebase.auth().createUserWithEmailAndPassword(values.email, values.password);
       firebase.firestore().collection('drivers').add({
         name: values.name,
         password: values.password,

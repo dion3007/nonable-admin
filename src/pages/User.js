@@ -28,6 +28,7 @@ import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
 import { userDataSet } from '../utils/cache';
+import ModalComponents from '../components/ModalComponents';
 
 // ----------------------------------------------------------------------
 
@@ -77,6 +78,8 @@ export default function User() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [openModal, setOpenModal] = useState(false);
+  const [uid, setUid] = useState('');
 
   useEffect(() => {
     firebase
@@ -93,6 +96,20 @@ export default function User() {
       userDataSet(users);
     }
   }, [users]);
+
+  const deleteUserEach = (id) => {
+    setUid(id);
+    setOpenModal(true);
+  };
+
+  const handleModalClose = () => {
+    setOpenModal(false);
+  };
+
+  const deleteUser = () => {
+    firebase.firestore().collection('users').doc(uid).delete();
+    setOpenModal(false);
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -226,7 +243,10 @@ export default function User() {
                           </TableCell>
 
                           <TableCell align="right">
-                            <UserMoreMenu linkEdit={`/dashboard/user-manage?act=Edit&id=${id}`} />
+                            <UserMoreMenu
+                              deleteFunction={() => deleteUserEach(id)}
+                              linkEdit={`/dashboard/user-manage?act=Edit&id=${id}`}
+                            />
                           </TableCell>
                         </TableRow>
                       );
@@ -248,6 +268,13 @@ export default function User() {
                 )}
               </Table>
             </TableContainer>
+            <ModalComponents
+              title="Delete"
+              message="Are you sure you wish to delete this user?"
+              open={openModal}
+              handleSubmit={deleteUser}
+              handleClose={handleModalClose}
+            />
           </Scrollbar>
 
           <TablePagination

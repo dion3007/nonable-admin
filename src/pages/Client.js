@@ -26,7 +26,8 @@ import Label from '../components/Label';
 import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
-import { clientDataSet } from '../utils/cache';
+import { clientDataGet, clientDataSet } from '../utils/cache';
+import ModalComponents from '../components/ModalComponents';
 
 // ----------------------------------------------------------------------
 
@@ -83,6 +84,8 @@ export default function Client() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [openModal, setOpenModal] = useState(false);
+  const [uid, setUid] = useState('');
 
   useEffect(() => {
     firebase
@@ -99,6 +102,30 @@ export default function Client() {
       clientDataSet(clients);
     }
   }, [clients]);
+
+  const deleteClientEach = (id) => {
+    setUid(id);
+    setOpenModal(true);
+  };
+
+  const handleModalClose = () => {
+    setOpenModal(false);
+  };
+
+  const deleteClient = () => {
+    const client = clientDataGet();
+    const fileteredDeleteClient = client.filter((client) => client.id === uid)[0];
+    firebase.firestore().collection('clients').doc(fileteredDeleteClient.id).set({
+      name: fileteredDeleteClient?.name,
+      email: fileteredDeleteClient?.email,
+      phone: fileteredDeleteClient?.phone,
+      ndisNumber: fileteredDeleteClient?.ndisNumber,
+      dobNumber: fileteredDeleteClient?.dobNumber,
+      planManagementDetail: fileteredDeleteClient?.planManagementDetail,
+      status: 'non-active'
+    });
+    setOpenModal(false);
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -150,6 +177,8 @@ export default function Client() {
 
   const filteredClients = applySortFilter(clients, getComparator(order, orderBy), filterName);
 
+  const fillteredActiveClient = filteredClients.filter((client) => client.status === 'active');
+
   const isUserNotFound = filteredClients.length === 0;
 
   return (
@@ -189,7 +218,7 @@ export default function Client() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredClients
+                  {fillteredActiveClient
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
                       const {
@@ -244,7 +273,10 @@ export default function Client() {
                           </TableCell>
 
                           <TableCell align="right">
-                            <UserMoreMenu linkEdit={`/dashboard/client-manage?act=Edit&id=${id}`} />
+                            <UserMoreMenu
+                              deleteFunction={() => deleteClientEach(id)}
+                              linkEdit={`/dashboard/client-manage?act=Edit&id=${id}`}
+                            />
                           </TableCell>
                         </TableRow>
                       );
@@ -266,6 +298,13 @@ export default function Client() {
                 )}
               </Table>
             </TableContainer>
+            <ModalComponents
+              title="Delete"
+              message="Are you sure you wish to delete this customer?"
+              open={openModal}
+              handleSubmit={deleteClient}
+              handleClose={handleModalClose}
+            />
           </Scrollbar>
 
           <TablePagination

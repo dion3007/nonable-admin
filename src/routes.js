@@ -19,6 +19,7 @@ import Client from './pages/Client';
 import AddEditClients from './pages/AddEditClients';
 import Job from './pages/Job';
 import AddEditJobs from './pages/AddEditJobs';
+import Ndis from './pages/Ndis';
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +36,7 @@ export default function Router() {
         { path: 'customer', element: <Customers /> },
         { path: 'client', element: <Client /> },
         { path: 'booking', element: <Job /> },
+        { path: 'ndis-report', element: <Ndis /> },
         { path: 'customer-manage', element: <AddEditCustomers /> },
         { path: 'user-manage', element: <AddEditUsers /> },
         { path: 'driver-manage', element: <AddEditDrivers /> },

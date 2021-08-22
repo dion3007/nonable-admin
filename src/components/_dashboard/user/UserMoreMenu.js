@@ -10,7 +10,7 @@ import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@materia
 
 // ----------------------------------------------------------------------
 
-export default function UserMoreMenu({ linkEdit }) {
+export default function UserMoreMenu({ linkEdit, deleteFunction }) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -30,7 +30,7 @@ export default function UserMoreMenu({ linkEdit }) {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem sx={{ color: 'text.secondary' }}>
+        <MenuItem sx={{ color: 'text.secondary' }} onClick={deleteFunction}>
           <ListItemIcon>
             <Icon icon={trash2Outline} width={24} height={24} />
           </ListItemIcon>
@@ -49,5 +49,6 @@ export default function UserMoreMenu({ linkEdit }) {
 }
 
 UserMoreMenu.propTypes = {
-  linkEdit: PropTypes.string.isRequired
+  linkEdit: PropTypes.string.isRequired,
+  deleteFunction: PropTypes.func
 };

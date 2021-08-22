@@ -17,6 +17,7 @@ import {
   Container,
   Typography,
   Grid,
+  Switch,
   TableContainer,
   TablePagination
 } from '@material-ui/core';
@@ -26,8 +27,9 @@ import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
-import { jobDataSet, driverDataSet, clientDataSet } from '../utils/cache';
+import { jobDataSet, driverDataSet, clientDataSet, jobDataGet } from '../utils/cache';
 import { AppNewUsers, AppItemOrders, AppWeeklySales } from '../components/_dashboard/app';
+import ModalComponents from '../components/ModalComponents';
 
 // ----------------------------------------------------------------------
 
@@ -84,6 +86,10 @@ export default function Job() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [openModal, setOpenModal] = useState(false);
+  const [uid, setUid] = useState('');
+  const [openPaidModal, setOpenPaidModal] = useState(false);
+  const [paidUid, setPaidUid] = useState('');
 
   useEffect(() => {
     firebase
@@ -120,6 +126,54 @@ export default function Job() {
       jobDataSet(jobs);
     }
   }, [jobs]);
+
+  const deleteJobsEach = (id) => {
+    setUid(id);
+    setOpenModal(true);
+  };
+
+  const handleModalClose = () => {
+    setOpenModal(false);
+  };
+
+  const deleteJobs = () => {
+    firebase.firestore().collection('jobs').doc(uid).delete();
+    setOpenModal(false);
+  };
+
+  const paidJobEach = (id) => {
+    setPaidUid(id);
+    setOpenPaidModal(true);
+  };
+
+  const handleModalPaidClose = () => {
+    setOpenPaidModal(false);
+  };
+
+  const paidJob = () => {
+    const jobs = jobDataGet();
+    const filteredSetJobs = jobs.filter((job) => job.id === paidUid)[0];
+    firebase.firestore().collection('jobs').doc(filteredSetJobs.id).set({
+      customer: filteredSetJobs?.customer,
+      driver: filteredSetJobs?.driver,
+      notes: filteredSetJobs?.notes,
+      pickUp: filteredSetJobs?.pickUp,
+      price: filteredSetJobs?.price,
+      profit: filteredSetJobs?.profit,
+      driverPaid: filteredSetJobs?.driverPaid,
+      bookingDate: filteredSetJobs?.bookingDate.toString(),
+      dropOff: filteredSetJobs?.dropOff,
+      expensePrice: 0,
+      expenseReason: 'none',
+      hour: filteredSetJobs?.hour,
+      distance: filteredSetJobs?.distance,
+      date: new Date(),
+      duplicate: false,
+      paid: !filteredSetJobs?.paid,
+      jobStat: 0
+    });
+    setOpenPaidModal(false);
+  };
 
   const addToLocalStorage = () => {
     clientDataSet(clients);
@@ -177,6 +231,15 @@ export default function Job() {
   const filteredJobs = applySortFilter(jobs, getComparator(order, orderBy), filterName);
 
   const isUserNotFound = filteredJobs.length === 0;
+
+  // amount
+
+  const sumAmount = filteredJobs.reduce((a, { price }) => parseFloat(a) + parseFloat(price), 0);
+  const sumHours = filteredJobs.reduce((a, { hour }) => parseFloat(a) + parseFloat(hour), 0);
+  const sumDistance = filteredJobs.reduce(
+    (a, { distance }) => parseFloat(a) + parseFloat(distance),
+    0
+  );
 
   // const jobsList = filteredJobs.reduce((p, c) => {
   //   p[new Date(c.bookingDate).toLocaleDateString('en-US')] =
@@ -259,11 +322,17 @@ export default function Job() {
                           </TableCell>
                           <TableCell align="left">{pickUp}</TableCell>
                           <TableCell align="left">{dropOff}</TableCell>
-                          <TableCell align="left">{price}</TableCell>
+                          <TableCell align="left">$ {price}</TableCell>
                           <TableCell align="left">
                             {drivers?.filter((driverData) => driverData.id === driver)[0]?.name}
                           </TableCell>
-                          <TableCell align="left">{paid ? 'paid' : 'no paid'}</TableCell>
+                          <TableCell>
+                            <Switch
+                              checked={paid}
+                              onChange={() => paidJobEach(id)}
+                              inputProps={{ 'aria-label': 'controlled' }}
+                            />
+                          </TableCell>
                           <TableCell align="left">
                             {moment(bookingDate).format('DD-MM-YYYY')}
                           </TableCell>
@@ -272,6 +341,7 @@ export default function Job() {
                           </TableCell>
                           <TableCell align="right">
                             <UserMoreMenu
+                              deleteFunction={() => deleteJobsEach(id)}
                               linkEdit={`/dashboard/booking-manage?act=Edit&id=${id}`}
                             />
                           </TableCell>
@@ -295,6 +365,20 @@ export default function Job() {
                 )}
               </Table>
             </TableContainer>
+            <ModalComponents
+              title="Delete"
+              message="Are you sure you wish to delete this job?"
+              open={openModal}
+              handleSubmit={deleteJobs}
+              handleClose={handleModalClose}
+            />
+            <ModalComponents
+              title="Paid"
+              message="Mark as Paid / Unpaid?"
+              open={openPaidModal}
+              handleSubmit={paidJob}
+              handleClose={handleModalPaidClose}
+            />
           </Scrollbar>
 
           <TablePagination
@@ -311,13 +395,13 @@ export default function Job() {
       <Container style={{ marginTop: 20 }}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={4}>
-            <AppWeeklySales />
+            <AppWeeklySales total={sumAmount} />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
-            <AppNewUsers />
+            <AppNewUsers total={sumHours} />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
-            <AppItemOrders />
+            <AppItemOrders total={sumDistance} />
           </Grid>
         </Grid>
       </Container>

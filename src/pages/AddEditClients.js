@@ -9,10 +9,12 @@ import {
   Grid,
   MenuItem
 } from '@material-ui/core';
+import { Icon } from '@iconify/react';
 import { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { useLocation } from 'react-router-dom';
+import clipboardFill from '@iconify/icons-eva/clipboard-fill';
+import { useLocation, Link as RouterLink } from 'react-router-dom';
 // components
 import useQuery from '../utils/useQuery';
 import Page from '../components/Page';
@@ -84,6 +86,16 @@ export default function AddEditClients() {
           <Typography variant="h4" gutterBottom>
             {act} Client
           </Typography>
+          {act === 'Edit' && (
+            <Button
+              variant="contained"
+              component={RouterLink}
+              to="/dashboard/ndis-report"
+              startIcon={<Icon icon={clipboardFill} />}
+            >
+              Generate Report
+            </Button>
+          )}
         </Stack>
         <Card>
           <Scrollbar>

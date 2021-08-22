@@ -94,18 +94,21 @@ export default function AddEditJobs() {
   const handleSubmit = async (values) => {
     const driverPaid =
       variable[0].emp_rate * values.hour + variable[0].driver_kms_m * values.distance;
-    const driverDetail = await drivers.filter((driver) => driver.id === values.driver)[0];
-    firebase.firestore().collection('drivers').doc(values.driver).set({
-      name: driverDetail?.name,
-      password: driverDetail?.password,
-      email: driverDetail?.email,
-      phone: driverDetail?.phone,
-      licenseNumber: driverDetail?.licenseNumber,
-      regoNumber: driverDetail?.regoNumber,
-      employeeType: driverDetail?.employeeType,
-      onWork: true,
-      status: 'active'
-    });
+    if (values.driver) {
+      const driverDetail = await drivers.filter((driver) => driver.id === values.driver)[0];
+      firebase.firestore().collection('drivers').doc(values.driver).set({
+        name: driverDetail?.name,
+        password: driverDetail?.password,
+        email: driverDetail?.email,
+        phone: driverDetail?.phone,
+        licenseNumber: driverDetail?.licenseNumber,
+        regoNumber: driverDetail?.regoNumber,
+        employeeType: driverDetail?.employeeType,
+        onWork: true,
+        status: 'active'
+      });
+    }
+
     if (act === 'Add') {
       firebase.firestore().collection('jobs').add({
         customer: values.customer,

@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 import androidFilled from '@iconify/icons-ant-design/credit-card-filled';
 // material
+import PropTypes from 'prop-types';
 import { alpha, styled } from '@material-ui/core/styles';
 import { Card, Typography } from '@material-ui/core';
 // utils
@@ -34,18 +35,20 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const TOTAL = 714000;
-
-export default function AppWeeklySales() {
+export default function AppWeeklySales({ total }) {
   return (
     <RootStyle>
       <IconWrapperStyle>
         <Icon icon={androidFilled} width={24} height={24} />
       </IconWrapperStyle>
-      <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
+      <Typography variant="h3">{fShortenNumber(total)}</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
         Total Amount (dummy)
       </Typography>
     </RootStyle>
   );
 }
+
+AppWeeklySales.propTypes = {
+  total: PropTypes.number
+};
