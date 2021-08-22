@@ -98,10 +98,11 @@ export default function Driver() {
         }));
         setDrivers(newDriver);
       });
-    if (drivers) {
-      driverDataSet(drivers);
-    }
-  }, [drivers]);
+  }, []);
+
+  if (drivers) {
+    driverDataSet(drivers);
+  }
 
   const deleteDriverEach = (id) => {
     setUid(id);

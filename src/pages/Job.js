@@ -122,10 +122,11 @@ export default function Job() {
         }));
         setClients(newClient);
       });
-    if (jobs) {
-      jobDataSet(jobs);
-    }
-  }, [jobs]);
+  }, []);
+
+  if (jobs) {
+    jobDataSet(jobs);
+  }
 
   const deleteJobsEach = (id) => {
     setUid(id);

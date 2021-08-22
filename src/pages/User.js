@@ -92,10 +92,11 @@ export default function User() {
         }));
         setUsers(newUser);
       });
-    if (users) {
-      userDataSet(users);
-    }
-  }, [users]);
+  }, []);
+
+  if (users) {
+    userDataSet(users);
+  }
 
   const deleteUserEach = (id) => {
     setUid(id);

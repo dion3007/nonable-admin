@@ -98,10 +98,11 @@ export default function Client() {
         }));
         setClients(newClient);
       });
-    if (clients) {
-      clientDataSet(clients);
-    }
-  }, [clients]);
+  }, []);
+
+  if (clients) {
+    clientDataSet(clients);
+  }
 
   const deleteClientEach = (id) => {
     setUid(id);
