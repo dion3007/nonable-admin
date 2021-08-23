@@ -16,11 +16,17 @@ import {
   TableCell,
   Container,
   Typography,
+  MenuItem,
+  TextField,
   Grid,
+  Box,
   Switch,
   TableContainer,
   TablePagination
 } from '@material-ui/core';
+import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
+import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
+import DesktopDateRangePicker from '@material-ui/lab/DesktopDateRangePicker';
 import firebase from '../firebase';
 // components
 import Page from '../components/Page';
@@ -46,6 +52,21 @@ const TABLE_HEAD = [
 ];
 
 // ----------------------------------------------------------------------
+
+const allocateArr = [
+  {
+    name: 'All',
+    value: 0
+  },
+  {
+    name: 'Allocated',
+    value: 1
+  },
+  {
+    name: 'Un-Allocated',
+    value: 2
+  }
+];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -81,6 +102,7 @@ export default function Job() {
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
   const [jobs, setJobs] = useState([]);
+  const [jobsTemp, setJobsTemp] = useState([]);
   const [clients, setClients] = useState([]);
   const [drivers, setDrivers] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
@@ -90,6 +112,12 @@ export default function Job() {
   const [uid, setUid] = useState('');
   const [openPaidModal, setOpenPaidModal] = useState(false);
   const [paidUid, setPaidUid] = useState('');
+
+  const [filterGrid, setFilterGrid] = useState(false);
+  const [allocated, setAllocated] = useState();
+  const [dateRange, setDateRange] = useState([null, null]);
+
+  console.log(allocated);
 
   useEffect(() => {
     firebase
@@ -101,6 +129,16 @@ export default function Job() {
           ...doc.data()
         }));
         setJobs(newJob);
+      });
+    firebase
+      .firestore()
+      .collection('jobs')
+      .onSnapshot((snapshot) => {
+        const newJob = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setJobsTemp(newJob);
       });
     firebase
       .firestore()
@@ -125,8 +163,26 @@ export default function Job() {
   }, []);
 
   if (jobs) {
-    jobDataSet(jobs);
+    jobDataSet(jobsTemp);
   }
+
+  const clearFilter = () => {
+    setAllocated();
+    setDateRange([null, null]);
+  };
+
+  const filterDataByInput = () => {
+    let filteredData;
+    const jobsData = jobDataGet();
+    if (allocated === 1) {
+      filteredData = jobsData.filter((job) => job.driver !== '');
+    } else if (allocated === 2) {
+      filteredData = jobsData.filter((job) => job.driver === '');
+    } else {
+      filteredData = jobDataGet();
+    }
+    setJobs(filteredData);
+  };
 
   const deleteJobsEach = (id) => {
     setUid(id);
@@ -242,18 +298,6 @@ export default function Job() {
     0
   );
 
-  // const jobsList = filteredJobs.reduce((p, c) => {
-  //   p[new Date(c.bookingDate).toLocaleDateString('en-US')] =
-  //     (p[new Date(c.booking_date).toLocaleDateString('en-US')] || 0) + 1;
-  //   return p;
-  // }, {});
-
-  // const result = filteredJobs.filter(
-  //   (obj) => jobsList[new Date(obj.bookingDate).toLocaleDateString('en-US')] > 1
-  // );
-
-  // console.log(result);
-
   return (
     <Page title="Bookings | Minimal-UI">
       <Container>
@@ -276,11 +320,63 @@ export default function Job() {
           <UserListToolbar
             numSelected={selected.length}
             filterName={filterName}
+            filterListClick={() => setFilterGrid(!filterGrid)}
             onFilterName={handleFilterByName}
           />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
+              {filterGrid && (
+                <Grid container style={{ padding: 15 }} spacing={3}>
+                  <Grid item md={3}>
+                    <TextField
+                      select
+                      style={{ marginBottom: 15, textAlign: 'left' }}
+                      fullWidth
+                      size="small"
+                      onChange={(e) => setAllocated(e.target.value)}
+                      value={allocated}
+                      id="allocated"
+                      label="Category"
+                    >
+                      {allocateArr.map((allocated) => (
+                        <MenuItem key={allocated.value} value={allocated.value}>
+                          {allocated.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  <Grid item md={4}>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DesktopDateRangePicker
+                        startText="Start"
+                        value={dateRange}
+                        onChange={(newValue) => {
+                          setDateRange(newValue);
+                        }}
+                        inputFormat="dd/MM/yyyy"
+                        renderInput={(startProps, endProps) => (
+                          <>
+                            <TextField size="small" {...startProps} />
+                            <Box sx={{ mx: 2 }}> to </Box>
+                            <TextField size="small" {...endProps} />
+                          </>
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item md={1}>
+                    <Button onClick={filterDataByInput} variant="contained">
+                      Filter
+                    </Button>
+                  </Grid>
+                  <Grid item md={2}>
+                    <Button color="inherit" onClick={clearFilter} variant="contained">
+                      Clear Filter
+                    </Button>
+                  </Grid>
+                </Grid>
+              )}
               <Table>
                 <UserListHead
                   order={order}

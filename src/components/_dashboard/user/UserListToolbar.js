@@ -42,10 +42,16 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
 UserListToolbar.propTypes = {
   numSelected: PropTypes.number,
   filterName: PropTypes.string,
-  onFilterName: PropTypes.func
+  onFilterName: PropTypes.func,
+  filterListClick: PropTypes.func
 };
 
-export default function UserListToolbar({ numSelected, filterName, onFilterName }) {
+export default function UserListToolbar({
+  numSelected,
+  filterName,
+  onFilterName,
+  filterListClick
+}) {
   return (
     <RootStyle
       sx={{
@@ -80,7 +86,7 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
         </Tooltip>
       ) : (
         <Tooltip title="Filter list">
-          <IconButton>
+          <IconButton onClick={filterListClick}>
             <Icon icon={roundFilterList} />
           </IconButton>
         </Tooltip>
