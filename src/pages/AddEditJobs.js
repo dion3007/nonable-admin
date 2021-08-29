@@ -202,11 +202,13 @@ export default function AddEditJobs() {
                         id="customer"
                         label="Client"
                       >
-                        {clients.map((client) => (
-                          <MenuItem key={client.id} value={client.id}>
-                            {client.name}
-                          </MenuItem>
-                        ))}
+                        {clients
+                          .filter((client) => client.status === 'active')
+                          .map((clientmap) => (
+                            <MenuItem key={clientmap.id} value={clientmap.id}>
+                              {clientmap.name}
+                            </MenuItem>
+                          ))}
                       </TextField>
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DateTimePicker
@@ -298,11 +300,13 @@ export default function AddEditJobs() {
                         id="driver"
                         label="Driver"
                       >
-                        {drivers.map((driver) => (
-                          <MenuItem key={driver.id} value={driver.id}>
-                            {driver.name}
-                          </MenuItem>
-                        ))}
+                        {drivers
+                          .filter((driver) => driver.status === 'active')
+                          .map((drivermap) => (
+                            <MenuItem key={drivermap.id} value={drivermap.id}>
+                              {drivermap.name}
+                            </MenuItem>
+                          ))}
                       </TextField>
                       <TextField
                         required

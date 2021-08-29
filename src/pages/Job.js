@@ -169,6 +169,8 @@ export default function Job() {
   const clearFilter = () => {
     setAllocated();
     setDateRange([null, null]);
+    const jobsData = jobDataGet();
+    setJobs(jobsData);
   };
 
   const filterDataByInput = () => {
@@ -180,6 +182,14 @@ export default function Job() {
       filteredData = jobsData.filter((job) => job.driver === '');
     } else {
       filteredData = jobDataGet();
+    }
+
+    if (dateRange) {
+      filteredData = jobsData.filter(
+        (job) =>
+          new Date(job.bookingDate) > new Date(dateRange[0]) &&
+          new Date(job.bookingDate) < new Date(dateRange[1])
+      );
     }
     setJobs(filteredData);
   };
