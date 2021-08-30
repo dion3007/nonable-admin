@@ -43,7 +43,7 @@ export default function AppNewUsers({ total }) {
       </IconWrapperStyle>
       <Typography variant="h3">{fShortenNumber(total)}</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        Total Hours (dummy)
+        Total Hours
       </Typography>
     </RootStyle>
   );

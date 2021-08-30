@@ -43,7 +43,7 @@ export default function AppItemOrders({ total }) {
       </IconWrapperStyle>
       <Typography variant="h3">{fShortenNumber(total)} KM</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        Total KMS (dummy)
+        Total KMS
       </Typography>
     </RootStyle>
   );

@@ -117,8 +117,6 @@ export default function Job() {
   const [allocated, setAllocated] = useState();
   const [dateRange, setDateRange] = useState([null, null]);
 
-  console.log(allocated);
-
   useEffect(() => {
     firebase
       .firestore()
@@ -300,6 +298,17 @@ export default function Job() {
   const isUserNotFound = filteredJobs.length === 0;
 
   // amount
+
+  // const ids = filteredJobs.map((x) => x.driver);
+  // const idate = filteredJobs.map((x) => x.bookingDate);
+  // const driverDuplicate = ids.filter((item, idx) => ids.indexOf(item) !== idx);
+  // const dateDuplicate = idate.filter((item, idx) => idate.indexOf(item) !== idx);
+  // console.log(dateDuplicate, driverDuplicate);
+
+  // if (driverDuplicate.length > 1) {
+  //   const res = filteredJobs.filter((el) => driverDuplicate.indexOf(el.id) >= 0);
+  //   console.log(res);
+  // }
 
   const sumAmount = filteredJobs.reduce((a, { price }) => parseFloat(a) + parseFloat(price), 0);
   const sumHours = filteredJobs.reduce((a, { hour }) => parseFloat(a) + parseFloat(hour), 0);
