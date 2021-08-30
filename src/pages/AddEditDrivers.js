@@ -19,6 +19,7 @@ import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
 import firebase from '../firebase';
 import { driverDataGet } from '../utils/cache';
+import JobDetail from '../layouts/JobDetail';
 
 const UserSchemaValidations = Yup.object().shape({
   name: Yup.string().required('Required'),
@@ -222,6 +223,7 @@ export default function AddEditDrivers() {
           </Scrollbar>
         </Card>
       </Container>
+      {act === 'Edit' && <JobDetail idParams={id} />}
     </Page>
   );
 }
