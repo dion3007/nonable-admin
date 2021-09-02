@@ -313,8 +313,6 @@ export default function Job() {
     (obj) => countList[obj.driver] > 1 && dateList[obj.bookingDate] > 1
   );
 
-  console.log(checkIfDuplicate);
-
   const sumAmount = filteredJobs.reduce((a, { price }) => parseFloat(a) + parseFloat(price), 0);
   const sumHours = filteredJobs.reduce((a, { hour }) => parseFloat(a) + parseFloat(hour), 0);
   const sumDistance = filteredJobs.reduce(
