@@ -299,16 +299,21 @@ export default function Job() {
 
   // amount
 
-  // const ids = filteredJobs.map((x) => x.driver);
-  // const idate = filteredJobs.map((x) => x.bookingDate);
-  // const driverDuplicate = ids.filter((item, idx) => ids.indexOf(item) !== idx);
-  // const dateDuplicate = idate.filter((item, idx) => idate.indexOf(item) !== idx);
-  // console.log(dateDuplicate, driverDuplicate);
+  const countList = filteredJobs.reduce((p, c) => {
+    p[c.driver] = (p[c.driver] || 0) + 1;
+    return p;
+  }, {});
 
-  // if (driverDuplicate.length > 1) {
-  //   const res = filteredJobs.filter((el) => driverDuplicate.indexOf(el.id) >= 0);
-  //   console.log(res);
-  // }
+  const dateList = filteredJobs.reduce((p, c) => {
+    p[c.bookingDate] = (p[c.bookingDate] || 0) + 1;
+    return p;
+  }, {});
+
+  const checkIfDuplicate = filteredJobs.filter(
+    (obj) => countList[obj.driver] > 1 && dateList[obj.bookingDate] > 1
+  );
+
+  console.log(checkIfDuplicate);
 
   const sumAmount = filteredJobs.reduce((a, { price }) => parseFloat(a) + parseFloat(price), 0);
   const sumHours = filteredJobs.reduce((a, { hour }) => parseFloat(a) + parseFloat(hour), 0);
@@ -417,6 +422,11 @@ export default function Job() {
                       return (
                         <TableRow
                           hover
+                          style={
+                            checkIfDuplicate.some((el) => el.id === id)
+                              ? { backgroundColor: 'yellow' }
+                              : { backgroundColor: '#fff' }
+                          }
                           key={id}
                           tabIndex={-1}
                           role="checkbox"
