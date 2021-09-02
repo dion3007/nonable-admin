@@ -8,7 +8,6 @@ import {
   Table,
   Stack,
   Button,
-  Checkbox,
   TableRow,
   TableBody,
   TableCell,
@@ -237,24 +236,6 @@ export default function JobDetail({ idParams }) {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -384,12 +365,7 @@ export default function JobDetail({ idParams }) {
                           selected={isItemSelected}
                           aria-checked={isItemSelected}
                         >
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={isItemSelected}
-                              onChange={(event) => handleClick(event, customer)}
-                            />
-                          </TableCell>
+                          <TableCell padding="checkbox" />
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
                               <Typography variant="subtitle2" noWrap>

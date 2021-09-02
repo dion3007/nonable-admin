@@ -10,7 +10,6 @@ import {
   Table,
   Stack,
   Button,
-  Checkbox,
   TableRow,
   TableBody,
   TableCell,
@@ -260,24 +259,6 @@ export default function Job() {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -422,7 +403,7 @@ export default function Job() {
                           hover
                           style={
                             checkIfDuplicate.some((el) => el.id === id)
-                              ? { backgroundColor: 'yellow' }
+                              ? { backgroundColor: '#bdbdbd' }
                               : { backgroundColor: '#fff' }
                           }
                           key={id}
@@ -431,12 +412,7 @@ export default function Job() {
                           selected={isItemSelected}
                           aria-checked={isItemSelected}
                         >
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={isItemSelected}
-                              onChange={(event) => handleClick(event, customer)}
-                            />
-                          </TableCell>
+                          <TableCell padding="checkbox" />
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
                               <Typography variant="subtitle2" noWrap>
@@ -446,7 +422,9 @@ export default function Job() {
                           </TableCell>
                           <TableCell align="left">{pickUp}</TableCell>
                           <TableCell align="left">{dropOff}</TableCell>
-                          <TableCell align="left">$ {price}</TableCell>
+                          <TableCell align="left" width="100px">
+                            $ {price}
+                          </TableCell>
                           <TableCell align="left">
                             {drivers?.filter((driverData) => driverData.id === driver)[0]?.name}
                           </TableCell>
@@ -457,10 +435,10 @@ export default function Job() {
                               inputProps={{ 'aria-label': 'controlled' }}
                             />
                           </TableCell>
-                          <TableCell align="left">
+                          <TableCell align="left" width="150px">
                             {moment(bookingDate).format('DD-MM-YYYY')}
                           </TableCell>
-                          <TableCell align="left">
+                          <TableCell align="left" width="100px">
                             {moment(bookingDate).format('hh:mm A')}
                           </TableCell>
                           <TableCell align="right">

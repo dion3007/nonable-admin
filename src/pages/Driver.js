@@ -4,13 +4,13 @@ import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
+import moment from 'moment';
 // material
 import {
   Card,
   Table,
   Stack,
   Button,
-  Checkbox,
   TableRow,
   TableBody,
   TableCell,
@@ -34,6 +34,7 @@ import ModalComponents from '../components/ModalComponents';
 const TABLE_HEAD = [
   { id: 'name', label: 'Employee Name', alignRight: false },
   { id: 'email', label: 'Email', alignRight: false },
+  { id: 'dobNumber', label: 'DOB', alignRight: false },
   { id: 'phone', label: 'Contact Number', alignRight: false },
   { id: 'regoNumber', label: 'Rego Number', alignRight: false },
   { id: 'licenseNumber', label: 'License Number', alignRight: false },
@@ -145,24 +146,6 @@ export default function Driver() {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -229,6 +212,7 @@ export default function Driver() {
                         name,
                         email,
                         phone,
+                        dobNumber,
                         regoNumber,
                         licenseNumber,
                         employeeType,
@@ -245,12 +229,7 @@ export default function Driver() {
                           selected={isItemSelected}
                           aria-checked={isItemSelected}
                         >
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={isItemSelected}
-                              onChange={(event) => handleClick(event, name)}
-                            />
-                          </TableCell>
+                          <TableCell padding="checkbox" />
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
                               <Typography variant="subtitle2" noWrap>
@@ -259,10 +238,14 @@ export default function Driver() {
                             </Stack>
                           </TableCell>
                           <TableCell align="left">{email}</TableCell>
+                          <TableCell align="left">
+                            {moment(dobNumber).format('DD-MM-YYYY')}
+                          </TableCell>
                           <TableCell align="left">{phone}</TableCell>
                           <TableCell align="left">{regoNumber}</TableCell>
                           <TableCell align="left">{licenseNumber}</TableCell>
                           <TableCell align="left">
+                            {employeeType === 2 && 'Terminate'}
                             {employeeType === 1 && 'Permanent'}
                             {employeeType === 0 && 'Part Time'}
                           </TableCell>

@@ -13,6 +13,9 @@ import { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useLocation } from 'react-router-dom';
+import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
+import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
+import DatePicker from '@material-ui/lab/DatePicker';
 // components
 import useQuery from '../utils/useQuery';
 import Page from '../components/Page';
@@ -65,6 +68,8 @@ export default function AddEditDrivers() {
         phone: values.phone,
         licenseNumber: values.licenseNumber,
         regoNumber: values.regoNumber,
+        dobNumber: values?.dobNumber.toString(),
+        address: values.address,
         employeeType: values.employeeType,
         onWork: false,
         status: 'active'
@@ -77,6 +82,8 @@ export default function AddEditDrivers() {
         phone: values?.phone,
         licenseNumber: values?.licenseNumber,
         regoNumber: values?.regoNumber,
+        address: values?.address,
+        dobNumber: values?.dobNumber.toString(),
         employeeType: values?.employeeType,
         onWork: false,
         status: 'active'
@@ -114,7 +121,7 @@ export default function AddEditDrivers() {
                 }, 400);
               }}
             >
-              {({ values, errors, handleChange, handleSubmit, isSubmitting }) => (
+              {({ values, errors, handleChange, handleSubmit, setFieldValue, isSubmitting }) => (
                 <form onSubmit={handleSubmit} style={{ padding: 20, textAlign: 'center' }}>
                   <Grid container justifyContent="space-between" spacing={2}>
                     <Grid item xs={6}>
@@ -167,6 +174,29 @@ export default function AddEditDrivers() {
                       />
                     </Grid>
                     <Grid item xs={6}>
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                          disableFuture
+                          renderInput={(props) => (
+                            <TextField
+                              {...props}
+                              helperText={errors?.dobNumber}
+                              fullWidth
+                              style={{ marginBottom: 15 }}
+                            />
+                          )}
+                          id="dobNumber"
+                          label="Date Of Birth"
+                          error={errors?.dobNumber && true}
+                          onChange={(value) => setFieldValue('dobNumber', value)}
+                          value={values?.dobNumber}
+                          inputFormat="dd/MM/yyyy"
+                          defaultValue="2017-05-24"
+                          InputLabelProps={{
+                            shrink: true
+                          }}
+                        />
+                      </LocalizationProvider>
                       <TextField
                         style={{ marginBottom: 15 }}
                         fullWidth
@@ -211,7 +241,20 @@ export default function AddEditDrivers() {
                         <MenuItem key="1" value={1}>
                           Permanent
                         </MenuItem>
+                        <MenuItem key="2" value={1}>
+                          Terminate
+                        </MenuItem>
                       </TextField>
+                      <TextField
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        multiline
+                        onChange={handleChange}
+                        value={values.address}
+                        rows={4}
+                        id="address"
+                        label="Address"
+                      />
                     </Grid>
                   </Grid>
                   <Button type="submit" disabled={isSubmitting}>

@@ -4,13 +4,13 @@ import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
+import moment from 'moment';
 // material
 import {
   Card,
   Table,
   Stack,
   Button,
-  Checkbox,
   TableRow,
   TableBody,
   TableCell,
@@ -32,11 +32,11 @@ import ModalComponents from '../components/ModalComponents';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Employee Name', alignRight: false },
+  { id: 'name', label: 'Full Name', alignRight: false },
+  { id: 'ndisNumber', label: 'NDIS Number', alignRight: false },
+  { id: 'dobNumber', label: 'DOB', alignRight: false },
   { id: 'email', label: 'Email', alignRight: false },
   { id: 'phone', label: 'Contact Number', alignRight: false },
-  { id: 'ndisNumber', label: 'NDIS Number', alignRight: false },
-  { id: 'dobNumber', label: 'DOB Number', alignRight: false },
   { id: 'planManagementDetail', label: 'Plan Management Detail', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
   { id: '' }
@@ -79,7 +79,6 @@ function applySortFilter(array, comparator, query) {
 export default function Client() {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
-  const [selected, setSelected] = useState([]);
   const [clients, setClients] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
@@ -134,33 +133,6 @@ export default function Client() {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = clients?.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -200,11 +172,7 @@ export default function Client() {
         </Stack>
 
         <Card>
-          <UserListToolbar
-            numSelected={selected.length}
-            filterName={filterName}
-            onFilterName={handleFilterByName}
-          />
+          <UserListToolbar filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -214,9 +182,7 @@ export default function Client() {
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={clients.length}
-                  numSelected={selected.length}
                   onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
                   {fillteredActiveClient
@@ -232,23 +198,9 @@ export default function Client() {
                         planManagementDetail,
                         status
                       } = row;
-                      const isItemSelected = selected.indexOf(name) !== -1;
-
                       return (
-                        <TableRow
-                          hover
-                          key={id}
-                          tabIndex={-1}
-                          role="checkbox"
-                          selected={isItemSelected}
-                          aria-checked={isItemSelected}
-                        >
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={isItemSelected}
-                              onChange={(event) => handleClick(event, name)}
-                            />
-                          </TableCell>
+                        <TableRow hover key={id} tabIndex={-1}>
+                          <TableCell padding="checkbox" />
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
                               <Typography variant="subtitle2" noWrap>
@@ -256,10 +208,12 @@ export default function Client() {
                               </Typography>
                             </Stack>
                           </TableCell>
+                          <TableCell align="left">{ndisNumber}</TableCell>
+                          <TableCell align="left">
+                            {moment(dobNumber).format('DD-MM-YYYY')}
+                          </TableCell>
                           <TableCell align="left">{email}</TableCell>
                           <TableCell align="left">{phone}</TableCell>
-                          <TableCell align="left">{ndisNumber}</TableCell>
-                          <TableCell align="left">{dobNumber}</TableCell>
                           <TableCell align="left">
                             {planManagementDetail === 1 && 'Plan Management'}
                             {planManagementDetail === 0 && 'Ndis Management'}

@@ -9,6 +9,9 @@ import {
   Grid,
   MenuItem
 } from '@material-ui/core';
+import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
+import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
+import DatePicker from '@material-ui/lab/DatePicker';
 import { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -26,7 +29,7 @@ const UserSchemaValidations = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
   phone: Yup.number().required('Required'),
   ndisNumber: Yup.number().required('Required'),
-  dobNumber: Yup.number().required('Required'),
+  dobNumber: Yup.string().required('Required'),
   planManagementDetail: Yup.number().required('Required')
 });
 
@@ -61,7 +64,11 @@ export default function AddEditClients() {
         email: values.email,
         phone: values.phone,
         ndisNumber: values.ndisNumber,
-        dobNumber: values.dobNumber,
+        dobNumber: values.dobNumber.toString(),
+        address: values.address,
+        clientSpec: values.clientSpec,
+        coordinator: values.coordinator,
+        fundsQuarantine: values.fundsQuarantine,
         planManagementDetail: values.planManagementDetail,
         status: 'active'
       });
@@ -71,7 +78,11 @@ export default function AddEditClients() {
         email: values?.email,
         phone: values?.phone,
         ndisNumber: values?.ndisNumber,
-        dobNumber: values?.dobNumber,
+        dobNumber: values?.dobNumber.toString(),
+        address: values?.address,
+        clientSpec: values?.clientSpec,
+        coordinator: values?.coordinator,
+        fundsQuarantine: values?.fundsQuarantine,
         planManagementDetail: values?.planManagementDetail,
         status: 'active'
       });
@@ -108,7 +119,7 @@ export default function AddEditClients() {
                 }, 400);
               }}
             >
-              {({ values, errors, handleChange, handleSubmit, isSubmitting }) => (
+              {({ values, errors, handleChange, handleSubmit, setFieldValue, isSubmitting }) => (
                 <form onSubmit={handleSubmit} style={{ padding: 20, textAlign: 'center' }}>
                   <Grid container justifyContent="space-between" spacing={2}>
                     <Grid item xs={6}>
@@ -147,6 +158,31 @@ export default function AddEditClients() {
                         id="phone"
                         label="Contact Number"
                       />
+                      <TextField
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        onChange={handleChange}
+                        value={values.clientSpec}
+                        id="clientSpec"
+                        label="Client Specification"
+                      />
+                      <TextField
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        onChange={handleChange}
+                        value={values.coordinator}
+                        id="coordinator"
+                        label="Coordinator"
+                      />
+                      <TextField
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        type="number"
+                        onChange={handleChange}
+                        value={values.fundsQuarantine}
+                        id="fundsQuarantine"
+                        label="Funds Quarantine"
+                      />
                     </Grid>
                     <Grid item xs={6}>
                       <TextField
@@ -162,19 +198,29 @@ export default function AddEditClients() {
                         id="ndisNumber"
                         label="Ndis Number"
                       />
-                      <TextField
-                        style={{ marginBottom: 15 }}
-                        fullWidth
-                        onChange={handleChange}
-                        multiline
-                        maxRows={3}
-                        value={values.dobNumber}
-                        error={errors?.dobNumber && true}
-                        helperText={errors?.dobNumber}
-                        type="number"
-                        id="dobNumber"
-                        label="Dob Number"
-                      />
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                          disableFuture
+                          renderInput={(props) => (
+                            <TextField
+                              {...props}
+                              helperText={errors?.dobNumber}
+                              fullWidth
+                              style={{ marginBottom: 15 }}
+                            />
+                          )}
+                          id="dobNumber"
+                          label="Date Of Birth"
+                          error={errors?.dobNumber && true}
+                          onChange={(value) => setFieldValue('dobNumber', value)}
+                          value={values?.dobNumber}
+                          inputFormat="dd/MM/yyyy"
+                          defaultValue="2017-05-24"
+                          InputLabelProps={{
+                            shrink: true
+                          }}
+                        />
+                      </LocalizationProvider>
                       <TextField
                         select
                         required
@@ -194,6 +240,16 @@ export default function AddEditClients() {
                           Plan Management
                         </MenuItem>
                       </TextField>
+                      <TextField
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        multiline
+                        onChange={handleChange}
+                        value={values.address}
+                        rows={4}
+                        id="address"
+                        label="Address"
+                      />
                     </Grid>
                   </Grid>
                   <Button type="submit" disabled={isSubmitting}>
