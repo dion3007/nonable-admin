@@ -34,9 +34,13 @@ import ModalComponents from '../components/ModalComponents';
 const TABLE_HEAD = [
   { id: 'name', label: 'Full Name', alignRight: false },
   { id: 'ndisNumber', label: 'NDIS Number', alignRight: false },
-  { id: 'dobNumber', label: 'DOB', alignRight: false },
   { id: 'email', label: 'Email', alignRight: false },
   { id: 'phone', label: 'Contact Number', alignRight: false },
+  { id: 'dobNumber', label: 'Date Of Birth', alignRight: false },
+  { id: 'clientSpec', label: 'Client Spec', alignRight: false },
+  { id: 'coordinator', label: 'Coordinate', alignRight: false },
+  { id: 'fundsQuarantine', label: 'Funds Quarantine', alignRight: false },
+  { id: 'address', label: 'Address', alignRight: false },
   { id: 'planManagementDetail', label: 'Plan Management Detail', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
   { id: '' }
@@ -119,6 +123,10 @@ export default function Client() {
       name: fileteredDeleteClient?.name,
       email: fileteredDeleteClient?.email,
       phone: fileteredDeleteClient?.phone,
+      clientSpec: fileteredDeleteClient?.clientSpec,
+      coordinator: fileteredDeleteClient?.coordinator,
+      fundsQuarantine: fileteredDeleteClient?.fundsQuarantine,
+      address: fileteredDeleteClient?.address,
       ndisNumber: fileteredDeleteClient?.ndisNumber,
       dobNumber: fileteredDeleteClient?.dobNumber,
       planManagementDetail: fileteredDeleteClient?.planManagementDetail,
@@ -175,7 +183,7 @@ export default function Client() {
           <UserListToolbar filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
+            <TableContainer sx={{ minWidth: 800, width: 1500 }}>
               <Table>
                 <UserListHead
                   order={order}
@@ -193,6 +201,10 @@ export default function Client() {
                         name,
                         email,
                         phone,
+                        clientSpec,
+                        coordinator,
+                        fundsQuarantine,
+                        address,
                         ndisNumber,
                         dobNumber,
                         planManagementDetail,
@@ -209,11 +221,21 @@ export default function Client() {
                             </Stack>
                           </TableCell>
                           <TableCell align="left">{ndisNumber}</TableCell>
-                          <TableCell align="left">
-                            {moment(dobNumber).format('DD-MM-YYYY')}
-                          </TableCell>
                           <TableCell align="left">{email}</TableCell>
                           <TableCell align="left">{phone}</TableCell>
+                          <TableCell align="left" width={130}>
+                            {moment(dobNumber).format('DD-MM-YYYY')}
+                          </TableCell>
+                          <TableCell align="left" width={120}>
+                            {clientSpec}
+                          </TableCell>
+                          <TableCell align="left" width={100}>
+                            {coordinator}
+                          </TableCell>
+                          <TableCell align="left" width={100}>
+                            $ {fundsQuarantine}
+                          </TableCell>
+                          <TableCell align="left">{address}</TableCell>
                           <TableCell align="left">
                             {planManagementDetail === 1 && 'Plan Management'}
                             {planManagementDetail === 0 && 'Ndis Management'}
