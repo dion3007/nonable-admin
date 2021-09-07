@@ -28,8 +28,6 @@ const UserSchemaValidations = Yup.object().shape({
   bookingDate: Yup.string().required('Required'),
   pickUp: Yup.string().required('Required'),
   dropOff: Yup.string().required('Required'),
-  price: Yup.string().required('Required'),
-  profit: Yup.string().required('Required'),
   distance: Yup.number().required('Required'),
   hour: Yup.number().required('Required')
 });
@@ -40,6 +38,7 @@ export default function AddEditJobs() {
   const act = queryString.get('act');
   const id = queryString.get('id');
   const [jobs, setJobs] = useState(jobDataGet() || []);
+  const [pickupState, setPickupState] = useState();
   const [clients, setClients] = useState(clientDataGet() || []);
   const [drivers, setDrivers] = useState(driverDataGet() || []);
   const [variable, setVariable] = useState([]);
@@ -152,9 +151,14 @@ export default function AddEditJobs() {
     }
   };
 
+  const handleBlurSetPickup = (id) => {
+    const address = clients.filter((client) => client.id === id);
+    setPickupState(address[0].address);
+  };
+
   return (
     <Page title="Bookings | Minimal-UI">
-      <Container>
+      <Container maxWidth={false}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             {act} Bookings
@@ -198,6 +202,7 @@ export default function AddEditJobs() {
                         fullWidth
                         helperText={errors?.customer}
                         onChange={handleChange('customer')}
+                        onBlur={() => handleBlurSetPickup(values.customer)}
                         value={values.customer}
                         id="customer"
                         label="Client"
@@ -239,7 +244,7 @@ export default function AddEditJobs() {
                         fullWidth
                         helperText={errors?.pickUp}
                         onChange={handleChange}
-                        value={values.pickUp}
+                        value={values.pickUp || pickupState}
                         id="pickUp"
                         label="Pick Up"
                       />
@@ -271,10 +276,8 @@ export default function AddEditJobs() {
                     <Grid item xs={6}>
                       <TextField
                         required
-                        error={errors?.price && true}
                         style={{ marginBottom: 15 }}
                         fullWidth
-                        helperText={errors?.price}
                         onChange={handleChange}
                         value={values.price}
                         id="price"
@@ -282,10 +285,8 @@ export default function AddEditJobs() {
                       />
                       <TextField
                         required
-                        error={errors?.profit && true}
                         style={{ marginBottom: 15 }}
                         fullWidth
-                        helperText={errors?.profit}
                         onChange={handleChange}
                         value={values.profit}
                         id="profit"

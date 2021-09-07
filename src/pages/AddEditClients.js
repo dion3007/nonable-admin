@@ -59,33 +59,50 @@ export default function AddEditClients() {
 
   const handleSubmit = (values) => {
     if (act === 'Add') {
-      firebase.firestore().collection('clients').add({
-        name: values.name,
-        email: values.email,
-        phone: values.phone,
-        ndisNumber: values.ndisNumber,
-        dobNumber: values.dobNumber.toString(),
-        address: values.address,
-        clientSpec: values.clientSpec,
-        coordinator: values.coordinator,
-        fundsQuarantine: values.fundsQuarantine,
-        planManagementDetail: values.planManagementDetail,
-        status: 'active'
-      });
+      firebase
+        .firestore()
+        .collection('clients')
+        .add({
+          name: values.name,
+          email: values.email,
+          streetNumber: values?.streetNumber,
+          streetAddress: values?.streetAddress,
+          suburb: values?.suburb,
+          state: values?.state,
+          postCode: values.postCode,
+          phone: values.phone,
+          ndisNumber: values.ndisNumber,
+          dobNumber: values.dobNumber.toString(),
+          address: `${values.streetNumber} ${values.streetAddress} ${values.suburb} ${values.state} ${values.postCode}`,
+          clientSpec: values.clientSpec,
+          coordinator: values.coordinator,
+          fundsQuarantine: values.fundsQuarantine,
+          planManagementDetail: values.planManagementDetail,
+          status: 'active'
+        });
     } else {
-      firebase.firestore().collection('clients').doc(filteredClients[0].id).set({
-        name: values?.name,
-        email: values?.email,
-        phone: values?.phone,
-        ndisNumber: values?.ndisNumber,
-        dobNumber: values?.dobNumber.toString(),
-        address: values?.address,
-        clientSpec: values?.clientSpec,
-        coordinator: values?.coordinator,
-        fundsQuarantine: values?.fundsQuarantine,
-        planManagementDetail: values?.planManagementDetail,
-        status: 'active'
-      });
+      firebase
+        .firestore()
+        .collection('clients')
+        .doc(filteredClients[0].id)
+        .set({
+          name: values?.name,
+          email: values?.email,
+          streetNumber: values?.streetNumber,
+          streetAddress: values?.streetAddress,
+          suburb: values?.suburb,
+          state: values?.state,
+          postCode: values.postCode,
+          phone: values?.phone,
+          ndisNumber: values?.ndisNumber,
+          dobNumber: values?.dobNumber.toString(),
+          address: `${values?.streetNumber} ${values?.streetAddress} ${values?.suburb} ${values?.state} ${values?.postCode}`,
+          clientSpec: values?.clientSpec,
+          coordinator: values?.coordinator,
+          fundsQuarantine: values?.fundsQuarantine,
+          planManagementDetail: values?.planManagementDetail,
+          status: 'active'
+        });
     }
   };
 
@@ -134,6 +151,67 @@ export default function AddEditClients() {
                         id="name"
                         label="Name"
                       />
+                      <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                          <TextField
+                            error={errors?.streetNumber && true}
+                            required
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            helperText={errors?.streetNumber}
+                            onChange={handleChange}
+                            value={values.streetNumber}
+                            id="streetNumber"
+                            label="Street Number"
+                          />
+                          <TextField
+                            error={errors?.suburb && true}
+                            required
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            helperText={errors?.suburb}
+                            onChange={handleChange}
+                            value={values.suburb}
+                            id="suburb"
+                            label="Suburb"
+                          />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            error={errors?.state && true}
+                            required
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            helperText={errors?.state}
+                            onChange={handleChange}
+                            value={values.state}
+                            id="state"
+                            label="State"
+                          />
+                          <TextField
+                            error={errors?.postCode && true}
+                            required
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            helperText={errors?.postCode}
+                            onChange={handleChange}
+                            value={values.postCode}
+                            id="postCode"
+                            label="Post Code"
+                          />
+                        </Grid>
+                      </Grid>
+                      <TextField
+                        error={errors?.streetAddress && true}
+                        required
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        helperText={errors?.streetAddress}
+                        onChange={handleChange}
+                        value={values.streetAddress}
+                        id="streetAddress"
+                        label="Street Address"
+                      />
                       <TextField
                         error={errors?.email && true}
                         required
@@ -144,6 +222,44 @@ export default function AddEditClients() {
                         value={values.email}
                         id="email"
                         label="Email"
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                          disableFuture
+                          renderInput={(props) => (
+                            <TextField
+                              {...props}
+                              helperText={errors?.dobNumber}
+                              fullWidth
+                              style={{ marginBottom: 15 }}
+                            />
+                          )}
+                          id="dobNumber"
+                          label="Date Of Birth"
+                          error={errors?.dobNumber && true}
+                          onChange={(value) => setFieldValue('dobNumber', value)}
+                          value={values?.dobNumber}
+                          inputFormat="dd/MM/yyyy"
+                          defaultValue="2017-05-24"
+                          InputLabelProps={{
+                            shrink: true
+                          }}
+                        />
+                      </LocalizationProvider>
+                      <TextField
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        onChange={handleChange}
+                        multiline
+                        maxRows={3}
+                        value={values.ndisNumber}
+                        error={errors?.ndisNumber && true}
+                        helperText={errors?.ndisNumber}
+                        type="number"
+                        id="ndisNumber"
+                        label="Ndis Number"
                       />
                       <TextField
                         style={{ marginBottom: 15 }}
@@ -183,44 +299,6 @@ export default function AddEditClients() {
                         id="fundsQuarantine"
                         label="Funds Quarantine"
                       />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        style={{ marginBottom: 15 }}
-                        fullWidth
-                        onChange={handleChange}
-                        multiline
-                        maxRows={3}
-                        value={values.ndisNumber}
-                        error={errors?.ndisNumber && true}
-                        helperText={errors?.ndisNumber}
-                        type="number"
-                        id="ndisNumber"
-                        label="Ndis Number"
-                      />
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
-                          disableFuture
-                          renderInput={(props) => (
-                            <TextField
-                              {...props}
-                              helperText={errors?.dobNumber}
-                              fullWidth
-                              style={{ marginBottom: 15 }}
-                            />
-                          )}
-                          id="dobNumber"
-                          label="Date Of Birth"
-                          error={errors?.dobNumber && true}
-                          onChange={(value) => setFieldValue('dobNumber', value)}
-                          value={values?.dobNumber}
-                          inputFormat="dd/MM/yyyy"
-                          defaultValue="2017-05-24"
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                        />
-                      </LocalizationProvider>
                       <TextField
                         select
                         required
@@ -240,16 +318,6 @@ export default function AddEditClients() {
                           Plan Management
                         </MenuItem>
                       </TextField>
-                      <TextField
-                        style={{ marginBottom: 15 }}
-                        fullWidth
-                        multiline
-                        onChange={handleChange}
-                        value={values.address}
-                        rows={4}
-                        id="address"
-                        label="Address"
-                      />
                     </Grid>
                   </Grid>
                   <Button type="submit" disabled={isSubmitting}>

@@ -27,6 +27,11 @@ import JobDetail from '../layouts/JobDetail';
 const UserSchemaValidations = Yup.object().shape({
   name: Yup.string().required('Required'),
   password: Yup.string().required('Required'),
+  streetNumber: Yup.string().required('Required'),
+  streetAddress: Yup.string().required('Required'),
+  postCode: Yup.string().required('Required'),
+  suburb: Yup.string().required('Required'),
+  state: Yup.string().required('Required'),
   email: Yup.string().email('Invalid email').required('Required'),
   phone: Yup.number().required('Required'),
   licenseNumber: Yup.number().required('Required'),
@@ -61,39 +66,56 @@ export default function AddEditDrivers() {
   const handleSubmit = (values) => {
     if (act === 'Add') {
       firebase.auth().createUserWithEmailAndPassword(values.email, values.password);
-      firebase.firestore().collection('drivers').add({
-        name: values.name,
-        password: values.password,
-        email: values.email,
-        phone: values.phone,
-        licenseNumber: values.licenseNumber,
-        regoNumber: values.regoNumber,
-        dobNumber: values?.dobNumber.toString(),
-        address: values.address,
-        employeeType: values.employeeType,
-        onWork: false,
-        status: 'active'
-      });
+      firebase
+        .firestore()
+        .collection('drivers')
+        .add({
+          name: values.name,
+          password: values.password,
+          email: values.email,
+          streetNumber: values.streetNumber,
+          streetAddress: values.streetAddress,
+          suburb: values.suburb,
+          state: values.state,
+          postCode: values.postCode,
+          phone: values.phone,
+          licenseNumber: values.licenseNumber,
+          regoNumber: values.regoNumber,
+          dobNumber: values?.dobNumber.toString(),
+          address: `${values.streetNumber} ${values.streetAddress} ${values.suburb} ${values.state} ${values.postCode}`,
+          employeeType: values.employeeType,
+          onWork: false,
+          status: 'active'
+        });
     } else {
-      firebase.firestore().collection('drivers').doc(filteredDrivers[0].id).set({
-        name: values?.name,
-        password: values?.password,
-        email: values?.email,
-        phone: values?.phone,
-        licenseNumber: values?.licenseNumber,
-        regoNumber: values?.regoNumber,
-        address: values?.address,
-        dobNumber: values?.dobNumber.toString(),
-        employeeType: values?.employeeType,
-        onWork: false,
-        status: 'active'
-      });
+      firebase
+        .firestore()
+        .collection('drivers')
+        .doc(filteredDrivers[0].id)
+        .set({
+          name: values?.name,
+          password: values?.password,
+          streetNumber: values?.streetNumber,
+          streetAddress: values?.streetAddress,
+          suburb: values?.suburb,
+          state: values?.state,
+          postCode: values.postCode,
+          email: values?.email,
+          phone: values?.phone,
+          licenseNumber: values?.licenseNumber,
+          regoNumber: values?.regoNumber,
+          address: `${values?.streetNumber} ${values?.streetAddress} ${values?.suburb} ${values?.state} ${values?.postCode}`,
+          dobNumber: values?.dobNumber.toString(),
+          employeeType: values?.employeeType,
+          onWork: false,
+          status: 'active'
+        });
     }
   };
 
   return (
     <Page title="Driver | Minimal-UI">
-      <Container>
+      <Container maxWidth={false}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             {act} Driver
@@ -136,6 +158,67 @@ export default function AddEditDrivers() {
                         id="name"
                         label="Name"
                       />
+                      <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                          <TextField
+                            error={errors?.streetNumber && true}
+                            required
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            helperText={errors?.streetNumber}
+                            onChange={handleChange}
+                            value={values.streetNumber}
+                            id="streetNumber"
+                            label="Street Number"
+                          />
+                          <TextField
+                            error={errors?.suburb && true}
+                            required
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            helperText={errors?.suburb}
+                            onChange={handleChange}
+                            value={values.suburb}
+                            id="suburb"
+                            label="Suburb"
+                          />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            error={errors?.state && true}
+                            required
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            helperText={errors?.state}
+                            onChange={handleChange}
+                            value={values.state}
+                            id="state"
+                            label="State"
+                          />
+                          <TextField
+                            error={errors?.postCode && true}
+                            required
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            helperText={errors?.postCode}
+                            onChange={handleChange}
+                            value={values.postCode}
+                            id="postCode"
+                            label="Post Code"
+                          />
+                        </Grid>
+                      </Grid>
+                      <TextField
+                        error={errors?.streetAddress && true}
+                        required
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        helperText={errors?.streetAddress}
+                        onChange={handleChange}
+                        value={values.streetAddress}
+                        id="streetAddress"
+                        label="Street Address"
+                      />
                       <TextField
                         error={errors?.email && true}
                         required
@@ -146,31 +229,6 @@ export default function AddEditDrivers() {
                         value={values.email}
                         id="email"
                         label="Email"
-                      />
-                      <TextField
-                        required
-                        error={errors?.password && true}
-                        style={{ marginBottom: 15 }}
-                        fullWidth
-                        helperText={errors?.password}
-                        onChange={handleChange}
-                        value={values.password}
-                        type="password"
-                        id="password"
-                        label="Password"
-                      />
-                      <TextField
-                        style={{ marginBottom: 15 }}
-                        fullWidth
-                        onChange={handleChange}
-                        multiline
-                        maxRows={3}
-                        error={errors?.phone && true}
-                        helperText={errors?.phone}
-                        value={values.phone}
-                        type="number"
-                        id="phone"
-                        label="Contact Number"
                       />
                     </Grid>
                     <Grid item xs={6}>
@@ -242,18 +300,33 @@ export default function AddEditDrivers() {
                           Permanent
                         </MenuItem>
                         <MenuItem key="2" value={1}>
-                          Terminate
+                          Terminated
                         </MenuItem>
                       </TextField>
                       <TextField
+                        required
+                        error={errors?.password && true}
                         style={{ marginBottom: 15 }}
                         fullWidth
-                        multiline
+                        helperText={errors?.password}
                         onChange={handleChange}
-                        value={values.address}
-                        rows={4}
-                        id="address"
-                        label="Address"
+                        value={values.password}
+                        type="password"
+                        id="password"
+                        label="Password"
+                      />
+                      <TextField
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        onChange={handleChange}
+                        multiline
+                        maxRows={3}
+                        error={errors?.phone && true}
+                        helperText={errors?.phone}
+                        value={values.phone}
+                        type="number"
+                        id="phone"
+                        label="Contact Number"
                       />
                     </Grid>
                   </Grid>

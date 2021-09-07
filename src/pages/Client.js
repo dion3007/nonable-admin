@@ -164,7 +164,7 @@ export default function Client() {
 
   return (
     <Page title="Client | Minimal-UI">
-      <Container>
+      <Container maxWidth={false}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Client

@@ -80,7 +80,7 @@ export default function AddEditUsers() {
 
   return (
     <Page title="Users | Minimal-UI">
-      <Container>
+      <Container maxWidth={false}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             {act} Users
