@@ -26,7 +26,7 @@ import Label from '../components/Label';
 import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
-import { userDataSet } from '../utils/cache';
+import { userDataSet, authDataGet } from '../utils/cache';
 import ModalComponents from '../components/ModalComponents';
 
 // ----------------------------------------------------------------------
@@ -74,6 +74,7 @@ export default function User() {
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
   const [users, setUsers] = useState([]);
+  const [auth, setAuth] = useState();
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -81,6 +82,7 @@ export default function User() {
   const [uid, setUid] = useState('');
 
   useEffect(() => {
+    setAuth(authDataGet());
     firebase
       .firestore()
       .collection('users')
@@ -145,6 +147,8 @@ export default function User() {
 
   const isUserNotFound = filteredUsers.length === 0;
 
+  const filteredUser = users.filter((user) => user.email === auth.user.email)[0];
+
   return (
     <Page title="User | Minimal-UI">
       <Container maxWidth={false}>
@@ -152,14 +156,16 @@ export default function User() {
           <Typography variant="h4" gutterBottom>
             User
           </Typography>
-          <Button
-            variant="contained"
-            component={RouterLink}
-            to="/dashboard/user-manage?act=Add"
-            startIcon={<Icon icon={plusFill} />}
-          >
-            New User
-          </Button>
+          {filteredUser?.role === 'superadmin' && (
+            <Button
+              variant="contained"
+              component={RouterLink}
+              to="/dashboard/user-manage?act=Add"
+              startIcon={<Icon icon={plusFill} />}
+            >
+              New User
+            </Button>
+          )}
         </Stack>
 
         <Card>
@@ -218,13 +224,14 @@ export default function User() {
                               {sentenceCase(status)}
                             </Label>
                           </TableCell>
-
-                          <TableCell align="right">
-                            <UserMoreMenu
-                              deleteFunction={() => deleteUserEach(id)}
-                              linkEdit={`/dashboard/user-manage?act=Edit&id=${id}`}
-                            />
-                          </TableCell>
+                          {filteredUser?.role === 'superadmin' && (
+                            <TableCell align="right">
+                              <UserMoreMenu
+                                deleteFunction={() => deleteUserEach(id)}
+                                linkEdit={`/dashboard/user-manage?act=Edit&id=${id}`}
+                              />
+                            </TableCell>
+                          )}
                         </TableRow>
                       );
                     })}

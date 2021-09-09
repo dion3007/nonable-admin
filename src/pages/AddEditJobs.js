@@ -23,7 +23,7 @@ import useQuery from '../utils/useQuery';
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
 import firebase from '../firebase';
-import { jobDataGet, clientDataGet, driverDataGet } from '../utils/cache';
+import { jobDataGet, clientDataGet, authDataGet, driverDataGet } from '../utils/cache';
 
 const UserSchemaValidations = Yup.object().shape({
   customer: Yup.string().required('Required'),
@@ -37,6 +37,8 @@ const UserSchemaValidations = Yup.object().shape({
 export default function AddEditJobs() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [users, setUsers] = useState([]);
+  const [auth, setAuth] = useState();
   const queryString = useQuery(location.search);
   const act = queryString.get('act');
   const id = queryString.get('id');
@@ -47,6 +49,17 @@ export default function AddEditJobs() {
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
+    setAuth(authDataGet());
+    firebase
+      .firestore()
+      .collection('users')
+      .onSnapshot((snapshot) => {
+        const newUser = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setUsers(newUser);
+      });
     if (act === 'Edit') {
       firebase
         .firestore()
@@ -161,6 +174,8 @@ export default function AddEditJobs() {
     }
   };
 
+  const filteredUser = users.filter((user) => user.email === auth.user.email)[0];
+
   return (
     <Page title="Bookings | Minimal-UI">
       <Container maxWidth={false}>
@@ -274,36 +289,42 @@ export default function AddEditJobs() {
                         id="dropOff"
                         label="Drop Off"
                       />
-                      <TextField
-                        error={errors?.hour && true}
-                        style={{ marginBottom: 15 }}
-                        fullWidth
-                        multiline
-                        helperText={errors?.hour}
-                        onChange={handleChange}
-                        value={values.hour}
-                        id="hour"
-                        label="Hour"
-                        type="number"
-                      />
+                      {filteredUser?.role === 'superadmin' && (
+                        <TextField
+                          error={errors?.hour && true}
+                          style={{ marginBottom: 15 }}
+                          fullWidth
+                          multiline
+                          helperText={errors?.hour}
+                          onChange={handleChange}
+                          value={values.hour}
+                          id="hour"
+                          label="Hour"
+                          type="number"
+                        />
+                      )}
                     </Grid>
                     <Grid item xs={6}>
-                      <TextField
-                        style={{ marginBottom: 15 }}
-                        fullWidth
-                        onChange={handleChange}
-                        value={values.price}
-                        id="price"
-                        label="Amount"
-                      />
-                      <TextField
-                        style={{ marginBottom: 15 }}
-                        fullWidth
-                        onChange={handleChange}
-                        value={values.profit}
-                        id="profit"
-                        label="Profit"
-                      />
+                      {filteredUser?.role === 'superadmin' && (
+                        <>
+                          <TextField
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            onChange={handleChange}
+                            value={values.price}
+                            id="price"
+                            label="Amount"
+                          />
+                          <TextField
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            onChange={handleChange}
+                            value={values.profit}
+                            id="profit"
+                            label="Profit"
+                          />
+                        </>
+                      )}
                       <TextField
                         select
                         style={{ marginBottom: 15, textAlign: 'left' }}
@@ -321,19 +342,21 @@ export default function AddEditJobs() {
                             </MenuItem>
                           ))}
                       </TextField>
-                      <TextField
-                        required
-                        error={errors?.distance && true}
-                        style={{ marginBottom: 15 }}
-                        fullWidth
-                        multiline
-                        helperText={errors?.distance}
-                        onChange={handleChange}
-                        value={values.distance}
-                        id="distance"
-                        label="Distance"
-                        type="number"
-                      />
+                      {filteredUser?.role === 'superadmin' && (
+                        <TextField
+                          required
+                          error={errors?.distance && true}
+                          style={{ marginBottom: 15 }}
+                          fullWidth
+                          multiline
+                          helperText={errors?.distance}
+                          onChange={handleChange}
+                          value={values.distance}
+                          id="distance"
+                          label="Distance"
+                          type="number"
+                        />
+                      )}
                       <TextField
                         style={{ marginBottom: 15 }}
                         fullWidth
