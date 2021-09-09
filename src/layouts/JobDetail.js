@@ -424,7 +424,7 @@ export default function JobDetail({ idParams }) {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={jobs.length}
+            count={filterByIdParams.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
