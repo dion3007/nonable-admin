@@ -16,6 +16,8 @@ import { useLocation } from 'react-router-dom';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import DateTimePicker from '@material-ui/lab/DateTimePicker';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 // components
 import useQuery from '../utils/useQuery';
 import Page from '../components/Page';
@@ -38,10 +40,10 @@ export default function AddEditJobs() {
   const act = queryString.get('act');
   const id = queryString.get('id');
   const [jobs, setJobs] = useState(jobDataGet() || []);
-  const [pickupState, setPickupState] = useState();
   const [clients, setClients] = useState(clientDataGet() || []);
   const [drivers, setDrivers] = useState(driverDataGet() || []);
   const [variable, setVariable] = useState([]);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
     if (act === 'Edit') {
@@ -151,14 +153,14 @@ export default function AddEditJobs() {
     }
   };
 
-  const handleBlurSetPickup = (id) => {
-    const address = clients.filter((client) => client.id === id);
-    setPickupState(address[0].address);
-  };
-
   return (
     <Page title="Bookings | Minimal-UI">
       <Container maxWidth={false}>
+        <Snackbar open={openSnackbar} autoHideDuration={300}>
+          <MuiAlert elevation={6} variant="filled" severity="success" sx={{ width: '100%' }}>
+            Success submit data.
+          </MuiAlert>
+        </Snackbar>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             {act} Bookings
@@ -184,6 +186,7 @@ export default function AddEditJobs() {
               }
               validationSchema={UserSchemaValidations}
               onSubmit={(values, { setSubmitting }) => {
+                setOpenSnackbar(true);
                 setTimeout(() => {
                   handleSubmit(values);
                   setSubmitting(false);
@@ -202,7 +205,10 @@ export default function AddEditJobs() {
                         fullWidth
                         helperText={errors?.customer}
                         onChange={handleChange('customer')}
-                        onBlur={() => handleBlurSetPickup(values.customer)}
+                        onBlur={() => {
+                          const address = clients.filter((client) => client.id === values.customer);
+                          setFieldValue('pickUp', address[0].address);
+                        }}
                         value={values.customer}
                         id="customer"
                         label="Client"
@@ -244,7 +250,7 @@ export default function AddEditJobs() {
                         fullWidth
                         helperText={errors?.pickUp}
                         onChange={handleChange}
-                        value={values.pickUp || pickupState}
+                        value={values.pickUp}
                         id="pickUp"
                         label="Pick Up"
                       />
@@ -260,7 +266,6 @@ export default function AddEditJobs() {
                         label="Drop Off"
                       />
                       <TextField
-                        required
                         error={errors?.hour && true}
                         style={{ marginBottom: 15 }}
                         fullWidth
@@ -275,7 +280,6 @@ export default function AddEditJobs() {
                     </Grid>
                     <Grid item xs={6}>
                       <TextField
-                        required
                         style={{ marginBottom: 15 }}
                         fullWidth
                         onChange={handleChange}
@@ -284,7 +288,6 @@ export default function AddEditJobs() {
                         label="Amount"
                       />
                       <TextField
-                        required
                         style={{ marginBottom: 15 }}
                         fullWidth
                         onChange={handleChange}

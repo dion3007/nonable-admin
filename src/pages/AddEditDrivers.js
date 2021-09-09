@@ -16,6 +16,8 @@ import { useLocation } from 'react-router-dom';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import DatePicker from '@material-ui/lab/DatePicker';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 // components
 import useQuery from '../utils/useQuery';
 import Page from '../components/Page';
@@ -45,6 +47,7 @@ export default function AddEditDrivers() {
   const act = queryString.get('act');
   const id = queryString.get('id');
   const [drivers, setDrivers] = useState(driverDataGet() || []);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
     if (act === 'Edit') {
@@ -116,6 +119,11 @@ export default function AddEditDrivers() {
   return (
     <Page title="Driver | Minimal-UI">
       <Container maxWidth={false}>
+        <Snackbar open={openSnackbar} autoHideDuration={300}>
+          <MuiAlert elevation={6} variant="filled" severity="success" sx={{ width: '100%' }}>
+            Success submit data.
+          </MuiAlert>
+        </Snackbar>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             {act} Driver
@@ -137,6 +145,7 @@ export default function AddEditDrivers() {
               }
               validationSchema={UserSchemaValidations}
               onSubmit={(values, { setSubmitting }) => {
+                setOpenSnackbar(true);
                 setTimeout(() => {
                   handleSubmit(values);
                   setSubmitting(false);
