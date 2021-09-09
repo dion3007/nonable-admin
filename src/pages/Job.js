@@ -178,16 +178,23 @@ export default function Job() {
     } else if (allocated === 2) {
       filteredData = jobsData.filter((job) => job.driver === '');
     } else {
-      filteredData = jobDataGet();
+      filteredData = jobsData;
     }
 
-    if (dateRange) {
+    if (dateRange[0] !== null && allocated !== null) {
+      filteredData = filteredData.filter(
+        (job) =>
+          new Date(job.bookingDate) > new Date(dateRange[0]) &&
+          new Date(job.bookingDate) < new Date(dateRange[1])
+      );
+    } else if (dateRange[0] !== null) {
       filteredData = jobsData.filter(
         (job) =>
           new Date(job.bookingDate) > new Date(dateRange[0]) &&
           new Date(job.bookingDate) < new Date(dateRange[1])
       );
     }
+    console.log(filteredData, dateRange);
     setJobs(filteredData);
   };
 

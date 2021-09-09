@@ -12,7 +12,7 @@ import {
 import { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import DateTimePicker from '@material-ui/lab/DateTimePicker';
@@ -35,6 +35,7 @@ const UserSchemaValidations = Yup.object().shape({
 });
 
 export default function AddEditJobs() {
+  const navigate = useNavigate();
   const location = useLocation();
   const queryString = useQuery(location.search);
   const act = queryString.get('act');
@@ -111,45 +112,52 @@ export default function AddEditJobs() {
     }
 
     if (act === 'Add') {
-      firebase.firestore().collection('jobs').add({
-        customer: values.customer,
-        driver: values.driver,
-        notes: values.notes,
-        pickUp: values.pickUp,
-        price: values.price,
-        profit: values.profit,
-        driverPaid,
-        bookingDate: values.bookingDate.toString(),
-        dropOff: values.dropOff,
-        expensePrice: 0,
-        expenseReason: 'none',
-        hour: values.hour,
-        distance: values.distance,
-        date: new Date(),
-        duplicate: true,
-        paid: false,
-        jobStat: 0
-      });
+      firebase
+        .firestore()
+        .collection('jobs')
+        .add({
+          customer: values.customer,
+          driver: values.driver,
+          notes: values.notes,
+          pickUp: values.pickUp,
+          price: values.price || 0,
+          profit: values.profit,
+          driverPaid,
+          bookingDate: values.bookingDate.toString(),
+          dropOff: values.dropOff,
+          expensePrice: 0,
+          expenseReason: 'none',
+          hour: values.hour,
+          distance: values.distance,
+          date: new Date(),
+          duplicate: true,
+          paid: false,
+          jobStat: 0
+        });
     } else {
-      firebase.firestore().collection('jobs').doc(filteredJobs[0].id).set({
-        customer: values?.customer,
-        driver: values?.driver,
-        notes: values?.notes,
-        pickUp: values?.pickUp,
-        price: values?.price,
-        profit: values?.profit,
-        driverPaid,
-        bookingDate: values?.bookingDate.toString(),
-        dropOff: values?.dropOff,
-        expensePrice: 0,
-        expenseReason: 'none',
-        hour: values?.hour,
-        distance: values?.distance,
-        date: new Date(),
-        duplicate: true,
-        paid: false,
-        jobStat: 0
-      });
+      firebase
+        .firestore()
+        .collection('jobs')
+        .doc(filteredJobs[0].id)
+        .set({
+          customer: values?.customer,
+          driver: values?.driver,
+          notes: values?.notes,
+          pickUp: values?.pickUp,
+          price: values?.price || 0,
+          profit: values?.profit,
+          driverPaid,
+          bookingDate: values?.bookingDate.toString(),
+          dropOff: values?.dropOff,
+          expensePrice: 0,
+          expenseReason: 'none',
+          hour: values?.hour,
+          distance: values?.distance,
+          date: new Date(),
+          duplicate: true,
+          paid: false,
+          jobStat: 0
+        });
     }
   };
 
@@ -158,7 +166,7 @@ export default function AddEditJobs() {
       <Container maxWidth={false}>
         <Snackbar open={openSnackbar} autoHideDuration={300}>
           <MuiAlert elevation={6} variant="filled" severity="success" sx={{ width: '100%' }}>
-            Success submit data.
+            Saved
           </MuiAlert>
         </Snackbar>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -187,6 +195,7 @@ export default function AddEditJobs() {
               validationSchema={UserSchemaValidations}
               onSubmit={(values, { setSubmitting }) => {
                 setOpenSnackbar(true);
+                navigate('/', { replace: true });
                 setTimeout(() => {
                   handleSubmit(values);
                   setSubmitting(false);
