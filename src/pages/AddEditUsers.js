@@ -7,7 +7,12 @@ import {
   Typography,
   TextField,
   Grid,
-  MenuItem
+  MenuItem,
+  InputAdornment,
+  OutlinedInput,
+  FormControl,
+  IconButton,
+  InputLabel
 } from '@material-ui/core';
 import { useState, useEffect } from 'react';
 import { Formik } from 'formik';
@@ -15,6 +20,10 @@ import * as Yup from 'yup';
 import { useLocation } from 'react-router-dom';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import { Icon } from '@iconify/react';
+import eyeFill from '@iconify/icons-eva/eye-fill';
+import eyeOffFill from '@iconify/icons-eva/eye-off-2-fill';
+
 // components
 import useQuery from '../utils/useQuery';
 import Page from '../components/Page';
@@ -36,6 +45,7 @@ export default function AddEditUsers() {
   const id = queryString.get('id');
   const [users, setUsers] = useState(userDataGet() || []);
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (act === 'Edit') {
@@ -153,18 +163,35 @@ export default function AddEditUsers() {
                       />
                     </Grid>
                     <Grid item xs={6}>
-                      <TextField
-                        required
-                        error={errors?.password && true}
-                        style={{ marginBottom: 15 }}
-                        fullWidth
-                        helperText={errors?.password}
-                        onChange={handleChange}
-                        value={values.password}
-                        type="password"
-                        id="password"
-                        label="Password"
-                      />
+                      <FormControl variant="outlined" fullWidth>
+                        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                        <OutlinedInput
+                          required
+                          error={errors?.password && true}
+                          style={{ marginBottom: 15 }}
+                          helperText={errors?.password}
+                          onChange={handleChange}
+                          value={values.password}
+                          type={showPassword ? 'text' : 'password'}
+                          id="password"
+                          label="Password"
+                          endAdornment={
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={() => setShowPassword(!showPassword)}
+                                edge="end"
+                              >
+                                {showPassword ? (
+                                  <Icon icon={eyeOffFill} />
+                                ) : (
+                                  <Icon icon={eyeFill} />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                        />
+                      </FormControl>
                       <TextField
                         select
                         required
