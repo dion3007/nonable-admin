@@ -232,6 +232,16 @@ export default function AddEditClients() {
                         id="email"
                         label="Email"
                       />
+                      <TextField
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        multiline
+                        onChange={handleChange}
+                        value={values.notes}
+                        rows={4}
+                        id="notes"
+                        label="Notes"
+                      />
                     </Grid>
                     <Grid item xs={6}>
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -327,6 +337,28 @@ export default function AddEditClients() {
                           Plan Management
                         </MenuItem>
                       </TextField>
+                      {values.planManagementDetail === 1 && (
+                        <>
+                          <TextField
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            type="number"
+                            onChange={handleChange}
+                            value={values.planManager}
+                            id="planManager"
+                            label="Plan Manager"
+                          />
+                          <TextField
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            type="number"
+                            onChange={handleChange}
+                            value={values.planManagerEmail}
+                            id="planManagerEmail"
+                            label="Plan Manager Email"
+                          />
+                        </>
+                      )}
                     </Grid>
                   </Grid>
                   <Button type="submit" disabled={isSubmitting}>
