@@ -160,90 +160,6 @@ export default function AddEditClients() {
                         id="name"
                         label="Name"
                       />
-                      <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                          <TextField
-                            error={errors?.streetNumber && true}
-                            required
-                            style={{ marginBottom: 15 }}
-                            fullWidth
-                            helperText={errors?.streetNumber}
-                            onChange={handleChange}
-                            value={values.streetNumber}
-                            id="streetNumber"
-                            label="Street Number"
-                          />
-                          <TextField
-                            error={errors?.suburb && true}
-                            required
-                            style={{ marginBottom: 15 }}
-                            fullWidth
-                            helperText={errors?.suburb}
-                            onChange={handleChange}
-                            value={values.suburb}
-                            id="suburb"
-                            label="Suburb"
-                          />
-                        </Grid>
-                        <Grid item xs={6}>
-                          <TextField
-                            error={errors?.state && true}
-                            required
-                            style={{ marginBottom: 15 }}
-                            fullWidth
-                            helperText={errors?.state}
-                            onChange={handleChange}
-                            value={values.state}
-                            id="state"
-                            label="State"
-                          />
-                          <TextField
-                            error={errors?.postCode && true}
-                            required
-                            style={{ marginBottom: 15 }}
-                            fullWidth
-                            helperText={errors?.postCode}
-                            onChange={handleChange}
-                            value={values.postCode}
-                            id="postCode"
-                            label="Post Code"
-                          />
-                        </Grid>
-                      </Grid>
-                      <TextField
-                        error={errors?.streetAddress && true}
-                        required
-                        style={{ marginBottom: 15 }}
-                        fullWidth
-                        helperText={errors?.streetAddress}
-                        onChange={handleChange}
-                        value={values.streetAddress}
-                        id="streetAddress"
-                        label="Street Address"
-                      />
-                      <TextField
-                        error={errors?.email && true}
-                        required
-                        style={{ marginBottom: 15 }}
-                        fullWidth
-                        helperText={errors?.email}
-                        onChange={handleChange}
-                        value={values.email}
-                        id="email"
-                        label="Email"
-                      />
-                      <TextField
-                        style={{ marginBottom: 15 }}
-                        fullWidth
-                        multiline
-                        onChange={handleChange}
-                        value={values.notes}
-                        rows={4}
-                        id="notes"
-                        label="Notes"
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
                           disableFuture
@@ -267,18 +183,66 @@ export default function AddEditClients() {
                           }}
                         />
                       </LocalizationProvider>
+                      <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                          <TextField
+                            error={errors?.streetNumber && true}
+                            required
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            helperText={errors?.streetNumber}
+                            onChange={handleChange}
+                            value={values.streetNumber}
+                            id="streetNumber"
+                            label="Street Number"
+                          />
+                          <TextField
+                            error={errors?.state && true}
+                            required
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            helperText={errors?.state}
+                            onChange={handleChange}
+                            value={values.state}
+                            id="state"
+                            label="State"
+                          />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            error={errors?.streetAddress && true}
+                            required
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            helperText={errors?.streetAddress}
+                            onChange={handleChange}
+                            value={values.streetAddress}
+                            id="streetAddress"
+                            label="Street Address"
+                          />
+                          <TextField
+                            error={errors?.suburb && true}
+                            required
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            helperText={errors?.suburb}
+                            onChange={handleChange}
+                            value={values.suburb}
+                            id="suburb"
+                            label="Suburb"
+                          />
+                        </Grid>
+                      </Grid>
                       <TextField
+                        error={errors?.postCode && true}
+                        required
                         style={{ marginBottom: 15 }}
                         fullWidth
+                        helperText={errors?.postCode}
                         onChange={handleChange}
-                        multiline
-                        maxRows={3}
-                        value={values.ndisNumber}
-                        error={errors?.ndisNumber && true}
-                        helperText={errors?.ndisNumber}
-                        type="number"
-                        id="ndisNumber"
-                        label="Ndis Number"
+                        value={values.postCode}
+                        id="postCode"
+                        label="Post Code"
                       />
                       <TextField
                         style={{ marginBottom: 15 }}
@@ -294,6 +258,19 @@ export default function AddEditClients() {
                         label="Contact Number"
                       />
                       <TextField
+                        error={errors?.email && true}
+                        required
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        helperText={errors?.email}
+                        onChange={handleChange}
+                        value={values.email}
+                        id="email"
+                        label="Email"
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
                         style={{ marginBottom: 15 }}
                         fullWidth
                         onChange={handleChange}
@@ -305,9 +282,14 @@ export default function AddEditClients() {
                         style={{ marginBottom: 15 }}
                         fullWidth
                         onChange={handleChange}
-                        value={values.coordinator}
-                        id="coordinator"
-                        label="Coordinator"
+                        multiline
+                        maxRows={3}
+                        value={values.ndisNumber}
+                        error={errors?.ndisNumber && true}
+                        helperText={errors?.ndisNumber}
+                        type="number"
+                        id="ndisNumber"
+                        label="Ndis Number"
                       />
                       <TextField
                         style={{ marginBottom: 15 }}
@@ -359,6 +341,98 @@ export default function AddEditClients() {
                           />
                         </>
                       )}
+                      <TextField
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        onChange={handleChange}
+                        value={values.coordinator}
+                        id="coordinator"
+                        label="Coordinator"
+                      />
+                      <TextField
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        multiline
+                        onChange={handleChange}
+                        value={values.notes}
+                        rows={4}
+                        id="notes"
+                        label="Notes"
+                      />
+                    </Grid>
+                  </Grid>
+                  <Button type="submit" disabled={isSubmitting}>
+                    {act === 'Add' ? 'Submit' : 'Save Changes'}
+                  </Button>
+                </form>
+              )}
+            </Formik>
+          </Scrollbar>
+        </Card>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} mt={5}>
+          <Typography variant="h4" gutterBottom>
+            Support Coordinator / Referred By
+          </Typography>
+        </Stack>
+        <Card>
+          <Scrollbar>
+            <Formik
+              initialValues={{
+                name: '',
+                company: '',
+                email: '',
+                phone: 0
+              }}
+              validationSchema={UserSchemaValidations}
+              onSubmit={(values, { setSubmitting }) => {
+                setOpenSnackbar(true);
+                setTimeout(() => {
+                  handleSubmit(values);
+                  setSubmitting(false);
+                }, 400);
+              }}
+            >
+              {({ values, errors, handleChange, handleSubmit, setFieldValue, isSubmitting }) => (
+                <form onSubmit={handleSubmit} style={{ padding: 20, textAlign: 'center' }}>
+                  <Grid container justifyContent="space-between" spacing={2}>
+                    <Grid item xs={6}>
+                      <TextField
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        onChange={handleChange}
+                        value={values.name}
+                        id="name"
+                        label="Name"
+                      />
+                      <TextField
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        onChange={handleChange}
+                        multiline
+                        maxRows={3}
+                        value={values.phone}
+                        type="number"
+                        id="phone"
+                        label="Contact Number"
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        onChange={handleChange}
+                        value={values.email}
+                        id="email"
+                        label="Email"
+                      />
+                      <TextField
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        onChange={handleChange}
+                        value={values.company}
+                        id="company"
+                        label="Company"
+                      />
                     </Grid>
                   </Grid>
                   <Button type="submit" disabled={isSubmitting}>
