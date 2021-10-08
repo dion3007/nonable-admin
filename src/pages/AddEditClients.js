@@ -384,10 +384,9 @@ export default function AddEditClients() {
                 phone: 0
               }}
               validationSchema={UserSchemaValidations}
-              onSubmit={(values, { setSubmitting }) => {
+              onSubmit={({ setSubmitting }) => {
                 setOpenSnackbar(true);
                 setTimeout(() => {
-                  handleSubmit(values);
                   setSubmitting(false);
                 }, 400);
               }}
