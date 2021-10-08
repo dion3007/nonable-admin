@@ -392,7 +392,7 @@ export default function AddEditClients() {
                 }, 400);
               }}
             >
-              {({ values, errors, handleChange, handleSubmit, setFieldValue, isSubmitting }) => (
+              {({ values, handleChange, handleSubmit, isSubmitting }) => (
                 <form onSubmit={handleSubmit} style={{ padding: 20, textAlign: 'center' }}>
                   <Grid container justifyContent="space-between" spacing={2}>
                     <Grid item xs={6}>
