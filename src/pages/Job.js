@@ -49,7 +49,7 @@ const TABLE_HEAD = [
   { id: 'pickUp', label: 'From', alignRight: false },
   { id: 'dropOff', label: 'Destination', alignRight: false },
   { id: 'price', label: 'Amount', alignRight: false },
-  { id: 'driverPaid', label: 'Driver Paid', alignRight: false },
+  { id: 'driverPaid', label: 'Paid Driver', alignRight: false },
   { id: 'driver', label: 'Driver', alignRight: false },
   { id: 'paid', label: 'Paid Status', alignRight: false },
   { id: 'date', label: 'Booking Date', alignRight: false },
