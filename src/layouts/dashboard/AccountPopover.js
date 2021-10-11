@@ -31,7 +31,7 @@ const MENU_OPTIONS = [
   {
     label: 'Settings',
     icon: settings2Fill,
-    linkTo: '#'
+    linkTo: '/dashboard/settings?act=Edit'
   }
 ];
 

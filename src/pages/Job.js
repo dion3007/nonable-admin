@@ -32,7 +32,13 @@ import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
-import { jobDataSet, driverDataSet, clientDataSet, jobDataGet } from '../utils/cache';
+import {
+  jobDataSet,
+  driverDataSet,
+  clientDataSet,
+  jobDataGet,
+  variableDataSet
+} from '../utils/cache';
 import { AppNewUsers, AppItemOrders, AppWeeklySales } from '../components/_dashboard/app';
 import ModalComponents from '../components/ModalComponents';
 
@@ -43,6 +49,7 @@ const TABLE_HEAD = [
   { id: 'pickUp', label: 'From', alignRight: false },
   { id: 'dropOff', label: 'Destination', alignRight: false },
   { id: 'price', label: 'Amount', alignRight: false },
+  { id: 'driverPaid', label: 'Driver Paid', alignRight: false },
   { id: 'driver', label: 'Driver', alignRight: false },
   { id: 'paid', label: 'Paid Status', alignRight: false },
   { id: 'date', label: 'Booking Date', alignRight: false },
@@ -104,6 +111,7 @@ export default function Job() {
   const [jobsTemp, setJobsTemp] = useState([]);
   const [clients, setClients] = useState([]);
   const [drivers, setDrivers] = useState([]);
+  const [variable, setVariable] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -149,6 +157,16 @@ export default function Job() {
       });
     firebase
       .firestore()
+      .collection('variable')
+      .onSnapshot((snapshot) => {
+        const newVar = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setVariable(newVar);
+      });
+    firebase
+      .firestore()
       .collection('clients')
       .onSnapshot((snapshot) => {
         const newClient = snapshot.docs.map((doc) => ({
@@ -161,6 +179,10 @@ export default function Job() {
 
   if (jobs) {
     jobDataSet(jobsTemp);
+  }
+
+  if (variable) {
+    variableDataSet(variable);
   }
 
   const clearFilter = () => {
@@ -401,8 +423,17 @@ export default function Job() {
                   {filteredJobs
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, customer, pickUp, dropOff, price, paid, bookingDate, driver } =
-                        row;
+                      const {
+                        id,
+                        customer,
+                        pickUp,
+                        dropOff,
+                        price,
+                        driverPaid,
+                        paid,
+                        bookingDate,
+                        driver
+                      } = row;
                       const isItemSelected = selected.indexOf(customer) !== -1;
 
                       return (
@@ -431,6 +462,9 @@ export default function Job() {
                           <TableCell align="left">{dropOff}</TableCell>
                           <TableCell align="left" width="100px">
                             $ {price}
+                          </TableCell>
+                          <TableCell align="left" width="100px">
+                            $ {driverPaid}
                           </TableCell>
                           <TableCell align="left">
                             {drivers?.filter((driverData) => driverData.id === driver)[0]?.name}

@@ -15,6 +15,7 @@ import AddEditCustomers from './pages/AddEditCustomers';
 import AddEditUsers from './pages/AddEditUsers';
 import AddEditDrivers from './pages/AddEditDrivers';
 import Driver from './pages/Driver';
+import Settings from './pages/Settings';
 import Client from './pages/Client';
 import AddEditClients from './pages/AddEditClients';
 import Job from './pages/Job';
@@ -42,6 +43,7 @@ export default function Router() {
         { path: 'driver-manage', element: <AddEditDrivers /> },
         { path: 'client-manage', element: <AddEditClients /> },
         { path: 'booking-manage', element: <AddEditJobs /> },
+        { path: 'settings', element: <Settings /> },
         { path: 'products', element: <Products /> },
         { path: 'blog', element: <Blog /> }
       ]

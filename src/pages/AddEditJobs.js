@@ -107,8 +107,7 @@ export default function AddEditJobs() {
   const filteredJobs = jobs.filter((job) => id === job.id);
 
   const handleSubmit = async (values) => {
-    const driverPaid =
-      variable[0].emp_rate * values.hour + variable[0].driver_kms_m * values.distance;
+    const driverPaid = variable[0].empRate * values.hour + variable[0].driverKms * values.distance;
     if (values.driver) {
       const driverDetail = await drivers.filter((driver) => driver.id === values.driver)[0];
       firebase.firestore().collection('drivers').doc(values.driver).set({

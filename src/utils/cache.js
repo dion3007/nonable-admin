@@ -55,3 +55,12 @@ export const authDataGet = () => {
   const getData = localStorage.getItem('auth');
   return JSON.parse(getData);
 };
+
+export const variableDataSet = (u) => {
+  localStorage.setItem('variable', JSON.stringify(u));
+};
+
+export const variableDataGet = () => {
+  const getData = localStorage.getItem('variable');
+  return JSON.parse(getData);
+};
