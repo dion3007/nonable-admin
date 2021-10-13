@@ -26,12 +26,16 @@ import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import DesktopDateRangePicker from '@material-ui/lab/DesktopDateRangePicker';
 import firebase from '../firebase';
 // components
-import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar } from '../components/_dashboard/user';
 import { jobDataSet, jobDataGet } from '../utils/cache';
-import { AppNewUsers, AppItemOrders, AppWeeklySales } from '../components/_dashboard/app';
+import {
+  AppNewUsers,
+  AppItemOrders,
+  AppWeeklySales,
+  AppWeeklyProfit
+} from '../components/_dashboard/app';
 import ModalComponents from '../components/ModalComponents';
 
 // ----------------------------------------------------------------------
@@ -267,10 +271,14 @@ export default function JobDetail({ idParams }) {
     (a, { distance }) => parseFloat(a) + parseFloat(distance),
     0
   );
+  const sumPaidDriver = filterByIdParams.reduce(
+    (a, { driverPaid }) => parseFloat(a) + parseFloat(driverPaid),
+    0
+  );
 
   return (
-    <Page title="Bookings | Minimal-UI">
-      <Container>
+    <>
+      <Container maxWidth={false}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} mt={5}>
           <Typography variant="h4" gutterBottom>
             List Booking
@@ -434,18 +442,21 @@ export default function JobDetail({ idParams }) {
       </Container>
       <Container style={{ marginTop: 20 }}>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={3}>
             <AppWeeklySales total={sumAmount} />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={3}>
             <AppNewUsers total={sumHours} />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={3}>
             <AppItemOrders total={sumDistance} />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <AppWeeklyProfit total={sumPaidDriver} />
           </Grid>
         </Grid>
       </Container>
-    </Page>
+    </>
   );
 }
 

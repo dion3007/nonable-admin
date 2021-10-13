@@ -39,7 +39,12 @@ import {
   jobDataGet,
   variableDataSet
 } from '../utils/cache';
-import { AppNewUsers, AppItemOrders, AppWeeklySales } from '../components/_dashboard/app';
+import {
+  AppNewUsers,
+  AppItemOrders,
+  AppWeeklySales,
+  AppWeeklyProfit
+} from '../components/_dashboard/app';
 import ModalComponents from '../components/ModalComponents';
 
 // ----------------------------------------------------------------------
@@ -329,6 +334,10 @@ export default function Job() {
     (a, { distance }) => parseFloat(a) + parseFloat(distance),
     0
   );
+  const sumPaidDriver = filteredJobs.reduce(
+    (a, { driverPaid }) => parseFloat(a) + parseFloat(driverPaid),
+    0
+  );
 
   return (
     <Page title="Bookings | Minimal-UI">
@@ -537,14 +546,17 @@ export default function Job() {
       </Container>
       <Container style={{ marginTop: 20 }}>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={3}>
             <AppWeeklySales total={sumAmount} />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={3}>
             <AppNewUsers total={sumHours} />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={3}>
             <AppItemOrders total={sumDistance} />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <AppWeeklyProfit total={sumPaidDriver} />
           </Grid>
         </Grid>
       </Container>

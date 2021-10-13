@@ -111,7 +111,7 @@ export default function AddEditClients() {
 
   return (
     <Page title="Client | Minimal-UI">
-      <Container>
+      <Container maxWidth={false}>
         <Snackbar open={openSnackbar} autoHideDuration={300}>
           <MuiAlert elevation={6} variant="filled" severity="success" sx={{ width: '100%' }}>
             Success submit data.
