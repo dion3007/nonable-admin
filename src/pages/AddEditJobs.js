@@ -108,6 +108,9 @@ export default function AddEditJobs() {
 
   const handleSubmit = async (values) => {
     const driverPaid = variable[0].empRate * values.hour + variable[0].driverKms * values.distance;
+    const price =
+      variable[0]?.itemRate * values.hour -
+      (variable[0]?.empRate * values.hour + variable[0]?.driverKms * values.distance);
     if (values.driver) {
       const driverDetail = await drivers.filter((driver) => driver.id === values.driver)[0];
       firebase.firestore().collection('drivers').doc(values.driver).set({
@@ -132,8 +135,8 @@ export default function AddEditJobs() {
           driver: values.driver,
           notes: values.notes,
           pickUp: values.pickUp,
-          price: values.price ? values.price : 0,
-          profit: values.profit,
+          price: values.price ? values.price : variable[0]?.itemRate * values.hour,
+          profit: values.price ? values.price : price,
           driverPaid,
           bookingDate: values.bookingDate.toString(),
           dropOff: values.dropOff,
@@ -156,8 +159,8 @@ export default function AddEditJobs() {
           driver: values?.driver,
           notes: values?.notes,
           pickUp: values?.pickUp,
-          price: values?.price ? values?.price : 0,
-          profit: values?.profit,
+          price: values?.price ? values?.price : variable[0]?.itemRate * values.hour,
+          profit: values?.profit ? values?.price : price,
           driverPaid,
           bookingDate: values?.bookingDate.toString(),
           dropOff: values?.dropOff,
@@ -203,7 +206,7 @@ export default function AddEditJobs() {
                   driver: '',
                   notes: '',
                   distance: 0,
-                  hour: 0
+                  hour: 1
                 }
               }
               validationSchema={UserSchemaValidations}
@@ -310,15 +313,20 @@ export default function AddEditJobs() {
                             style={{ marginBottom: 15 }}
                             fullWidth
                             onChange={handleChange}
-                            value={values.price}
+                            value={values.price || variable[0]?.itemRate * values.hour}
                             id="price"
-                            label="Amount"
+                            label="Charges"
                           />
                           <TextField
                             style={{ marginBottom: 15 }}
                             fullWidth
                             onChange={handleChange}
-                            value={values.profit}
+                            value={
+                              values.profit ||
+                              variable[0]?.itemRate * values.hour -
+                                (variable[0]?.empRate * values.hour +
+                                  variable[0]?.driverKms * values.distance)
+                            }
                             id="profit"
                             label="Profit"
                           />

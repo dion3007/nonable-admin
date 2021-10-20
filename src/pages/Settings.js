@@ -45,14 +45,15 @@ export default function Settings() {
     firebase.firestore().collection('variable').doc(variable[0].id).set({
       driverKms: values?.driverKms,
       empRate: values?.empRate,
-      nonableKms: values?.nonableKms
+      nonableKms: values?.nonableKms,
+      itemRate: values?.itemRate
     });
   };
 
   console.log(variable[0]);
 
   return (
-    <Page title="Driver | Minimal-UI">
+    <Page title="Settings Menu | Minimal-UI">
       <Container maxWidth={false}>
         <Snackbar open={openSnackbar} autoHideDuration={300}>
           <MuiAlert elevation={6} variant="filled" severity="success" sx={{ width: '100%' }}>
@@ -71,7 +72,8 @@ export default function Settings() {
                 variable[0] || {
                   driverKms: '',
                   empRate: '',
-                  nonableKms: ''
+                  nonableKms: '',
+                  itemRate: ''
                 }
               }
               validationSchema={UserSchemaValidations}
@@ -121,6 +123,26 @@ export default function Settings() {
                         value={values.nonableKms}
                         id="nonableKms"
                         label="Nonabel Kms"
+                      />
+                    </Grid>
+                  </Grid>
+                  <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
+                    <Typography variant="h4" gutterBottom>
+                      Set Item Rate
+                    </Typography>
+                  </Stack>
+                  <Grid container justifyContent="space-between" spacing={2}>
+                    <Grid item xs={6}>
+                      <TextField
+                        required
+                        error={errors?.itemRate && true}
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        helperText={errors?.itemRate}
+                        onChange={handleChange}
+                        value={values.itemRate}
+                        id="itemRate"
+                        label="Item Rate"
                       />
                     </Grid>
                   </Grid>
