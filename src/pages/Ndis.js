@@ -18,8 +18,8 @@ import firebase from '../firebase';
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
-import { clientDataGet, clientDataSet, itemRateDataGet } from '../utils/cache';
+import { UserListHead, UserListToolbar } from '../components/_dashboard/user';
+import { clientDataGet, itemRateDataGet } from '../utils/cache';
 
 // ----------------------------------------------------------------------
 

@@ -6,12 +6,8 @@ import {
   Button,
   Typography,
   TextField,
-  Grid,
-  MenuItem
+  Grid
 } from '@material-ui/core';
-import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
-import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
-import DatePicker from '@material-ui/lab/DatePicker';
 import { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -24,7 +20,6 @@ import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
 import firebase from '../firebase';
 import { itemRateDataGet } from '../utils/cache';
-import JobDetail from '../layouts/JobDetail';
 
 const UserSchemaValidations = Yup.object().shape({
   name: Yup.string().required('Required'),
