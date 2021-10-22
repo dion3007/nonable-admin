@@ -88,7 +88,7 @@ export default function AddEditItemRate() {
                 }, 400);
               }}
             >
-              {({ values, errors, handleChange, handleSubmit, setFieldValue, isSubmitting }) => (
+              {({ values, errors, handleChange, handleSubmit, isSubmitting }) => (
                 <form onSubmit={handleSubmit} style={{ padding: 20, textAlign: 'center' }}>
                   <Grid container justifyContent="space-between" spacing={2}>
                     <Grid item xs={6}>
