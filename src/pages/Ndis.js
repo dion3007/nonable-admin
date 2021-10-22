@@ -81,7 +81,7 @@ export default function Ndis() {
   useEffect(() => {
     firebase
       .firestore()
-      .collection('ndis')
+      .collection('jobs')
       .onSnapshot((snapshot) => {
         const newNdis = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -89,10 +89,7 @@ export default function Ndis() {
         }));
         setNdis(newNdis);
       });
-    if (ndis) {
-      clientDataSet(ndis);
-    }
-  }, [ndis]);
+  }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -168,18 +165,8 @@ export default function Ndis() {
                   {filteredNdis
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const {
-                        id,
-                        date,
-                        hours,
-                        itemNumber,
-                        rate,
-                        amount,
-                        client,
-                        planManagementDetail,
-                        tax
-                      } = row;
-                      const isItemSelected = selected.indexOf(client) !== -1;
+                      const { id, bookingDate, hour, item, price, profit, customer } = row;
+                      const isItemSelected = selected.indexOf(customer) !== -1;
 
                       return (
                         <TableRow
@@ -194,20 +181,21 @@ export default function Ndis() {
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
                               <Typography variant="subtitle2" noWrap>
-                                {client}
+                                {customer}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{itemNumber}</TableCell>
-                          <TableCell align="left">{rate}</TableCell>
-                          <TableCell align="left">{amount}</TableCell>
-                          <TableCell align="left">{date}</TableCell>
-                          <TableCell align="left">{hours}</TableCell>
+                          <TableCell align="left">{item}</TableCell>
+                          <TableCell align="left">{price}</TableCell>
+                          <TableCell align="left">{profit}</TableCell>
+                          <TableCell align="left">{bookingDate}</TableCell>
+                          <TableCell align="left">{hour}</TableCell>
                           <TableCell align="left">
-                            {planManagementDetail === 1 && 'Plan Management'}
-                            {planManagementDetail === 0 && 'Ndis Management'}
+                            Plan Management
+                            {/* {planManagementDetail === 1 && 'Plan Management'}
+                            {planManagementDetail === 0 && 'Ndis Management'} */}
                           </TableCell>
-                          <TableCell align="left">{tax}</TableCell>
+                          <TableCell align="left">0</TableCell>
                           {/* <TableCell align="left">
                             <Label
                               variant="ghost"
@@ -217,9 +205,9 @@ export default function Ndis() {
                             </Label>
                           </TableCell> */}
 
-                          <TableCell align="right">
+                          {/* <TableCell align="right">
                             <UserMoreMenu linkEdit={`/dashboard/client-manage?act=Edit&id=${id}`} />
-                          </TableCell>
+                          </TableCell> */}
                         </TableRow>
                       );
                     })}

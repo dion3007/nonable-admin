@@ -336,7 +336,7 @@ export default function AddEditJobs() {
                           onChange={handleChange('item')}
                           onBlur={() => {
                             const itemRates = itemRate.filter((items) => items.id === values.item);
-                            setFieldValue('price', itemRates[0].rate);
+                            setFieldValue('price', itemRates[0].rate * values.hour);
                             setFieldValue(
                               'profit',
                               itemRates[0].rate * values.hour -
@@ -362,7 +362,7 @@ export default function AddEditJobs() {
                               style={{ marginBottom: 15 }}
                               fullWidth
                               onChange={handleChange}
-                              value={values.price || variable[0]?.itemRate * values.hour}
+                              value={values.price || 0}
                               id="price"
                               label="Charges"
                             />
@@ -370,12 +370,7 @@ export default function AddEditJobs() {
                               style={{ marginBottom: 15 }}
                               fullWidth
                               onChange={handleChange}
-                              value={
-                                values.profit ||
-                                variable[0]?.itemRate * values.hour -
-                                  (variable[0]?.empRate * values.hour +
-                                    variable[0]?.driverKms * values.distance)
-                              }
+                              value={values.profit}
                               id="profit"
                               label="Profit"
                             />
