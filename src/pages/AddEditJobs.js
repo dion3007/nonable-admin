@@ -125,9 +125,6 @@ export default function AddEditJobs() {
 
   const handleSubmit = async (values) => {
     const driverPaid = variable[0].empRate * values.hour + variable[0].driverKms * values.distance;
-    const price =
-      variable[0]?.itemRate * values.hour -
-      (variable[0]?.empRate * values.hour + variable[0]?.driverKms * values.distance);
     if (values.driver) {
       const driverDetail = await drivers.filter((driver) => driver.id === values.driver)[0];
       firebase.firestore().collection('drivers').doc(values.driver).set({
@@ -144,54 +141,47 @@ export default function AddEditJobs() {
     }
 
     if (act === 'Add') {
-      firebase
-        .firestore()
-        .collection('jobs')
-        .add({
-          customer: values.customer,
-          driver: values.driver,
-          notes: values.notes,
-          pickUp: values.pickUp,
-          price: values.price ? values.price : variable[0]?.itemRate * values.hour,
-          profit: values.price ? values.price : price,
-          driverPaid,
-          bookingDate: values.bookingDate.toString(),
-          dropOff: values.dropOff,
-          expensePrice: 0,
-          expenseReason: 'none',
-          hour: values.hour,
-          item: values.item,
-          distance: values.distance,
-          date: new Date(),
-          duplicate: true,
-          paid: false,
-          jobStat: 0
-        });
+      firebase.firestore().collection('jobs').add({
+        customer: values.customer,
+        driver: values.driver,
+        notes: values.notes,
+        pickUp: values.pickUp,
+        price: values.price,
+        profit: values.profit,
+        driverPaid,
+        bookingDate: values.bookingDate.toString(),
+        dropOff: values.dropOff,
+        expensePrice: 0,
+        expenseReason: 'none',
+        hour: values.hour,
+        item: values.item,
+        distance: values.distance,
+        date: new Date(),
+        duplicate: true,
+        paid: false,
+        jobStat: 0
+      });
     } else {
-      firebase
-        .firestore()
-        .collection('jobs')
-        .doc(filteredJobs[0].id)
-        .set({
-          customer: values?.customer,
-          driver: values?.driver,
-          notes: values?.notes,
-          pickUp: values?.pickUp,
-          price: values?.price ? values?.price : variable[0]?.itemRate * values.hour,
-          profit: values?.profit ? values?.price : price,
-          driverPaid,
-          bookingDate: values?.bookingDate.toString(),
-          dropOff: values?.dropOff,
-          expensePrice: 0,
-          expenseReason: 'none',
-          hour: values?.hour,
-          item: values?.item,
-          distance: values?.distance,
-          date: new Date(),
-          duplicate: true,
-          paid: false,
-          jobStat: 0
-        });
+      firebase.firestore().collection('jobs').doc(filteredJobs[0].id).set({
+        customer: values?.customer,
+        driver: values?.driver,
+        notes: values?.notes,
+        pickUp: values?.pickUp,
+        price: values?.price,
+        profit: values?.profit,
+        driverPaid,
+        bookingDate: values?.bookingDate.toString(),
+        dropOff: values?.dropOff,
+        expensePrice: 0,
+        expenseReason: 'none',
+        hour: values?.hour,
+        item: values?.item,
+        distance: values?.distance,
+        date: new Date(),
+        duplicate: true,
+        paid: false,
+        jobStat: 0
+      });
     }
   };
 
@@ -370,7 +360,7 @@ export default function AddEditJobs() {
                               style={{ marginBottom: 15 }}
                               fullWidth
                               onChange={handleChange}
-                              value={values.profit}
+                              value={values.profit || 0}
                               id="profit"
                               label="Profit"
                             />

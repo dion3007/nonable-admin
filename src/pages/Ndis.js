@@ -19,7 +19,7 @@ import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
-import { clientDataSet } from '../utils/cache';
+import { clientDataGet, clientDataSet, itemRateDataGet } from '../utils/cache';
 
 // ----------------------------------------------------------------------
 
@@ -74,6 +74,8 @@ export default function Ndis() {
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
   const [ndis, setNdis] = useState([]);
+  const [itemRate, setItemRate] = useState(itemRateDataGet() || []);
+  const [clients, setClients] = useState(clientDataGet() || []);
   const [orderBy, setOrderBy] = useState('itemNumber');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -88,6 +90,26 @@ export default function Ndis() {
           ...doc.data()
         }));
         setNdis(newNdis);
+      });
+    firebase
+      .firestore()
+      .collection('clients')
+      .onSnapshot((snapshot) => {
+        const newClient = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setClients(newClient);
+      });
+    firebase
+      .firestore()
+      .collection('itemrate')
+      .onSnapshot((snapshot) => {
+        const newItemRate = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setItemRate(newItemRate);
       });
   }, []);
 
@@ -181,19 +203,22 @@ export default function Ndis() {
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
                               <Typography variant="subtitle2" noWrap>
-                                {customer}
+                                {clients.filter((client) => client.id === customer)[0]?.name}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{item}</TableCell>
+                          <TableCell align="left">
+                            {itemRate.filter((items) => items.id === item)[0]?.name}
+                          </TableCell>
                           <TableCell align="left">{price}</TableCell>
                           <TableCell align="left">{profit}</TableCell>
                           <TableCell align="left">{bookingDate}</TableCell>
                           <TableCell align="left">{hour}</TableCell>
                           <TableCell align="left">
-                            Plan Management
-                            {/* {planManagementDetail === 1 && 'Plan Management'}
-                            {planManagementDetail === 0 && 'Ndis Management'} */}
+                            {clients.filter((client) => client.id === customer)[0]
+                              ?.planManagementDetail === 1 && 'Plan Management'}
+                            {clients.filter((client) => client.id === customer)[0]
+                              ?.planManagementDetail === 0 && 'Ndis Management'}
                           </TableCell>
                           <TableCell align="left">0</TableCell>
                           {/* <TableCell align="left">
