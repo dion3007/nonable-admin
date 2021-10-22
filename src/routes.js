@@ -21,6 +21,7 @@ import AddEditClients from './pages/AddEditClients';
 import Job from './pages/Job';
 import AddEditJobs from './pages/AddEditJobs';
 import Ndis from './pages/Ndis';
+import AddEditItemRate from './pages/AddEditItemRate';
 
 // ----------------------------------------------------------------------
 
@@ -44,6 +45,7 @@ export default function Router() {
         { path: 'client-manage', element: <AddEditClients /> },
         { path: 'booking-manage', element: <AddEditJobs /> },
         { path: 'settings', element: <Settings /> },
+        { path: 'item-rate-manage', element: <AddEditItemRate /> },
         { path: 'products', element: <Products /> },
         { path: 'blog', element: <Blog /> }
       ]

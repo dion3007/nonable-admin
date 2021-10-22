@@ -37,7 +37,8 @@ import {
   driverDataSet,
   clientDataSet,
   jobDataGet,
-  variableDataSet
+  variableDataSet,
+  itemRateDataSet
 } from '../utils/cache';
 import {
   AppNewUsers,
@@ -116,6 +117,7 @@ export default function Job() {
   const [jobsTemp, setJobsTemp] = useState([]);
   const [clients, setClients] = useState([]);
   const [drivers, setDrivers] = useState([]);
+  const [itemRate, setItemRate] = useState([]);
   const [variable, setVariable] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
@@ -172,6 +174,16 @@ export default function Job() {
       });
     firebase
       .firestore()
+      .collection('itemrate')
+      .onSnapshot((snapshot) => {
+        const newItemRate = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setItemRate(newItemRate);
+      });
+    firebase
+      .firestore()
       .collection('clients')
       .onSnapshot((snapshot) => {
         const newClient = snapshot.docs.map((doc) => ({
@@ -188,6 +200,10 @@ export default function Job() {
 
   if (variable) {
     variableDataSet(variable);
+  }
+
+  if (itemRate) {
+    itemRateDataSet(itemRate);
   }
 
   const clearFilter = () => {

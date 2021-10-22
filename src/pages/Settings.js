@@ -1,9 +1,26 @@
 // material
-import { Card, Stack, Container, Button, Typography, TextField, Grid } from '@material-ui/core';
+import { filter } from 'lodash';
+import {
+  Card,
+  Stack,
+  Container,
+  Button,
+  Typography,
+  TextField,
+  Grid,
+  Table,
+  TableRow,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TablePagination
+} from '@material-ui/core';
+import { Icon } from '@iconify/react';
+import plusFill from '@iconify/icons-eva/plus-fill';
 import { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link as RouterLink } from 'react-router-dom';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 // components
@@ -11,7 +28,10 @@ import useQuery from '../utils/useQuery';
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
 import firebase from '../firebase';
-import { variableDataGet } from '../utils/cache';
+import SearchNotFound from '../components/SearchNotFound';
+import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
+import { variableDataGet, itemRateDataGet, itemRateDataSet } from '../utils/cache';
+import ModalComponents from '../components/ModalComponents';
 
 const UserSchemaValidations = Yup.object().shape({
   driverKms: Yup.string().required('Required'),
@@ -19,12 +39,133 @@ const UserSchemaValidations = Yup.object().shape({
   nonableKms: Yup.string().required('Required')
 });
 
+// ----------------------------------------------------------------------
+
+const TABLE_HEAD = [
+  { id: 'name', label: 'Item Name', alignRight: false },
+  { id: 'rate', label: 'Rate', alignRight: false },
+  { id: '' }
+];
+
+// ----------------------------------------------------------------------
+
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator(order, orderBy) {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function applySortFilter(array, comparator, query) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+  if (query) {
+    return filter(
+      array,
+      (_driver) => _driver.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
+    );
+  }
+  return stabilizedThis.map((el) => el[0]);
+}
+
 export default function Settings() {
   const location = useLocation();
   const queryString = useQuery(location.search);
   const act = queryString.get('act');
   const [variable, setVariable] = useState(variableDataGet() || []);
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [page, setPage] = useState(0);
+  const [order, setOrder] = useState('asc');
+  const [selected, setSelected] = useState([]);
+  const [itemRate, setItemRate] = useState([]);
+  const [orderBy, setOrderBy] = useState('name');
+  const [filterName, setFilterName] = useState('');
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [openModal, setOpenModal] = useState(false);
+  const [uid, setUid] = useState('');
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection('itemrate')
+      .onSnapshot((snapshot) => {
+        const newItem = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setItemRate(newItem);
+      });
+  }, []);
+
+  if (itemRate) {
+    itemRateDataSet(itemRate);
+  }
+
+  const deleteDriverEach = (id) => {
+    setUid(id);
+    setOpenModal(true);
+  };
+
+  const handleModalClose = () => {
+    setOpenModal(false);
+  };
+
+  const deleteDriver = () => {
+    const itemRates = itemRateDataGet();
+    const filteredDeleteItem = itemRates.filter((itemRate) => itemRate.id === uid)[0];
+    firebase.firestore().collection('itemrate').doc(filteredDeleteItem.id).set({
+      name: filteredDeleteItem?.name,
+      rate: filteredDeleteItem?.rate
+    });
+    setOpenModal(false);
+  };
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = itemRate?.map((n) => n.name);
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const handleFilterByName = (event) => {
+    setFilterName(event.target.value);
+  };
+
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - itemRate?.length) : 0;
+
+  const filteredItemRate = applySortFilter(itemRate, getComparator(order, orderBy), filterName);
+
+  const isUserNotFound = filteredItemRate.length === 0;
 
   useEffect(() => {
     if (act === 'Edit') {
@@ -130,22 +271,105 @@ export default function Settings() {
                     <Typography variant="h4" gutterBottom>
                       Set Item Rate
                     </Typography>
+                    <Button
+                      variant="contained"
+                      component={RouterLink}
+                      to="/dashboard/item-rate-manage?act=Add"
+                      startIcon={<Icon icon={plusFill} />}
+                    >
+                      New Item Rate
+                    </Button>
                   </Stack>
-                  <Grid container justifyContent="space-between" spacing={2}>
-                    <Grid item xs={6}>
-                      <TextField
-                        required
-                        error={errors?.itemRate && true}
-                        style={{ marginBottom: 15 }}
-                        fullWidth
-                        helperText={errors?.itemRate}
-                        onChange={handleChange}
-                        value={values.itemRate}
-                        id="itemRate"
-                        label="Item Rate"
+
+                  <Card>
+                    <UserListToolbar
+                      numSelected={selected.length}
+                      filterName={filterName}
+                      onFilterName={handleFilterByName}
+                    />
+
+                    <Scrollbar>
+                      <TableContainer sx={{ minWidth: 800 }}>
+                        <Table>
+                          <UserListHead
+                            order={order}
+                            orderBy={orderBy}
+                            headLabel={TABLE_HEAD}
+                            rowCount={itemRate.length}
+                            numSelected={selected.length}
+                            onRequestSort={handleRequestSort}
+                            onSelectAllClick={handleSelectAllClick}
+                          />
+                          <TableBody>
+                            {filteredItemRate
+                              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                              .map((row) => {
+                                const { id, name, rate } = row;
+                                const isItemSelected = selected.indexOf(name) !== -1;
+
+                                return (
+                                  <TableRow
+                                    hover
+                                    key={id}
+                                    tabIndex={-1}
+                                    role="checkbox"
+                                    selected={isItemSelected}
+                                    aria-checked={isItemSelected}
+                                  >
+                                    <TableCell padding="checkbox" />
+                                    <TableCell component="th" scope="row" padding="none">
+                                      <Stack direction="row" alignItems="center" spacing={2}>
+                                        <Typography variant="subtitle2" noWrap>
+                                          {name}
+                                        </Typography>
+                                      </Stack>
+                                    </TableCell>
+                                    <TableCell align="left">{rate}</TableCell>
+                                    <TableCell align="right">
+                                      <UserMoreMenu
+                                        deleteFunction={() => deleteDriverEach(id)}
+                                        linkEdit={`/dashboard/item-rate-manage?act=Edit&id=${id}`}
+                                      />
+                                    </TableCell>
+                                  </TableRow>
+                                );
+                              })}
+                            {emptyRows > 0 && (
+                              <TableRow style={{ height: 53 * emptyRows }}>
+                                <TableCell colSpan={6} />
+                              </TableRow>
+                            )}
+                          </TableBody>
+                          {isUserNotFound && (
+                            <TableBody>
+                              <TableRow>
+                                <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                                  <SearchNotFound searchQuery={filterName} />
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          )}
+                        </Table>
+                      </TableContainer>
+                      <ModalComponents
+                        title="Delete"
+                        message="Are you sure you wish to delete this driver?"
+                        open={openModal}
+                        handleSubmit={deleteDriver}
+                        handleClose={handleModalClose}
                       />
-                    </Grid>
-                  </Grid>
+                    </Scrollbar>
+
+                    <TablePagination
+                      rowsPerPageOptions={[5, 10, 25]}
+                      component="div"
+                      count={itemRate.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                  </Card>
                   <Button type="submit" disabled={isSubmitting}>
                     {act === 'Add' ? 'Submit' : 'Save Changes'}
                   </Button>

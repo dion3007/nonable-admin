@@ -64,3 +64,12 @@ export const variableDataGet = () => {
   const getData = localStorage.getItem('variable');
   return JSON.parse(getData);
 };
+
+export const itemRateDataSet = (u) => {
+  localStorage.setItem('itemrate', JSON.stringify(u));
+};
+
+export const itemRateDataGet = () => {
+  const getData = localStorage.getItem('itemrate');
+  return JSON.parse(getData);
+};
