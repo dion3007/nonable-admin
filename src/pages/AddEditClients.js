@@ -81,6 +81,8 @@ export default function AddEditClients() {
           coordinator: values.coordinator,
           fundsQuarantine: values.fundsQuarantine,
           planManagementDetail: values.planManagementDetail,
+          planManager: values.planManager,
+          planManagerEmail: values.planManagerEmail,
           status: 'active'
         });
     } else {
@@ -104,6 +106,8 @@ export default function AddEditClients() {
           coordinator: values?.coordinator,
           fundsQuarantine: values?.fundsQuarantine,
           planManagementDetail: values?.planManagementDetail,
+          planManager: values?.planManager,
+          planManagerEmail: values?.planManagerEmail,
           status: 'active'
         });
     }
@@ -133,7 +137,9 @@ export default function AddEditClients() {
                   phone: 0,
                   licenseNumber: 0,
                   regoNumber: 0,
-                  employeeType: 0
+                  employeeType: 0,
+                  planManager: '',
+                  planManagerEmail: ''
                 }
               }
               validationSchema={UserSchemaValidations}
