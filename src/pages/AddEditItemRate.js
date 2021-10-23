@@ -15,7 +15,8 @@ import { itemRateDataGet } from '../utils/cache';
 
 const UserSchemaValidations = Yup.object().shape({
   name: Yup.string().required('Required'),
-  rate: Yup.string().required('Required')
+  rate: Yup.string().required('Required'),
+  desc: Yup.string().required('Required')
 });
 
 export default function AddEditItemRate() {
@@ -47,12 +48,14 @@ export default function AddEditItemRate() {
     if (act === 'Add') {
       firebase.firestore().collection('itemrate').add({
         name: values.name,
-        rate: values.rate
+        rate: values.rate,
+        desc: values.desc
       });
     } else {
       firebase.firestore().collection('itemrate').doc(filteredItemRate[0].id).set({
         name: values?.name,
-        rate: values?.rate
+        rate: values?.rate,
+        desc: values?.desc
       });
     }
   };
@@ -76,7 +79,8 @@ export default function AddEditItemRate() {
               initialValues={
                 filteredItemRate[0] || {
                   name: '',
-                  rate: ''
+                  rate: '',
+                  desc: ''
                 }
               }
               validationSchema={UserSchemaValidations}
@@ -102,6 +106,17 @@ export default function AddEditItemRate() {
                         value={values.name}
                         id="name"
                         label="Name"
+                      />
+                      <TextField
+                        required
+                        error={errors?.desc && true}
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        helperText={errors?.desc}
+                        onChange={handleChange}
+                        value={values.desc}
+                        id="desc"
+                        label="Description"
                       />
                     </Grid>
                     <Grid item xs={6}>

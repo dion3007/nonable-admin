@@ -43,6 +43,7 @@ const UserSchemaValidations = Yup.object().shape({
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Item Name', alignRight: false },
+  { id: 'desc', label: 'Description', alignRight: false },
   { id: 'rate', label: 'Rate', alignRight: false },
   { id: '' }
 ];
@@ -304,7 +305,7 @@ export default function Settings() {
                             {filteredItemRate
                               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                               .map((row) => {
-                                const { id, name, rate } = row;
+                                const { id, name, rate, desc } = row;
                                 const isItemSelected = selected.indexOf(name) !== -1;
 
                                 return (
@@ -324,6 +325,7 @@ export default function Settings() {
                                         </Typography>
                                       </Stack>
                                     </TableCell>
+                                    <TableCell align="left">{desc}</TableCell>
                                     <TableCell align="left">{rate}</TableCell>
                                     <TableCell align="right">
                                       <UserMoreMenu

@@ -1,5 +1,6 @@
 import { filter } from 'lodash';
 import { useState, useEffect } from 'react';
+import moment from 'moment';
 // material
 import {
   Card,
@@ -212,7 +213,9 @@ export default function Ndis() {
                           </TableCell>
                           <TableCell align="left">{price}</TableCell>
                           <TableCell align="left">{profit}</TableCell>
-                          <TableCell align="left">{bookingDate}</TableCell>
+                          <TableCell align="left">
+                            {moment(bookingDate).format('DD-MM-YYYY hh:mm a')}
+                          </TableCell>
                           <TableCell align="left">{hour}</TableCell>
                           <TableCell align="left">
                             {clients.filter((client) => client.id === customer)[0]
