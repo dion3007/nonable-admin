@@ -188,7 +188,7 @@ export default function Ndis() {
                   {filteredNdis
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, bookingDate, hour, item, price, profit, customer } = row;
+                      const { id, bookingDate, hour, item, price, customer } = row;
                       const isItemSelected = selected.indexOf(customer) !== -1;
 
                       return (
