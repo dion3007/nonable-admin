@@ -211,8 +211,8 @@ export default function Ndis() {
                           <TableCell align="left">
                             {itemRate.filter((items) => items.id === item)[0]?.name}
                           </TableCell>
+                          <TableCell align="left">{itemRate.filter((items) => items.id === item)[0]?.rate}</TableCell>
                           <TableCell align="left">{price}</TableCell>
-                          <TableCell align="left">{profit}</TableCell>
                           <TableCell align="left">
                             {moment(bookingDate).format('DD-MM-YYYY hh:mm a')}
                           </TableCell>
