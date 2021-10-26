@@ -15,7 +15,7 @@ import DatePicker from '@material-ui/lab/DatePicker';
 import { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 // components
@@ -37,6 +37,7 @@ const UserSchemaValidations = Yup.object().shape({
 
 export default function AddEditClients() {
   const location = useLocation();
+  const navigate = useNavigate();
   const queryString = useQuery(location.search);
   const act = queryString.get('act');
   const id = queryString.get('id');
@@ -81,8 +82,8 @@ export default function AddEditClients() {
           coordinator: values.coordinator,
           fundsQuarantine: values.fundsQuarantine,
           planManagementDetail: values.planManagementDetail,
-          planManager: values.planManager,
-          planManagerEmail: values.planManagerEmail,
+          planManager: values?.planManager || '',
+          planManagerEmail: values?.planManagerEmail || '',
           status: 'active'
         });
     } else {
@@ -106,8 +107,8 @@ export default function AddEditClients() {
           coordinator: values?.coordinator,
           fundsQuarantine: values?.fundsQuarantine,
           planManagementDetail: values?.planManagementDetail,
-          planManager: values?.planManager,
-          planManagerEmail: values?.planManagerEmail,
+          planManager: values?.planManager || '',
+          planManagerEmail: values?.planManagerEmail || '',
           status: 'active'
         });
     }
@@ -145,6 +146,7 @@ export default function AddEditClients() {
               validationSchema={UserSchemaValidations}
               onSubmit={(values, { setSubmitting }) => {
                 setOpenSnackbar(true);
+                navigate('/dashboard/client', { replace: true });
                 setTimeout(() => {
                   handleSubmit(values);
                   setSubmitting(false);
@@ -330,7 +332,7 @@ export default function AddEditClients() {
                           <TextField
                             style={{ marginBottom: 15 }}
                             fullWidth
-                            type="number"
+                            type="text"
                             onChange={handleChange}
                             value={values.planManager}
                             id="planManager"
@@ -339,7 +341,7 @@ export default function AddEditClients() {
                           <TextField
                             style={{ marginBottom: 15 }}
                             fullWidth
-                            type="number"
+                            type="text"
                             onChange={handleChange}
                             value={values.planManagerEmail}
                             id="planManagerEmail"
