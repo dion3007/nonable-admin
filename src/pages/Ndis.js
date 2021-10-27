@@ -19,7 +19,7 @@ import {
   Box,
   Button
 } from '@material-ui/core';
-import { DesktopDatePicker, DesktopDateRangePicker, LocalizationProvider } from '@material-ui/lab';
+import { DesktopDateRangePicker, LocalizationProvider } from '@material-ui/lab';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import firebase from '../firebase';
 // components
