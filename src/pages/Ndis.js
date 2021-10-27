@@ -12,15 +12,22 @@ import {
   Container,
   Typography,
   TableContainer,
-  TablePagination
+  TablePagination,
+  Grid,
+  TextField,
+  MenuItem,
+  Box,
+  Button
 } from '@material-ui/core';
+import { DesktopDatePicker, DesktopDateRangePicker, LocalizationProvider } from '@material-ui/lab';
+import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import firebase from '../firebase';
 // components
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar } from '../components/_dashboard/user';
-import { clientDataGet, itemRateDataGet } from '../utils/cache';
+import { clientDataGet, itemRateDataGet, jobDataGet } from '../utils/cache';
 
 // ----------------------------------------------------------------------
 
@@ -79,7 +86,11 @@ export default function Ndis() {
   const [clients, setClients] = useState(clientDataGet() || []);
   const [orderBy, setOrderBy] = useState('itemNumber');
   const [filterName, setFilterName] = useState('');
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
+
+  const [allocated, setAllocated] = useState();
+  const [filterGrid, setFilterGrid] = useState(false);
+  const [dateRange, setDateRange] = useState([null, null]);
 
   useEffect(() => {
     firebase
@@ -113,6 +124,35 @@ export default function Ndis() {
         setItemRate(newItemRate);
       });
   }, []);
+
+  const clearFilter = () => {
+    setAllocated();
+    setDateRange([null, null]);
+    const jobsData = jobDataGet();
+    setNdis(jobsData);
+  };
+
+  const filterDataByInput = () => {
+    let filteredData;
+    const jobsData = jobDataGet();
+    filteredData = jobsData.filter((job) => job.item === allocated);
+
+    if (dateRange[0] !== null && allocated !== null) {
+      filteredData = filteredData.filter(
+        (job) =>
+          new Date(job.bookingDate) > new Date(dateRange[0]) &&
+          new Date(job.bookingDate) < new Date(dateRange[1])
+      );
+    } else if (dateRange[0] !== null) {
+      filteredData = jobsData.filter(
+        (job) =>
+          new Date(job.bookingDate) > new Date(dateRange[0]) &&
+          new Date(job.bookingDate) < new Date(dateRange[1])
+      );
+    }
+    console.log(filteredData, dateRange);
+    setNdis(filteredData);
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -169,11 +209,63 @@ export default function Ndis() {
           <UserListToolbar
             numSelected={selected.length}
             filterName={filterName}
+            filterListClick={() => setFilterGrid(!filterGrid)}
             onFilterName={handleFilterByName}
           />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
+              {filterGrid && (
+                <Grid container style={{ padding: 15 }} spacing={3}>
+                  <Grid item md={3}>
+                    <TextField
+                      select
+                      style={{ marginBottom: 15, textAlign: 'left' }}
+                      fullWidth
+                      size="small"
+                      onChange={(e) => setAllocated(e.target.value)}
+                      value={allocated}
+                      id="allocated"
+                      label="Item Rate"
+                    >
+                      {itemRate.map((allocated) => (
+                        <MenuItem key={allocated.name} value={allocated.id}>
+                          {allocated.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  <Grid item md={4}>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DesktopDateRangePicker
+                        startText="Start"
+                        value={dateRange}
+                        onChange={(newValue) => {
+                          setDateRange(newValue);
+                        }}
+                        inputFormat="dd/MM/yyyy"
+                        renderInput={(startProps, endProps) => (
+                          <>
+                            <TextField size="small" {...startProps} />
+                            <Box sx={{ mx: 2 }}> to </Box>
+                            <TextField size="small" {...endProps} />
+                          </>
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item md={1}>
+                    <Button onClick={filterDataByInput} variant="contained">
+                      Filter
+                    </Button>
+                  </Grid>
+                  <Grid item md={2}>
+                    <Button color="inherit" onClick={clearFilter} variant="contained">
+                      Clear Filter
+                    </Button>
+                  </Grid>
+                </Grid>
+              )}
               <Table>
                 <UserListHead
                   order={order}

@@ -121,7 +121,7 @@ export default function Job() {
   const [variable, setVariable] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
   const [openModal, setOpenModal] = useState(false);
   const [uid, setUid] = useState('');
   const [openPaidModal, setOpenPaidModal] = useState(false);
