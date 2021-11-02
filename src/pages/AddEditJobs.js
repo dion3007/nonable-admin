@@ -15,9 +15,9 @@ import * as Yup from 'yup';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
-import DateTimePicker from '@material-ui/lab/DateTimePicker';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import { DatePicker } from '@material-ui/lab';
 // components
 import useQuery from '../utils/useQuery';
 import Page from '../components/Page';
@@ -262,7 +262,7 @@ export default function AddEditJobs() {
                             ))}
                         </TextField>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
-                          <DateTimePicker
+                          <DatePicker
                             renderInput={(props) => (
                               <TextField
                                 {...props}
