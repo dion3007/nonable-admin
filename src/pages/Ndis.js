@@ -61,7 +61,7 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function applySortFilter(array, comparator, query) {
+function applySortFilter(array, comparator, query, arrayClient) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -69,10 +69,10 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(
-      array,
-      (_ndis) => _ndis.itemNumber.toLowerCase().indexOf(query.toLowerCase()) !== -1
-    );
+    return filter(array, (_ndis) => {
+      const _filtered = arrayClient.filter((client) => client.id === _ndis.customer)[0]?.name;
+      return _filtered.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+    });
   }
   return stabilizedThis.map((el) => el[0]);
 }
@@ -184,7 +184,7 @@ export default function Ndis() {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - ndis?.length) : 0;
 
-  const filteredNdis = applySortFilter(ndis, getComparator(order, orderBy), filterName);
+  const filteredNdis = applySortFilter(ndis, getComparator(order, orderBy), filterName, clients);
 
   const isUserNotFound = filteredNdis.length === 0;
 

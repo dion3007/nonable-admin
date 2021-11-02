@@ -85,7 +85,7 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function applySortFilter(array, comparator, query) {
+function applySortFilter(array, comparator, query, arrayClient) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -93,7 +93,10 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_job) => _job.customer.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_job) => {
+      const _filtered = arrayClient.filter((client) => client.id === _job.customer)[0]?.name;
+      return _filtered.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+    });
   }
   return stabilizedThis.map((el) => el[0]);
 }
@@ -255,7 +258,7 @@ export default function JobDetail({ idParams }) {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - jobs?.length) : 0;
 
-  const filteredJobs = applySortFilter(jobs, getComparator(order, orderBy), filterName);
+  const filteredJobs = applySortFilter(jobs, getComparator(order, orderBy), filterName, clients);
 
   const isUserNotFound = filteredJobs.length === 0;
 
