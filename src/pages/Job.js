@@ -460,6 +460,7 @@ export default function Job() {
                         driverPaid,
                         paid,
                         bookingDate,
+                        bookingTime,
                         driver
                       } = row;
                       const isItemSelected = selected.indexOf(customer) !== -1;
@@ -508,7 +509,7 @@ export default function Job() {
                             {moment(bookingDate).format('DD-MM-YYYY')}
                           </TableCell>
                           <TableCell align="left" width="100px">
-                            {moment(bookingDate).format('hh:mm A')}
+                            {moment(bookingTime).format('hh:mm A')}
                           </TableCell>
                           <TableCell align="right">
                             <UserMoreMenu

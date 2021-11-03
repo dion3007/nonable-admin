@@ -18,6 +18,8 @@ import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { DatePicker } from '@material-ui/lab';
+import moment from 'moment';
+import TimePicker from 'rc-time-picker';
 // components
 import useQuery from '../utils/useQuery';
 import Page from '../components/Page';
@@ -30,6 +32,11 @@ import {
   driverDataGet,
   itemRateDataGet
 } from '../utils/cache';
+import 'rc-time-picker/assets/index.css';
+import '../utils/timepicker.css';
+
+const format = 'hh:mm a';
+const now = moment().hour(0).minute(0);
 
 const UserSchemaValidations = Yup.object().shape({
   customer: Yup.string().required('Required'),
@@ -148,6 +155,7 @@ export default function AddEditJobs() {
         pickUp: values.pickUp,
         price: values.price,
         profit: values.profit,
+        bookingTime: values.bookingTime.toString(),
         driverPaid,
         bookingDate: values.bookingDate.toString(),
         dropOff: values.dropOff,
@@ -169,6 +177,7 @@ export default function AddEditJobs() {
         pickUp: values?.pickUp,
         price: values?.price,
         profit: values?.profit,
+        bookingTime: values?.bookingTime.toString(),
         driverPaid,
         bookingDate: values?.bookingDate.toString(),
         dropOff: values?.dropOff,
@@ -207,6 +216,7 @@ export default function AddEditJobs() {
                 filteredJobs[0] || {
                   customer: '',
                   bookingDate: '',
+                  bookingTime: '',
                   pickUp: '',
                   dropOff: '',
                   price: '',
@@ -261,28 +271,43 @@ export default function AddEditJobs() {
                               </MenuItem>
                             ))}
                         </TextField>
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                          <DatePicker
-                            renderInput={(props) => (
-                              <TextField
-                                {...props}
-                                helperText={errors?.bookingDate}
-                                fullWidth
-                                style={{ marginBottom: 15 }}
+                        <Grid container spacing={2}>
+                          <Grid item>
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                              <DatePicker
+                                renderInput={(props) => (
+                                  <TextField
+                                    {...props}
+                                    helperText={errors?.bookingDate}
+                                    fullWidth
+                                    style={{ marginBottom: 15 }}
+                                  />
+                                )}
+                                id="bookingDate"
+                                label="Booking Date & Time"
+                                error={errors?.bookingDate && true}
+                                onChange={(value) => setFieldValue('bookingDate', value)}
+                                value={values?.bookingDate}
+                                inputFormat="dd/MM/yyyy"
+                                defaultValue="2017-05-24T10:30"
+                                InputLabelProps={{
+                                  shrink: true
+                                }}
                               />
-                            )}
-                            id="bookingDate"
-                            label="Booking Date & Time"
-                            error={errors?.bookingDate && true}
-                            onChange={(value) => setFieldValue('bookingDate', value)}
-                            value={values?.bookingDate}
-                            inputFormat="dd/MM/yyyy hh:mm a"
-                            defaultValue="2017-05-24T10:30"
-                            InputLabelProps={{
-                              shrink: true
-                            }}
-                          />
-                        </LocalizationProvider>
+                            </LocalizationProvider>
+                          </Grid>
+                          <Grid item>
+                            <TimePicker
+                              showSecond={false}
+                              defaultValue={now}
+                              value={values.bookingTime}
+                              onChange={(value) => setFieldValue('bookingTime', value)}
+                              format={format}
+                              use12Hours
+                              inputReadOnly
+                            />
+                          </Grid>
+                        </Grid>
                         <TextField
                           required
                           error={errors?.pickUp && true}
