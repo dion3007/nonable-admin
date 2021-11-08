@@ -300,7 +300,7 @@ export default function AddEditJobs() {
                             <TimePicker
                               showSecond={false}
                               defaultValue={now}
-                              value={values.bookingTime}
+                              value={moment(values.bookingTime)}
                               onChange={(value) => setFieldValue('bookingTime', value)}
                               format={format}
                               use12Hours

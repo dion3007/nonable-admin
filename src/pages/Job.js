@@ -60,6 +60,7 @@ const TABLE_HEAD = [
   { id: 'paid', label: 'Paid Status', alignRight: false },
   { id: 'date', label: 'Booking Date', alignRight: false },
   { id: 'time', label: 'Time', alignRight: false },
+  { id: 'status', label: 'Status', alignRight: false },
   { id: '' }
 ];
 
@@ -461,7 +462,8 @@ export default function Job() {
                         paid,
                         bookingDate,
                         bookingTime,
-                        driver
+                        driver,
+                        jobStat
                       } = row;
                       const isItemSelected = selected.indexOf(customer) !== -1;
 
@@ -510,6 +512,13 @@ export default function Job() {
                           </TableCell>
                           <TableCell align="left" width="100px">
                             {moment(bookingTime).format('hh:mm A')}
+                          </TableCell>
+                          <TableCell align="left" width="100px">
+                            {jobStat === 0 && 'Requested'}
+                            {jobStat === 1 && 'Confirmed'}
+                            {jobStat === 2 && 'On Going'}
+                            {jobStat === 3 && 'Completed'}
+                            {jobStat === 4 && 'Canceled'}
                           </TableCell>
                           <TableCell align="right">
                             <UserMoreMenu
