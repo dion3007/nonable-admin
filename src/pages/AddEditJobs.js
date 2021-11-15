@@ -167,7 +167,7 @@ export default function AddEditJobs() {
         date: new Date(),
         duplicate: true,
         paid: false,
-        jobStat: 0
+        jobStat: values?.jobStat
       });
     } else {
       firebase.firestore().collection('jobs').doc(filteredJobs[0].id).set({
@@ -189,7 +189,7 @@ export default function AddEditJobs() {
         date: new Date(),
         duplicate: true,
         paid: false,
-        jobStat: 0
+        jobStat: values?.jobStat
       });
     }
   };
@@ -216,7 +216,7 @@ export default function AddEditJobs() {
                 filteredJobs[0] || {
                   customer: '',
                   bookingDate: '',
-                  bookingTime: '',
+                  bookingTime: now,
                   pickUp: '',
                   dropOff: '',
                   price: '',
@@ -240,7 +240,7 @@ export default function AddEditJobs() {
               }}
             >
               {({ values, errors, handleChange, handleSubmit, setFieldValue, isSubmitting }) => {
-                console.log(values);
+                console.log('log');
                 return (
                   <form onSubmit={handleSubmit} style={{ padding: 20, textAlign: 'center' }}>
                     <Grid container justifyContent="space-between" spacing={2}>

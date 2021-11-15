@@ -1,5 +1,8 @@
 import { filter } from 'lodash';
 import { useState, useEffect } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import { Icon } from '@iconify/react';
+import plusFill from '@iconify/icons-eva/plus-fill';
 import moment from 'moment';
 // material
 import {
@@ -195,14 +198,14 @@ export default function Ndis() {
           <Typography variant="h4" gutterBottom>
             Ndis
           </Typography>
-          {/* <Button
+          <Button
             variant="contained"
             component={RouterLink}
-            to="/dashboard/client-manage?act=Add"
+            to="/dashboard/booking-manage?act=Add"
             startIcon={<Icon icon={plusFill} />}
           >
-            New Ndis
-          </Button> */}
+            Generate to excel
+          </Button>
         </Stack>
 
         <Card>
