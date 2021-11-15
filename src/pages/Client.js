@@ -38,7 +38,7 @@ const TABLE_HEAD = [
   { id: 'phone', label: 'Contact Number', alignRight: false },
   { id: 'dobNumber', label: 'Date Of Birth', alignRight: false },
   { id: 'clientSpec', label: 'Client Spec', alignRight: false },
-  { id: 'coordinator', label: 'Coordinate', alignRight: false },
+  { id: 'coordinator', label: 'Coordinator', alignRight: false },
   { id: 'fundsQuarantine', label: 'Funds Quarantine', alignRight: false },
   { id: 'address', label: 'Address', alignRight: false },
   { id: 'planManagementDetail', label: 'Plan Management Detail', alignRight: false },

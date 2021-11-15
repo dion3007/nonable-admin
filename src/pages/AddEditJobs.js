@@ -148,49 +148,56 @@ export default function AddEditJobs() {
     }
 
     if (act === 'Add') {
-      firebase.firestore().collection('jobs').add({
-        customer: values.customer,
-        driver: values.driver,
-        notes: values.notes,
-        pickUp: values.pickUp,
-        price: values.price,
-        profit: values.profit,
-        bookingTime: values.bookingTime.toString(),
-        driverPaid,
-        bookingDate: values.bookingDate.toString(),
-        dropOff: values.dropOff,
-        expensePrice: 0,
-        expenseReason: 'none',
-        hour: values.hour,
-        item: values.item,
-        distance: values.distance,
-        date: new Date(),
-        duplicate: true,
-        paid: false,
-        jobStat: values?.jobStat
-      });
+      firebase
+        .firestore()
+        .collection('jobs')
+        .add({
+          customer: values.customer,
+          driver: values.driver,
+          notes: values.notes,
+          pickUp: values.pickUp,
+          price: values.price,
+          profit: values.profit,
+          bookingTime: values.bookingTime.toString(),
+          driverPaid,
+          bookingDate: values.bookingDate.toString(),
+          dropOff: values.dropOff,
+          expensePrice: 0,
+          expenseReason: 'none',
+          hour: values.hour,
+          item: values.item,
+          distance: values.distance,
+          date: new Date(),
+          duplicate: true,
+          paid: false,
+          jobStat: values?.jobStat || 1
+        });
     } else {
-      firebase.firestore().collection('jobs').doc(filteredJobs[0].id).set({
-        customer: values?.customer,
-        driver: values?.driver,
-        notes: values?.notes,
-        pickUp: values?.pickUp,
-        price: values?.price,
-        profit: values?.profit,
-        bookingTime: values?.bookingTime.toString(),
-        driverPaid,
-        bookingDate: values?.bookingDate.toString(),
-        dropOff: values?.dropOff,
-        expensePrice: 0,
-        expenseReason: 'none',
-        hour: values?.hour,
-        item: values?.item,
-        distance: values?.distance,
-        date: new Date(),
-        duplicate: true,
-        paid: false,
-        jobStat: values?.jobStat
-      });
+      firebase
+        .firestore()
+        .collection('jobs')
+        .doc(filteredJobs[0].id)
+        .set({
+          customer: values?.customer,
+          driver: values?.driver,
+          notes: values?.notes,
+          pickUp: values?.pickUp,
+          price: values?.price,
+          profit: values?.profit,
+          bookingTime: values?.bookingTime.toString(),
+          driverPaid,
+          bookingDate: values?.bookingDate.toString(),
+          dropOff: values?.dropOff,
+          expensePrice: 0,
+          expenseReason: 'none',
+          hour: values?.hour,
+          item: values?.item,
+          distance: values?.distance,
+          date: new Date(),
+          duplicate: true,
+          paid: false,
+          jobStat: values?.jobStat || 1
+        });
     }
   };
 

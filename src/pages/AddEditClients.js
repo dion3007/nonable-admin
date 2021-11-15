@@ -62,6 +62,7 @@ export default function AddEditClients() {
   const filteredClients = clients.filter((client) => id === client.id);
 
   const handleSubmit = (values) => {
+    console.log(values);
     if (act === 'Add') {
       firebase
         .firestore()
@@ -78,9 +79,9 @@ export default function AddEditClients() {
           ndisNumber: values.ndisNumber,
           dobNumber: values.dobNumber.toString(),
           address: `${values.streetNumber} ${values.streetAddress} ${values.suburb} ${values.state} ${values.postCode}`,
-          clientSpec: values?.clientSpec,
-          coordinator: values?.coordinator,
-          fundsQuarantine: values?.fundsQuarantine,
+          clientSpec: values?.clientSpec || '',
+          coordinator: values?.coordinator || '',
+          fundsQuarantine: values?.fundsQuarantine || 0,
           planManagementDetail: values.planManagementDetail,
           planManager: values?.planManager || '',
           planManagerEmail: values?.planManagerEmail || '',
@@ -103,9 +104,9 @@ export default function AddEditClients() {
           ndisNumber: values?.ndisNumber,
           dobNumber: values?.dobNumber.toString(),
           address: `${values?.streetNumber} ${values?.streetAddress} ${values?.suburb} ${values?.state} ${values?.postCode}`,
-          clientSpec: values?.clientSpec,
-          coordinator: values?.coordinator,
-          fundsQuarantine: values?.fundsQuarantine,
+          clientSpec: values?.clientSpec || '',
+          coordinator: values?.coordinator || '',
+          fundsQuarantine: values?.fundsQuarantine || 0,
           planManagementDetail: values?.planManagementDetail,
           planManager: values?.planManager || '',
           planManagerEmail: values?.planManagerEmail || '',
