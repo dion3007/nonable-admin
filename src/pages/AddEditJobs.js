@@ -170,7 +170,7 @@ export default function AddEditJobs() {
           date: new Date(),
           duplicate: true,
           paid: false,
-          jobStat: values?.jobStat || 1
+          jobStat: values?.jobStat || 0
         });
     } else {
       firebase
@@ -196,7 +196,7 @@ export default function AddEditJobs() {
           date: new Date(),
           duplicate: true,
           paid: false,
-          jobStat: values?.jobStat || 1
+          jobStat: values?.jobStat || 0
         });
     }
   };

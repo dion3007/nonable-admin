@@ -51,7 +51,7 @@ import ModalComponents from '../components/ModalComponents';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'customerName', label: 'Customer Name', alignRight: false },
+  { id: 'customer', label: 'Customer Name', alignRight: false },
   { id: 'pickUp', label: 'From', alignRight: false },
   { id: 'dropOff', label: 'Destination', alignRight: false },
   { id: 'price', label: 'Amount', alignRight: false },
@@ -268,28 +268,64 @@ export default function Job() {
     setOpenPaidModal(false);
   };
 
+  const cancelJob = (id, status) => {
+    const filteredSetJobs = jobs.filter((job) => job.id === id)[0];
+    firebase
+      .firestore()
+      .collection('jobs')
+      .doc(filteredSetJobs.id)
+      .set({
+        customer: filteredSetJobs?.customer,
+        driver: status ? filteredSetJobs?.driver : '',
+        notes: filteredSetJobs?.notes,
+        pickUp: filteredSetJobs?.pickUp,
+        price: filteredSetJobs?.price,
+        profit: filteredSetJobs?.profit,
+        driverPaid: filteredSetJobs?.driverPaid,
+        bookingDate: filteredSetJobs?.bookingDate.toString(),
+        bookingTime: filteredSetJobs?.bookingTime.toString(),
+        item: filteredSetJobs?.item,
+        dropOff: filteredSetJobs?.dropOff,
+        expensePrice: 0,
+        expenseReason: 'none',
+        hour: filteredSetJobs?.hour,
+        distance: filteredSetJobs?.distance,
+        date: new Date(),
+        duplicate: false,
+        paid: filteredSetJobs?.paid,
+        jobStat: status ? 6 : 0
+      });
+    setOpenPaidModal(false);
+  };
+
   const paidJob = () => {
     const jobs = jobDataGet();
     const filteredSetJobs = jobs.filter((job) => job.id === paidUid)[0];
-    firebase.firestore().collection('jobs').doc(filteredSetJobs.id).set({
-      customer: filteredSetJobs?.customer,
-      driver: filteredSetJobs?.driver,
-      notes: filteredSetJobs?.notes,
-      pickUp: filteredSetJobs?.pickUp,
-      price: filteredSetJobs?.price,
-      profit: filteredSetJobs?.profit,
-      driverPaid: filteredSetJobs?.driverPaid,
-      bookingDate: filteredSetJobs?.bookingDate.toString(),
-      dropOff: filteredSetJobs?.dropOff,
-      expensePrice: 0,
-      expenseReason: 'none',
-      hour: filteredSetJobs?.hour,
-      distance: filteredSetJobs?.distance,
-      date: new Date(),
-      duplicate: false,
-      paid: !filteredSetJobs?.paid,
-      jobStat: 0
-    });
+    firebase
+      .firestore()
+      .collection('jobs')
+      .doc(filteredSetJobs.id)
+      .set({
+        customer: filteredSetJobs?.customer,
+        driver: filteredSetJobs?.driver,
+        notes: filteredSetJobs?.notes,
+        pickUp: filteredSetJobs?.pickUp,
+        price: filteredSetJobs?.price,
+        profit: filteredSetJobs?.profit,
+        driverPaid: filteredSetJobs?.driverPaid,
+        bookingDate: filteredSetJobs?.bookingDate.toString(),
+        bookingTime: filteredSetJobs?.bookingTime.toString(),
+        item: filteredSetJobs?.item,
+        dropOff: filteredSetJobs?.dropOff,
+        expensePrice: 0,
+        expenseReason: 'none',
+        hour: filteredSetJobs?.hour,
+        distance: filteredSetJobs?.distance,
+        date: new Date(),
+        duplicate: false,
+        paid: !filteredSetJobs?.paid,
+        jobStat: !filteredSetJobs?.paid ? 5 : 3
+      });
     setOpenPaidModal(false);
   };
 
@@ -513,12 +549,29 @@ export default function Job() {
                           <TableCell align="left" width="100px">
                             {moment(bookingTime).format('hh:mm A')}
                           </TableCell>
-                          <TableCell align="left" width="100px">
+                          <TableCell align="center" width={jobStat === 4 ? `300px` : `100px`}>
                             {jobStat === 0 && 'Requested'}
                             {jobStat === 1 && 'Confirmed'}
                             {jobStat === 2 && 'On Going'}
                             {jobStat === 3 && 'Completed'}
-                            {jobStat === 4 && 'Canceled'}
+                            {jobStat === 4 && (
+                              <Grid container justifyContent="center" spacing={2}>
+                                <Grid item>
+                                  <Button
+                                    onClick={() => cancelJob(id, true)}
+                                    variant="contained"
+                                    color="error"
+                                  >
+                                    Confirm Cancel
+                                  </Button>
+                                </Grid>
+                                <Grid item variant="contained">
+                                  <Button onClick={() => cancelJob(id, false)}>Decline</Button>
+                                </Grid>
+                              </Grid>
+                            )}
+                            {jobStat === 5 && 'Paid'}
+                            {jobStat === 6 && 'Declined'}
                           </TableCell>
                           <TableCell align="right">
                             <UserMoreMenu
