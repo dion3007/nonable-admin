@@ -153,7 +153,6 @@ export default function Ndis() {
           new Date(job.bookingDate) < new Date(dateRange[1])
       );
     }
-    console.log(filteredData, dateRange);
     setNdis(filteredData);
   };
 

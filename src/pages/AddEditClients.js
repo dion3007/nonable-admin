@@ -7,12 +7,14 @@ import {
   Typography,
   TextField,
   Grid,
-  MenuItem
+  MenuItem,
+  Box
 } from '@material-ui/core';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import DatePicker from '@material-ui/lab/DatePicker';
-import { useState, useEffect } from 'react';
+import DateRangePicker from '@material-ui/lab/DateRangePicker';
+import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -62,7 +64,6 @@ export default function AddEditClients() {
   const filteredClients = clients.filter((client) => id === client.id);
 
   const handleSubmit = (values) => {
-    console.log(values);
     if (act === 'Add') {
       firebase
         .firestore()
@@ -81,6 +82,7 @@ export default function AddEditClients() {
           address: `${values.streetNumber} ${values.streetAddress} ${values.suburb} ${values.state} ${values.postCode}`,
           clientSpec: values?.clientSpec || '',
           coordinator: values?.coordinator || '',
+          planDates: [values?.planDates[0].toString(), values?.planDates[1].toString()] || ['', ''],
           fundsQuarantine: values?.fundsQuarantine || 0,
           planManagementDetail: values.planManagementDetail,
           planManager: values?.planManager || '',
@@ -103,6 +105,7 @@ export default function AddEditClients() {
           phone: values?.phone,
           ndisNumber: values?.ndisNumber,
           dobNumber: values?.dobNumber.toString(),
+          planDates: [values?.planDates[0].toString(), values?.planDates[1].toString()],
           address: `${values?.streetNumber} ${values?.streetAddress} ${values?.suburb} ${values?.state} ${values?.postCode}`,
           clientSpec: values?.clientSpec || '',
           coordinator: values?.coordinator || '',
@@ -136,6 +139,7 @@ export default function AddEditClients() {
                   name: '',
                   password: '',
                   email: '',
+                  planDates: [null, null],
                   phone: 0,
                   licenseNumber: 0,
                   regoNumber: 0,
@@ -358,6 +362,26 @@ export default function AddEditClients() {
                         id="coordinator"
                         label="Coordinator"
                       />
+                      <div style={{ marginBottom: 15 }}>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                          <DateRangePicker
+                            startText="Plan Dates Start"
+                            endText="Plan Dates End"
+                            value={values.planDates}
+                            onChange={(value) => setFieldValue('planDates', value)}
+                            id="planDates"
+                            inputFormat="dd/MM/yyyy"
+                            defaultValue="2017-05-24"
+                            renderInput={(startProps, endProps) => (
+                              <>
+                                <TextField {...startProps} />
+                                <Box sx={{ mx: 2 }}> to </Box>
+                                <TextField {...endProps} />
+                              </>
+                            )}
+                          />
+                        </LocalizationProvider>
+                      </div>
                       <TextField
                         style={{ marginBottom: 15 }}
                         fullWidth

@@ -26,6 +26,7 @@ import {
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import DesktopDateRangePicker from '@material-ui/lab/DesktopDateRangePicker';
+import Label from '../components/Label';
 import firebase from '../firebase';
 // components
 import Page from '../components/Page';
@@ -275,7 +276,7 @@ export default function Job() {
       .doc(filteredSetJobs.id)
       .set({
         customer: filteredSetJobs?.customer,
-        driver: status ? filteredSetJobs?.driver : '',
+        driver: '',
         notes: filteredSetJobs?.notes,
         pickUp: filteredSetJobs?.pickUp,
         price: filteredSetJobs?.price,
@@ -588,10 +589,22 @@ export default function Job() {
                             {moment(bookingTime).format('hh:mm A')}
                           </TableCell>
                           <TableCell align="center" width={jobStat === 4 ? `300px` : `100px`}>
-                            {jobStat === 0 && 'Requested'}
+                            {jobStat === 0 && (
+                              <Label variant="ghost" color="primary">
+                                Requested
+                              </Label>
+                            )}
                             {jobStat === 1 && 'Confirmed'}
-                            {jobStat === 2 && 'On Going'}
-                            {jobStat === 3 && 'Completed'}
+                            {jobStat === 2 && (
+                              <Label variant="ghost" color="info">
+                                On Going
+                              </Label>
+                            )}
+                            {jobStat === 3 && (
+                              <Label variant="ghost" color="success">
+                                Completed
+                              </Label>
+                            )}
                             {jobStat === 4 && (
                               <Grid container justifyContent="center" spacing={2}>
                                 <Grid item>
@@ -609,7 +622,11 @@ export default function Job() {
                               </Grid>
                             )}
                             {jobStat === 5 && 'Paid'}
-                            {jobStat === 6 && 'Declined'}
+                            {jobStat === 6 && (
+                              <Label variant="ghost" color="error">
+                                Declined
+                              </Label>
+                            )}
                             {jobStat === 7 && 'Un Allocated'}
                             {jobStat === 8 && (
                               <Grid container justifyContent="center" spacing={2}>
