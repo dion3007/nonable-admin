@@ -203,6 +203,10 @@ export default function Job() {
     jobDataSet(jobsTemp);
   }
 
+  if (clients) {
+    clientDataSet(clients);
+  }
+
   if (variable) {
     variableDataSet(variable);
   }

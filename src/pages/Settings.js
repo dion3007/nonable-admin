@@ -192,8 +192,6 @@ export default function Settings() {
     });
   };
 
-  console.log(variable[0]);
-
   return (
     <Page title="Settings Menu | Minimal-UI">
       <Container maxWidth={false}>
