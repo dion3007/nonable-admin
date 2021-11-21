@@ -241,7 +241,6 @@ export default function Job() {
           new Date(job.bookingDate) < new Date(dateRange[1])
       );
     }
-    console.log(filteredData, dateRange);
     setJobs(filteredData);
   };
 
@@ -296,6 +295,35 @@ export default function Job() {
         jobStat: status ? 6 : 0
       });
     setOpenPaidModal(false);
+  };
+
+  const completedJob = (id, status) => {
+    const filteredSetJobs = jobs.filter((job) => job.id === id)[0];
+    firebase
+      .firestore()
+      .collection('jobs')
+      .doc(filteredSetJobs.id)
+      .set({
+        customer: filteredSetJobs?.customer,
+        driver: status ? filteredSetJobs?.driver : '',
+        notes: filteredSetJobs?.notes,
+        pickUp: filteredSetJobs?.pickUp,
+        price: filteredSetJobs?.price,
+        profit: filteredSetJobs?.profit,
+        driverPaid: filteredSetJobs?.driverPaid,
+        bookingDate: filteredSetJobs?.bookingDate.toString(),
+        bookingTime: filteredSetJobs?.bookingTime.toString(),
+        item: filteredSetJobs?.item,
+        dropOff: filteredSetJobs?.dropOff,
+        expensePrice: 0,
+        expenseReason: 'none',
+        hour: filteredSetJobs?.hour,
+        distance: filteredSetJobs?.distance,
+        date: new Date(),
+        duplicate: false,
+        paid: filteredSetJobs?.paid,
+        jobStat: status ? 3 : 0
+      });
   };
 
   const paidJob = () => {
@@ -520,9 +548,14 @@ export default function Job() {
                           <TableCell padding="checkbox" />
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Typography variant="subtitle2" noWrap>
-                                {clients?.filter((client) => client.id === customer)[0]?.name}
-                              </Typography>
+                              <RouterLink
+                                to={`/dashboard/client-manage?act=Edit&id=${customer}`}
+                                style={{ textDecoration: 'none', color: '#000' }}
+                              >
+                                <Typography variant="subtitle2" noWrap>
+                                  {clients?.filter((client) => client.id === customer)[0]?.name}
+                                </Typography>
+                              </RouterLink>
                             </Stack>
                           </TableCell>
                           <TableCell align="left">{pickUp}</TableCell>
@@ -534,7 +567,12 @@ export default function Job() {
                             $ {driverPaid}
                           </TableCell>
                           <TableCell align="left">
-                            {drivers?.filter((driverData) => driverData.id === driver)[0]?.name}
+                            <RouterLink
+                              to={`/dashboard/driver-manage?act=Edit&id=${driver}`}
+                              style={{ textDecoration: 'none', color: '#000' }}
+                            >
+                              {drivers?.filter((driverData) => driverData.id === driver)[0]?.name}
+                            </RouterLink>
                           </TableCell>
                           <TableCell>
                             <Switch
@@ -572,6 +610,23 @@ export default function Job() {
                             )}
                             {jobStat === 5 && 'Paid'}
                             {jobStat === 6 && 'Declined'}
+                            {jobStat === 7 && 'Un Allocated'}
+                            {jobStat === 8 && (
+                              <Grid container justifyContent="center" spacing={2}>
+                                <Grid item>
+                                  <Button
+                                    onClick={() => completedJob(id, true)}
+                                    variant="contained"
+                                    color="success"
+                                  >
+                                    Confirm Completed
+                                  </Button>
+                                </Grid>
+                                <Grid item variant="contained">
+                                  <Button onClick={() => completedJob(id, false)}>Decline</Button>
+                                </Grid>
+                              </Grid>
+                            )}
                           </TableCell>
                           <TableCell align="right">
                             <UserMoreMenu

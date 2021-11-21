@@ -17,7 +17,7 @@ import {
 import { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { Icon } from '@iconify/react';
@@ -40,6 +40,7 @@ const UserSchemaValidations = Yup.object().shape({
 
 export default function AddEditUsers() {
   const location = useLocation();
+  const navigate = useNavigate();
   const queryString = useQuery(location.search);
   const act = queryString.get('act');
   const id = queryString.get('id');
@@ -119,6 +120,7 @@ export default function AddEditUsers() {
               validationSchema={UserSchemaValidations}
               onSubmit={(values, { setSubmitting }) => {
                 setOpenSnackbar(true);
+                navigate(-1);
                 setTimeout(() => {
                   handleSubmit(values);
                   setSubmitting(false);

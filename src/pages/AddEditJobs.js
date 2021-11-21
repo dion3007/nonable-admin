@@ -61,6 +61,8 @@ export default function AddEditJobs() {
   const [drivers, setDrivers] = useState(driverDataGet() || []);
   const [variable, setVariable] = useState([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  //
+  const [jobStatusAlignment, setJobStatusAlignment] = useState(false);
 
   useEffect(() => {
     setAuth(authDataGet());
@@ -170,7 +172,7 @@ export default function AddEditJobs() {
           date: new Date(),
           duplicate: true,
           paid: false,
-          jobStat: values?.jobStat || 0
+          jobStat: values.driver === '' ? 7 : 0
         });
     } else {
       firebase
@@ -196,8 +198,14 @@ export default function AddEditJobs() {
           date: new Date(),
           duplicate: true,
           paid: false,
-          jobStat: values?.jobStat || 0
+          jobStat: jobStatusAlignment ? 0 : values?.jobStat || 0
         });
+    }
+  };
+
+  const setRequested = (values) => {
+    if (values.jobStat) {
+      setJobStatusAlignment(true);
     }
   };
 
@@ -239,215 +247,233 @@ export default function AddEditJobs() {
               validationSchema={UserSchemaValidations}
               onSubmit={(values, { setSubmitting }) => {
                 setOpenSnackbar(true);
-                navigate('/', { replace: true });
+                navigate(-1);
                 setTimeout(() => {
                   handleSubmit(values);
                   setSubmitting(false);
                 }, 400);
               }}
             >
-              {({ values, errors, handleChange, handleSubmit, setFieldValue, isSubmitting }) => {
-                console.log('log');
-                return (
-                  <form onSubmit={handleSubmit} style={{ padding: 20, textAlign: 'center' }}>
-                    <Grid container justifyContent="space-between" spacing={2}>
-                      <Grid item xs={6}>
-                        <TextField
-                          select
-                          required
-                          error={errors?.customer && true}
-                          style={{ marginBottom: 15, textAlign: 'left' }}
-                          fullWidth
-                          helperText={errors?.customer}
-                          onChange={handleChange('customer')}
-                          onBlur={() => {
-                            const address = clients.filter(
-                              (client) => client.id === values.customer
-                            );
-                            setFieldValue('pickUp', address[0].address);
-                          }}
-                          value={values.customer}
-                          id="customer"
-                          label="Client"
-                        >
-                          {clients
-                            .filter((client) => client.status === 'active')
-                            .map((clientmap) => (
-                              <MenuItem key={clientmap.id} value={clientmap.id}>
-                                {clientmap.name}
-                              </MenuItem>
-                            ))}
-                        </TextField>
-                        <Grid container spacing={2}>
-                          <Grid item>
-                            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                              <DatePicker
-                                renderInput={(props) => (
-                                  <TextField
-                                    {...props}
-                                    helperText={errors?.bookingDate}
-                                    fullWidth
-                                    style={{ marginBottom: 15 }}
-                                  />
-                                )}
-                                id="bookingDate"
-                                label="Booking Date & Time"
-                                error={errors?.bookingDate && true}
-                                onChange={(value) => setFieldValue('bookingDate', value)}
-                                value={values?.bookingDate}
-                                inputFormat="dd/MM/yyyy"
-                                defaultValue="2017-05-24T10:30"
-                                InputLabelProps={{
-                                  shrink: true
-                                }}
-                              />
-                            </LocalizationProvider>
-                          </Grid>
-                          <Grid item>
-                            <TimePicker
-                              showSecond={false}
-                              defaultValue={now}
-                              value={moment(values.bookingTime)}
-                              onChange={(value) => setFieldValue('bookingTime', value)}
-                              format={format}
-                              use12Hours
-                              inputReadOnly
+              {({ values, errors, handleChange, handleSubmit, setFieldValue, isSubmitting }) => (
+                <form onSubmit={handleSubmit} style={{ padding: 20, textAlign: 'center' }}>
+                  <Grid container justifyContent="space-between" spacing={2}>
+                    <Grid item xs={6}>
+                      <TextField
+                        select
+                        required
+                        error={errors?.customer && true}
+                        style={{ marginBottom: 15, textAlign: 'left' }}
+                        fullWidth
+                        helperText={errors?.customer}
+                        onChange={handleChange('customer')}
+                        onBlur={() => {
+                          const address = clients.filter((client) => client.id === values.customer);
+                          setFieldValue('pickUp', address[0].address);
+                        }}
+                        value={values.customer}
+                        id="customer"
+                        label="Client"
+                      >
+                        {clients
+                          .filter((client) => client.status === 'active')
+                          .map((clientmap) => (
+                            <MenuItem key={clientmap.id} value={clientmap.id}>
+                              {clientmap.name}
+                            </MenuItem>
+                          ))}
+                      </TextField>
+                      <Grid container spacing={2}>
+                        <Grid item>
+                          <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DatePicker
+                              renderInput={(props) => (
+                                <TextField
+                                  {...props}
+                                  helperText={errors?.bookingDate}
+                                  fullWidth
+                                  style={{ marginBottom: 15 }}
+                                />
+                              )}
+                              id="bookingDate"
+                              label="Booking Date & Time"
+                              error={errors?.bookingDate && true}
+                              onChange={(value) => setFieldValue('bookingDate', value)}
+                              value={values?.bookingDate}
+                              inputFormat="dd/MM/yyyy"
+                              defaultValue="2017-05-24T10:30"
+                              InputLabelProps={{
+                                shrink: true
+                              }}
                             />
-                          </Grid>
+                          </LocalizationProvider>
                         </Grid>
-                        <TextField
-                          required
-                          error={errors?.pickUp && true}
-                          style={{ marginBottom: 15 }}
-                          fullWidth
-                          helperText={errors?.pickUp}
-                          onChange={handleChange}
-                          value={values.pickUp}
-                          id="pickUp"
-                          label="Pick Up"
-                        />
-                        <TextField
-                          required
-                          error={errors?.dropOff && true}
-                          style={{ marginBottom: 15 }}
-                          fullWidth
-                          helperText={errors?.dropOff}
-                          onChange={handleChange}
-                          value={values.dropOff}
-                          id="dropOff"
-                          label="Drop Off"
-                        />
-                        {filteredUser?.role === 'superadmin' && (
-                          <TextField
-                            error={errors?.hour && true}
-                            style={{ marginBottom: 15 }}
-                            fullWidth
-                            multiline
-                            helperText={errors?.hour}
-                            onChange={handleChange}
-                            value={values.hour}
-                            id="hour"
-                            label="Hour"
-                            type="number"
+                        <Grid item>
+                          <TimePicker
+                            showSecond={false}
+                            defaultValue={now}
+                            value={moment(values.bookingTime)}
+                            onChange={(value) => setFieldValue('bookingTime', value)}
+                            format={format}
+                            use12Hours
+                            inputReadOnly
                           />
-                        )}
+                        </Grid>
+                      </Grid>
+                      <TextField
+                        required
+                        error={errors?.pickUp && true}
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        helperText={errors?.pickUp}
+                        onChange={handleChange}
+                        value={values.pickUp}
+                        id="pickUp"
+                        label="Pick Up"
+                      />
+                      <TextField
+                        required
+                        error={errors?.dropOff && true}
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        helperText={errors?.dropOff}
+                        onChange={handleChange}
+                        value={values.dropOff}
+                        id="dropOff"
+                        label="Drop Off"
+                      />
+                      {filteredUser?.role === 'superadmin' && (
                         <TextField
-                          select
-                          style={{ marginBottom: 15, textAlign: 'left' }}
+                          error={errors?.hour && true}
+                          style={{ marginBottom: 15 }}
                           fullWidth
-                          onChange={handleChange('item')}
+                          multiline
+                          helperText={errors?.hour}
+                          onChange={handleChange}
+                          value={values.hour}
                           onBlur={() => {
-                            const itemRates = itemRate.filter((items) => items.id === values.item);
-                            setFieldValue('price', itemRates[0].rate * values.hour);
+                            const itemRates =
+                              itemRate.filter((items) => items.id === values.item) || 0;
+                            setFieldValue('price', itemRates[0]?.rate * values.hour);
                             setFieldValue(
                               'profit',
-                              itemRates[0].rate * values.hour -
+                              itemRates[0]?.rate * values.hour -
                                 (variable[0]?.empRate * values.hour +
                                   variable[0]?.driverKms * values.distance)
                             );
                           }}
-                          value={values.item}
-                          id="item"
-                          label="Item Rate"
-                        >
-                          {itemRate.map((item) => (
-                            <MenuItem key={item.id} value={item.id}>
-                              {item.name}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                      </Grid>
-                      <Grid item xs={6}>
-                        {filteredUser?.role === 'superadmin' && (
-                          <>
-                            <TextField
-                              style={{ marginBottom: 15 }}
-                              fullWidth
-                              onChange={handleChange}
-                              value={values.price || 0}
-                              id="price"
-                              label="Charges"
-                            />
-                            <TextField
-                              style={{ marginBottom: 15 }}
-                              fullWidth
-                              onChange={handleChange}
-                              value={values.profit || 0}
-                              id="profit"
-                              label="Profit"
-                            />
-                          </>
-                        )}
-                        <TextField
-                          select
-                          style={{ marginBottom: 15, textAlign: 'left' }}
-                          fullWidth
-                          onChange={handleChange('driver')}
-                          value={values.driver}
-                          id="driver"
-                          label="Driver"
-                        >
-                          {drivers
-                            .filter((driver) => driver.status === 'active')
-                            .map((drivermap) => (
-                              <MenuItem key={drivermap.id} value={drivermap.id}>
-                                {drivermap.name}
-                              </MenuItem>
-                            ))}
-                        </TextField>
-                        {filteredUser?.role === 'superadmin' && (
+                          id="hour"
+                          label="Hour"
+                          type="number"
+                        />
+                      )}
+                      <TextField
+                        select
+                        style={{ marginBottom: 15, textAlign: 'left' }}
+                        fullWidth
+                        onChange={handleChange('item')}
+                        onBlur={() => {
+                          const itemRates = itemRate.filter((items) => items.id === values.item);
+                          setFieldValue('price', itemRates[0].rate * values.hour);
+                          setFieldValue(
+                            'profit',
+                            itemRates[0].rate * values.hour -
+                              (variable[0]?.empRate * values.hour +
+                                variable[0]?.driverKms * values.distance)
+                          );
+                        }}
+                        value={values.item}
+                        id="item"
+                        label="Item Rate"
+                      >
+                        {itemRate.map((item) => (
+                          <MenuItem key={item.id} value={item.id}>
+                            {item.name}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={6}>
+                      {filteredUser?.role === 'superadmin' && (
+                        <>
                           <TextField
-                            required
-                            error={errors?.distance && true}
                             style={{ marginBottom: 15 }}
                             fullWidth
-                            multiline
-                            helperText={errors?.distance}
                             onChange={handleChange}
-                            value={values.distance}
-                            id="distance"
-                            label="Distance"
-                            type="number"
+                            value={values.price || 0}
+                            id="price"
+                            label="Charges"
                           />
-                        )}
+                          <TextField
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            onChange={handleChange}
+                            value={values.profit || 0}
+                            id="profit"
+                            label="Profit"
+                          />
+                        </>
+                      )}
+                      <TextField
+                        select
+                        style={{ marginBottom: 15, textAlign: 'left' }}
+                        fullWidth
+                        onChange={handleChange('driver')}
+                        onBlur={() => setRequested(values)}
+                        value={values.driver}
+                        id="driver"
+                        label="Driver"
+                      >
+                        {drivers
+                          .filter((driver) => driver.status === 'active')
+                          .map((drivermap) => (
+                            <MenuItem key={drivermap.id} value={drivermap.id}>
+                              {drivermap.name}
+                            </MenuItem>
+                          ))}
+                      </TextField>
+                      {filteredUser?.role === 'superadmin' && (
                         <TextField
+                          required
+                          error={errors?.distance && true}
                           style={{ marginBottom: 15 }}
                           fullWidth
                           multiline
+                          helperText={errors?.distance}
                           onChange={handleChange}
-                          value={values.notes}
-                          rows={4}
-                          id="notes"
-                          label="notes"
+                          onBlur={() => {
+                            const itemRates =
+                              itemRate.filter((items) => items.id === values.item) || 0;
+                            setFieldValue('price', itemRates[0]?.rate * values.hour);
+                            setFieldValue(
+                              'profit',
+                              itemRates[0]?.rate * values.hour -
+                                (variable[0]?.empRate * values.hour +
+                                  variable[0]?.driverKms * values.distance)
+                            );
+                          }}
+                          value={values.distance}
+                          id="distance"
+                          label="Distance"
+                          type="number"
                         />
-                      </Grid>
+                      )}
+                      <TextField
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        multiline
+                        onChange={handleChange}
+                        value={values.notes}
+                        rows={4}
+                        id="notes"
+                        label="notes"
+                      />
                     </Grid>
-                    <Button type="submit" disabled={isSubmitting}>
-                      {act === 'Add' ? 'Submit' : 'Save Changes'}
-                    </Button>
-                  </form>
-                );
-              }}
+                  </Grid>
+                  <Button type="submit" disabled={isSubmitting}>
+                    {act === 'Add' ? 'Submit' : 'Save Changes'}
+                  </Button>
+                </form>
+              )}
             </Formik>
           </Scrollbar>
         </Card>

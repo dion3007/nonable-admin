@@ -17,7 +17,7 @@ import {
 import { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import DatePicker from '@material-ui/lab/DatePicker';
@@ -51,6 +51,7 @@ const UserSchemaValidations = Yup.object().shape({
 
 export default function AddEditDrivers() {
   const location = useLocation();
+  const navigate = useNavigate();
   const queryString = useQuery(location.search);
   const act = queryString.get('act');
   const id = queryString.get('id');
@@ -155,6 +156,7 @@ export default function AddEditDrivers() {
               validationSchema={UserSchemaValidations}
               onSubmit={(values, { setSubmitting }) => {
                 setOpenSnackbar(true);
+                navigate(-1);
                 setTimeout(() => {
                   handleSubmit(values);
                   setSubmitting(false);

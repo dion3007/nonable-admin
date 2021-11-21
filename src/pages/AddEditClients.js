@@ -147,7 +147,7 @@ export default function AddEditClients() {
               validationSchema={UserSchemaValidations}
               onSubmit={(values, { setSubmitting }) => {
                 setOpenSnackbar(true);
-                navigate('/dashboard/client', { replace: true });
+                navigate(-1);
                 setTimeout(() => {
                   handleSubmit(values);
                   setSubmitting(false);
