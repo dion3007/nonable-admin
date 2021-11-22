@@ -54,18 +54,46 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-const allocateArr = [
+const statusList = [
   {
-    name: 'All',
-    value: 0
+    value: 92,
+    label: 'All'
   },
   {
-    name: 'Allocated',
-    value: 1
+    value: 7,
+    label: 'Un Allocated'
   },
   {
-    name: 'Un-Allocated',
-    value: 2
+    value: 0,
+    label: 'Requested'
+  },
+  {
+    value: 1,
+    label: 'Confirmed'
+  },
+  {
+    value: 2,
+    label: 'On Going'
+  },
+  {
+    value: 3,
+    label: 'Completed'
+  },
+  {
+    value: 4,
+    label: 'Need Confirm Cancel'
+  },
+  {
+    value: 5,
+    label: 'Paid'
+  },
+  {
+    value: 6,
+    label: 'Declined'
+  },
+  {
+    value: 8,
+    label: 'Need Confirm Completed'
   }
 ];
 
@@ -176,15 +204,21 @@ export default function JobDetail({ idParams }) {
   const filterDataByInput = () => {
     let filteredData;
     const jobsData = jobDataGet();
-    if (allocated === 1) {
-      filteredData = jobsData.filter((job) => job.driver !== '');
-    } else if (allocated === 2) {
-      filteredData = jobsData.filter((job) => job.driver === '');
+    if (allocated && allocated !== 92) {
+      filteredData = jobsData.filter((job) => job.jobStat === allocated);
+    } else if (allocated === 0) {
+      filteredData = jobsData.filter((job) => job.jobStat === 0);
     } else {
-      filteredData = jobDataGet();
+      filteredData = jobsData;
     }
 
-    if (dateRange) {
+    if (dateRange[0] !== null && allocated !== null) {
+      filteredData = filteredData.filter(
+        (job) =>
+          new Date(job.bookingDate) > new Date(dateRange[0]) &&
+          new Date(job.bookingDate) < new Date(dateRange[1])
+      );
+    } else if (dateRange[0] !== null) {
       filteredData = jobsData.filter(
         (job) =>
           new Date(job.bookingDate) > new Date(dateRange[0]) &&
@@ -311,9 +345,9 @@ export default function JobDetail({ idParams }) {
                       id="allocated"
                       label="Category"
                     >
-                      {allocateArr.map((allocated) => (
+                      {statusList.map((allocated) => (
                         <MenuItem key={allocated.value} value={allocated.value}>
-                          {allocated.name}
+                          {allocated.label}
                         </MenuItem>
                       ))}
                     </TextField>
