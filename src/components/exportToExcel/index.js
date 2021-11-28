@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@material-ui/core';
 import { Icon } from '@iconify/react';
+import PropTypes from 'prop-types';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
@@ -27,4 +28,9 @@ export const ExportCSV = ({ csvData, fileName }) => {
       Generate to excel
     </Button>
   );
+};
+
+ExportCSV.propTypes = {
+  csvData: PropTypes.any,
+  fileName: PropTypes.string
 };

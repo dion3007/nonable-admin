@@ -186,6 +186,20 @@ export default function Ndis() {
 
   const filteredNdis = applySortFilter(ndis, getComparator(order, orderBy), filterName, clients);
 
+  const exportExcel = filteredNdis.map((data) => ({
+    Client: clients.filter((client) => client.id === data.customer)[0]?.name,
+    Item_Number: itemRate.filter((items) => items.id === data.item)[0]?.name,
+    Item_Rate: itemRate.filter((items) => items.id === data.item)[0]?.rate,
+    Amount: data.price,
+    Date: moment(data.bookingDate).format('DD-MM-YYYY hh:mm a'),
+    Hour: data.hour,
+    Plan_Manager:
+      clients.filter((client) => client.id === data.customer)[0]?.planManagementDetail === 1
+        ? 'Plan Management'
+        : 'Ndis Management',
+    Tax: 0
+  }));
+
   const isUserNotFound = filteredNdis.length === 0;
 
   return (
@@ -196,7 +210,7 @@ export default function Ndis() {
             Ndis
           </Typography>
           <ExportCSV
-            csvData={filteredNdis}
+            csvData={exportExcel}
             fileName={`report_${moment(new Date()).format('DD/MM/YYYY hh:mm a')}`}
           />
         </Stack>
@@ -306,7 +320,7 @@ export default function Ndis() {
                           <TableCell align="left">
                             {moment(bookingDate).format('DD-MM-YYYY hh:mm a')}
                           </TableCell>
-                          <TableCell align="left">{hour}</TableCell>
+                          <TableCell align="left">{hour}h</TableCell>
                           <TableCell align="left">
                             {clients.filter((client) => client.id === customer)[0]
                               ?.planManagementDetail === 1 && 'Plan Management'}
