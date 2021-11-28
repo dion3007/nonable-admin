@@ -1,8 +1,5 @@
 import { filter } from 'lodash';
 import { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { Icon } from '@iconify/react';
-import plusFill from '@iconify/icons-eva/plus-fill';
 import moment from 'moment';
 // material
 import {
@@ -24,6 +21,7 @@ import {
 } from '@material-ui/core';
 import { DesktopDateRangePicker, LocalizationProvider } from '@material-ui/lab';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
+import { ExportCSV } from '../components/exportToExcel';
 import firebase from '../firebase';
 // components
 import Page from '../components/Page';
@@ -197,14 +195,10 @@ export default function Ndis() {
           <Typography variant="h4" gutterBottom>
             Ndis
           </Typography>
-          <Button
-            variant="contained"
-            component={RouterLink}
-            to="/dashboard/booking-manage?act=Add"
-            startIcon={<Icon icon={plusFill} />}
-          >
-            Generate to excel
-          </Button>
+          <ExportCSV
+            csvData={filteredNdis}
+            fileName={`report_${moment(new Date()).format('DD/MM/YYYY hh:mm a')}`}
+          />
         </Stack>
 
         <Card>
