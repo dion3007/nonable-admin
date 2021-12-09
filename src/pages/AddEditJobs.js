@@ -465,7 +465,7 @@ export default function AddEditJobs() {
                         value={values.notes}
                         rows={4}
                         id="notes"
-                        label="notes"
+                        label="Instructions"
                       />
                     </Grid>
                   </Grid>

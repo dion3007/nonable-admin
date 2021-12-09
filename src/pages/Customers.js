@@ -211,12 +211,17 @@ export default function Customers() {
                           </TableCell>
                           <TableCell align="left">{idNumber}</TableCell>
                           <TableCell component="th" scope="row" padding="none">
-                            <Stack direction="row" alignItems="center" spacing={2}>
-                              <Avatar alt={name} src={avatarUrl} />
-                              <Typography variant="subtitle2" noWrap>
-                                {name}
-                              </Typography>
-                            </Stack>
+                            <RouterLink
+                              to={`/dashboard/customer-manage?act=Edit&id=${idNumber}`}
+                              style={{ textDecoration: 'none', color: '#000' }}
+                            >
+                              <Stack direction="row" alignItems="center" spacing={2}>
+                                <Avatar alt={name} src={avatarUrl} />
+                                <Typography variant="subtitle2" noWrap>
+                                  {name}
+                                </Typography>
+                              </Stack>
+                            </RouterLink>
                           </TableCell>
                           <TableCell align="left">{address}</TableCell>
                           <TableCell align="left">

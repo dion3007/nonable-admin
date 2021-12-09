@@ -231,11 +231,16 @@ export default function Driver() {
                         >
                           <TableCell padding="checkbox" />
                           <TableCell component="th" scope="row" padding="none">
-                            <Stack direction="row" alignItems="center" spacing={2}>
-                              <Typography variant="subtitle2" noWrap>
-                                {name}
-                              </Typography>
-                            </Stack>
+                            <RouterLink
+                              to={`/dashboard/driver-manage?act=Edit&id=${id}`}
+                              style={{ textDecoration: 'none', color: '#000' }}
+                            >
+                              <Stack direction="row" alignItems="center" spacing={2}>
+                                <Typography variant="subtitle2" noWrap>
+                                  {name}
+                                </Typography>
+                              </Stack>
+                            </RouterLink>
                           </TableCell>
                           <TableCell align="left">{email}</TableCell>
                           <TableCell align="left">

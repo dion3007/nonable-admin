@@ -126,7 +126,7 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function applySortFilter(array, comparator, query, arrayClient) {
+function applySortFilter(array, comparator, query, arrayClient, driverSearch) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -135,10 +135,16 @@ function applySortFilter(array, comparator, query, arrayClient) {
   });
   if (query) {
     return filter(array, (_job) => {
-      const _filtered = arrayClient.filter((client) => client.id === _job.customer)[0]?.name;
+      let _filtered;
+      if (driverSearch) {
+        _filtered = arrayClient.filter((driver) => driver.id === _job.driver)[0]?.name;
+      } else {
+        _filtered = arrayClient.filter((client) => client.id === _job.customer)[0]?.name;
+      }
       return _filtered.toLowerCase().indexOf(query.toLowerCase()) !== -1;
     });
   }
+
   return stabilizedThis.map((el) => el[0]);
 }
 
@@ -163,6 +169,8 @@ export default function Job() {
   const [filterGrid, setFilterGrid] = useState(false);
   const [allocated, setAllocated] = useState();
   const [dateRange, setDateRange] = useState([null, null]);
+
+  const [driverSearch, setDriverSearch] = useState(false);
 
   useEffect(() => {
     firebase
@@ -425,7 +433,13 @@ export default function Job() {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - jobs?.length) : 0;
 
-  const filteredJobs = applySortFilter(jobs, getComparator(order, orderBy), filterName, clients);
+  const filteredJobs = applySortFilter(
+    jobs,
+    getComparator(order, orderBy),
+    filterName,
+    driverSearch ? drivers : clients,
+    driverSearch
+  );
 
   const isUserNotFound = filteredJobs.length === 0;
 
@@ -475,13 +489,24 @@ export default function Job() {
         </Stack>
 
         <Card>
+          <div style={{ marginLeft: 22, marginTop: 10 }}>
+            <Grid container style={{ alignItems: 'center' }}>
+              <Grid item>{driverSearch ? 'Search By Driver' : 'Search By Customer'}</Grid>
+              <Grid item>
+                <Switch
+                  checked={driverSearch}
+                  onChange={() => setDriverSearch(!driverSearch)}
+                  inputProps={{ 'aria-label': 'controlled' }}
+                />
+              </Grid>
+            </Grid>
+          </div>
           <UserListToolbar
             numSelected={selected.length}
             filterName={filterName}
             filterListClick={() => setFilterGrid(!filterGrid)}
             onFilterName={handleFilterByName}
           />
-
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               {filterGrid && (
@@ -582,7 +607,7 @@ export default function Job() {
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
                               <RouterLink
-                                to={`/dashboard/client-manage?act=Edit&id=${customer}`}
+                                to={`/dashboard/booking-manage?act=Edit&id=${id}`}
                                 style={{ textDecoration: 'none', color: '#000' }}
                               >
                                 <Typography variant="subtitle2" noWrap>
@@ -601,7 +626,7 @@ export default function Job() {
                           </TableCell>
                           <TableCell align="left">
                             <RouterLink
-                              to={`/dashboard/driver-manage?act=Edit&id=${driver}`}
+                              to={`/dashboard/booking-manage?act=Edit&id=${id}`}
                               style={{ textDecoration: 'none', color: '#000' }}
                             >
                               {drivers?.filter((driverData) => driverData.id === driver)[0]?.name}
