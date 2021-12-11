@@ -1,6 +1,7 @@
 import { filter } from 'lodash';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { Link as RouterLink } from 'react-router-dom';
 import moment from 'moment';
 // material
 import {
@@ -413,16 +414,26 @@ export default function JobDetail({ idParams }) {
                           <TableCell padding="checkbox" />
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Typography variant="subtitle2" noWrap>
-                                {clients?.filter((client) => client.id === customer)[0]?.name}
-                              </Typography>
+                              <RouterLink
+                                to={`/dashboard/client-manage?act=Edit&id=${customer}`}
+                                style={{ textDecoration: 'none', color: '#000' }}
+                              >
+                                <Typography variant="subtitle2" noWrap>
+                                  {clients?.filter((client) => client.id === customer)[0]?.name}
+                                </Typography>
+                              </RouterLink>
                             </Stack>
                           </TableCell>
                           <TableCell align="left">{pickUp}</TableCell>
                           <TableCell align="left">{dropOff}</TableCell>
                           <TableCell align="left">$ {price}</TableCell>
                           <TableCell align="left">
-                            {drivers?.filter((driverData) => driverData.id === driver)[0]?.name}
+                            <RouterLink
+                              to={`/dashboard/driver-manage?act=Edit&id=${driver}`}
+                              style={{ textDecoration: 'none', color: '#000' }}
+                            >
+                              {drivers?.filter((driverData) => driverData.id === driver)[0]?.name}
+                            </RouterLink>
                           </TableCell>
                           <TableCell>
                             <Switch

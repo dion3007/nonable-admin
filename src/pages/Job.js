@@ -607,7 +607,7 @@ export default function Job() {
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
                               <RouterLink
-                                to={`/dashboard/booking-manage?act=Edit&id=${id}`}
+                                to={`/dashboard/client-manage?act=Edit&id=${customer}`}
                                 style={{ textDecoration: 'none', color: '#000' }}
                               >
                                 <Typography variant="subtitle2" noWrap>
@@ -626,7 +626,7 @@ export default function Job() {
                           </TableCell>
                           <TableCell align="left">
                             <RouterLink
-                              to={`/dashboard/booking-manage?act=Edit&id=${id}`}
+                              to={`/dashboard/driver-manage?act=Edit&id=${driver}`}
                               style={{ textDecoration: 'none', color: '#000' }}
                             >
                               {drivers?.filter((driverData) => driverData.id === driver)[0]?.name}
