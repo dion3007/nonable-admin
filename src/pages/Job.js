@@ -607,7 +607,7 @@ export default function Job() {
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
                               <RouterLink
-                                to={`/dashboard/client-manage?act=Edit&id=${customer}`}
+                                to={`/dashboard/booking-manage?act=Edit&id=${id}`}
                                 style={{ textDecoration: 'none', color: '#000' }}
                               >
                                 <Typography variant="subtitle2" noWrap>
