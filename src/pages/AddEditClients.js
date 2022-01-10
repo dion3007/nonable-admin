@@ -64,6 +64,7 @@ export default function AddEditClients() {
   const filteredClients = clients.filter((client) => id === client.id);
 
   const handleSubmit = (values) => {
+    console.log(values);
     if (act === 'Add') {
       firebase
         .firestore()
@@ -82,10 +83,9 @@ export default function AddEditClients() {
           address: `${values.streetNumber} ${values.streetAddress} ${values.suburb} ${values.state} ${values.postCode}`,
           clientSpec: values?.clientSpec || '',
           coordinator: values?.coordinator || '',
-          planDates: [values?.planDates[0]?.toString(), values?.planDates[1]?.toString()] || [
-            '',
-            ''
-          ],
+          planDates: values?.planDates[0]
+            ? [values?.planDates[0]?.toString(), values?.planDates[1]?.toString()]
+            : [null, null],
           fundsQuarantine: values?.fundsQuarantine || 0,
           planManagementDetail: values.planManagementDetail,
           planManager: values?.planManager || '',
