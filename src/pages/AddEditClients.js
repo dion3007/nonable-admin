@@ -82,7 +82,10 @@ export default function AddEditClients() {
           address: `${values.streetNumber} ${values.streetAddress} ${values.suburb} ${values.state} ${values.postCode}`,
           clientSpec: values?.clientSpec || '',
           coordinator: values?.coordinator || '',
-          planDates: [values?.planDates[0]?.toString(), values?.planDates[1]?.toString()] || ['', ''],
+          planDates: [values?.planDates[0]?.toString(), values?.planDates[1]?.toString()] || [
+            '',
+            ''
+          ],
           fundsQuarantine: values?.fundsQuarantine || 0,
           planManagementDetail: values.planManagementDetail,
           planManager: values?.planManager || '',
