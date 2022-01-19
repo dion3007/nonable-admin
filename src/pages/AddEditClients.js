@@ -72,7 +72,7 @@ export default function AddEditClients() {
           setCoor(newRef);
         });
     }
-  }, [coor]);
+  }, [act, coor]);
 
   const filteredClients = clients.filter((client) => id === client.id);
 
