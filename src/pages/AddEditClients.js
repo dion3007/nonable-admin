@@ -25,7 +25,7 @@ import useQuery from '../utils/useQuery';
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
 import firebase from '../firebase';
-import { clientDataGet } from '../utils/cache';
+import { clientDataGet, coorDataGet } from '../utils/cache';
 import JobDetail from '../layouts/JobDetail';
 
 const UserSchemaValidations = Yup.object().shape({
@@ -44,6 +44,7 @@ export default function AddEditClients() {
   const act = queryString.get('act');
   const id = queryString.get('id');
   const [clients, setClients] = useState(clientDataGet() || []);
+  const [coor, setCoor] = useState(coorDataGet() || []);
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
@@ -59,9 +60,25 @@ export default function AddEditClients() {
           setClients(newClient);
         });
     }
-  }, [act]);
+    if (!coor) {
+      firebase
+        .firestore()
+        .collection('refferedby')
+        .onSnapshot((snapshot) => {
+          const newRef = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          setCoor(newRef);
+        });
+    }
+  }, [coor]);
 
   const filteredClients = clients.filter((client) => id === client.id);
+
+  const filteredCoor = coor.filter((cor) => cor.id_client === id);
+
+  console.log(coor);
 
   const handleSubmit = (values) => {
     console.log(values);
@@ -118,6 +135,29 @@ export default function AddEditClients() {
           planManagerEmail: values?.planManagerEmail || '',
           status: 'active'
         });
+    }
+  };
+
+  const handleSubmitt = (values) => {
+    console.log(values);
+    if (filteredCoor.length < 1) {
+      firebase.firestore().collection('refferedby').add({
+        name: values.name,
+        email: values.email,
+        company: values.company,
+        phone: values.phone,
+        id_client: filteredClients[0].id,
+        status: 'active'
+      });
+    } else {
+      firebase.firestore().collection('refferedby').doc(filteredCoor[0].id).set({
+        name: values?.name,
+        email: values?.email,
+        company: values?.company,
+        phone: values?.phone,
+        id_client: filteredClients[0].id,
+        status: 'active'
+      });
     }
   };
 
@@ -413,16 +453,18 @@ export default function AddEditClients() {
         <Card>
           <Scrollbar>
             <Formik
-              initialValues={{
-                name: '',
-                company: '',
-                email: '',
-                phone: 0
-              }}
-              validationSchema={UserSchemaValidations}
-              onSubmit={({ setSubmitting }) => {
+              initialValues={
+                filteredCoor[0] || {
+                  name: '',
+                  company: '',
+                  email: '',
+                  phone: 0
+                }
+              }
+              onSubmit={(values, { setSubmitting }) => {
                 setOpenSnackbar(true);
                 setTimeout(() => {
+                  handleSubmitt(values);
                   setSubmitting(false);
                 }, 400);
               }}
@@ -471,7 +513,7 @@ export default function AddEditClients() {
                     </Grid>
                   </Grid>
                   <Button type="submit" disabled={isSubmitting}>
-                    {act === 'Add' ? 'Submit' : 'Save Changes'}
+                    Submit
                   </Button>
                 </form>
               )}

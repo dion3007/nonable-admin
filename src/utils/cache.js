@@ -34,6 +34,15 @@ export const clientDataGet = () => {
   return JSON.parse(getData);
 };
 
+export const coorDataSet = (u) => {
+  localStorage.setItem('refferedby', JSON.stringify(u));
+};
+
+export const coorDataGet = () => {
+  const getData = localStorage.getItem('refferedby');
+  return JSON.parse(getData);
+};
+
 export const jobDataSet = (u) => {
   localStorage.setItem('job', JSON.stringify(u));
 };
