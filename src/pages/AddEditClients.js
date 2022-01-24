@@ -445,81 +445,85 @@ export default function AddEditClients() {
             </Formik>
           </Scrollbar>
         </Card>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} mt={5}>
-          <Typography variant="h4" gutterBottom>
-            Support Coordinator / Referred By
-          </Typography>
-        </Stack>
-        <Card>
-          <Scrollbar>
-            <Formik
-              initialValues={
-                filteredCoor[0] || {
-                  name: '',
-                  company: '',
-                  email: '',
-                  phone: 0
-                }
-              }
-              onSubmit={(values, { setSubmitting }) => {
-                setOpenSnackbar(true);
-                setTimeout(() => {
-                  handleSubmitt(values);
-                  setSubmitting(false);
-                }, 400);
-              }}
-            >
-              {({ values, handleChange, handleSubmit, isSubmitting }) => (
-                <form onSubmit={handleSubmit} style={{ padding: 20, textAlign: 'center' }}>
-                  <Grid container justifyContent="space-between" spacing={2}>
-                    <Grid item xs={6}>
-                      <TextField
-                        style={{ marginBottom: 15 }}
-                        fullWidth
-                        onChange={handleChange}
-                        value={values.name}
-                        id="name"
-                        label="Name"
-                      />
-                      <TextField
-                        style={{ marginBottom: 15 }}
-                        fullWidth
-                        onChange={handleChange}
-                        multiline
-                        maxRows={3}
-                        value={values.phone}
-                        type="number"
-                        id="phone"
-                        label="Contact Number"
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        style={{ marginBottom: 15 }}
-                        fullWidth
-                        onChange={handleChange}
-                        value={values.email}
-                        id="email"
-                        label="Email"
-                      />
-                      <TextField
-                        style={{ marginBottom: 15 }}
-                        fullWidth
-                        onChange={handleChange}
-                        value={values.company}
-                        id="company"
-                        label="Company"
-                      />
-                    </Grid>
-                  </Grid>
-                  <Button type="submit" disabled={isSubmitting}>
-                    Submit
-                  </Button>
-                </form>
-              )}
-            </Formik>
-          </Scrollbar>
-        </Card>
+        {act === 'Edit' && (
+          <>
+            <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} mt={5}>
+              <Typography variant="h4" gutterBottom>
+                Support Coordinator / Referred By
+              </Typography>
+            </Stack>
+            <Card>
+              <Scrollbar>
+                <Formik
+                  initialValues={
+                    filteredCoor[0] || {
+                      name: '',
+                      company: '',
+                      email: '',
+                      phone: 0
+                    }
+                  }
+                  onSubmit={(values, { setSubmitting }) => {
+                    setOpenSnackbar(true);
+                    setTimeout(() => {
+                      handleSubmitt(values);
+                      setSubmitting(false);
+                    }, 400);
+                  }}
+                >
+                  {({ values, handleChange, handleSubmit, isSubmitting }) => (
+                    <form onSubmit={handleSubmit} style={{ padding: 20, textAlign: 'center' }}>
+                      <Grid container justifyContent="space-between" spacing={2}>
+                        <Grid item xs={6}>
+                          <TextField
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            onChange={handleChange}
+                            value={values.name}
+                            id="name"
+                            label="Name"
+                          />
+                          <TextField
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            onChange={handleChange}
+                            multiline
+                            maxRows={3}
+                            value={values.phone}
+                            type="number"
+                            id="phone"
+                            label="Contact Number"
+                          />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            onChange={handleChange}
+                            value={values.email}
+                            id="email"
+                            label="Email"
+                          />
+                          <TextField
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            onChange={handleChange}
+                            value={values.company}
+                            id="company"
+                            label="Company"
+                          />
+                        </Grid>
+                      </Grid>
+                      <Button type="submit" disabled={isSubmitting}>
+                        Submit
+                      </Button>
+                    </form>
+                  )}
+                </Formik>
+              </Scrollbar>
+            </Card>
+          </>
+        )}
       </Container>
       {act === 'Edit' && <JobDetail idParams={id} />}
     </Page>
