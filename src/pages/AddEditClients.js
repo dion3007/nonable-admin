@@ -185,7 +185,7 @@ export default function AddEditClients() {
                   planDates: [null, null],
                   phone: 0,
                   licenseNumber: 0,
-                  regoNumber: 0,
+                  regoNumber: '',
                   employeeType: 0,
                   planManager: '',
                   planManagerEmail: ''

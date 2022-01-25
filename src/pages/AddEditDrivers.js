@@ -45,7 +45,7 @@ const UserSchemaValidations = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
   phone: Yup.number().required('Required'),
   licenseNumber: Yup.number().required('Required'),
-  regoNumber: Yup.number().required('Required'),
+  regoNumber: Yup.string().required('Required'),
   employeeType: Yup.number().required('Required')
 });
 
@@ -297,7 +297,7 @@ export default function AddEditDrivers() {
                         value={values.regoNumber}
                         error={errors?.regoNumber && true}
                         helperText={errors?.regoNumber}
-                        type="number"
+                        type="text"
                         id="regoNumber"
                         label="Rego Number"
                       />
