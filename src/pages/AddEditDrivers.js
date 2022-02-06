@@ -44,7 +44,7 @@ const UserSchemaValidations = Yup.object().shape({
   state: Yup.string().required('Required'),
   email: Yup.string().email('Invalid email').required('Required'),
   phone: Yup.number().required('Required'),
-  licenseNumber: Yup.number().required('Required'),
+  licenseNumber: Yup.string().required('Required'),
   regoNumber: Yup.string().required('Required'),
   employeeType: Yup.number().required('Required')
 });
@@ -94,7 +94,7 @@ export default function AddEditDrivers() {
           phone: values.phone,
           licenseNumber: values.licenseNumber,
           regoNumber: values.regoNumber,
-          dobNumber: values?.dobNumber.toString(),
+          dobNumber: values?.dobNumber ? values?.dobNumber?.toString() : new Date().toDateString(),
           address: `${values.streetNumber} ${values.streetAddress} ${values.suburb} ${values.state} ${values.postCode}`,
           employeeType: values.employeeType,
           onWork: false,
@@ -118,7 +118,7 @@ export default function AddEditDrivers() {
           licenseNumber: values?.licenseNumber,
           regoNumber: values?.regoNumber,
           address: `${values?.streetNumber} ${values?.streetAddress} ${values?.suburb} ${values?.state} ${values?.postCode}`,
-          dobNumber: values?.dobNumber.toString(),
+          dobNumber: values?.dobNumber ? values?.dobNumber?.toString() : new Date().toDateString(),
           employeeType: values?.employeeType,
           onWork: false,
           status: 'active'
@@ -205,6 +205,17 @@ export default function AddEditDrivers() {
                         </Grid>
                         <Grid item xs={6}>
                           <TextField
+                            error={errors?.streetAddress && true}
+                            required
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            helperText={errors?.streetAddress}
+                            onChange={handleChange}
+                            value={values.streetAddress}
+                            id="streetAddress"
+                            label="Street Address"
+                          />
+                          <TextField
                             error={errors?.state && true}
                             required
                             style={{ marginBottom: 15 }}
@@ -215,29 +226,18 @@ export default function AddEditDrivers() {
                             id="state"
                             label="State"
                           />
-                          <TextField
-                            error={errors?.postCode && true}
-                            required
-                            style={{ marginBottom: 15 }}
-                            fullWidth
-                            helperText={errors?.postCode}
-                            onChange={handleChange}
-                            value={values.postCode}
-                            id="postCode"
-                            label="Post Code"
-                          />
                         </Grid>
                       </Grid>
                       <TextField
-                        error={errors?.streetAddress && true}
+                        error={errors?.postCode && true}
                         required
                         style={{ marginBottom: 15 }}
                         fullWidth
-                        helperText={errors?.streetAddress}
+                        helperText={errors?.postCode}
                         onChange={handleChange}
-                        value={values.streetAddress}
-                        id="streetAddress"
-                        label="Street Address"
+                        value={values.postCode}
+                        id="postCode"
+                        label="Post Code"
                       />
                       <TextField
                         error={errors?.email && true}

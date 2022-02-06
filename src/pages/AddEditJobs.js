@@ -399,6 +399,7 @@ export default function AddEditJobs() {
                             style={{ marginBottom: 15 }}
                             fullWidth
                             onChange={handleChange}
+                            disabled
                             value={values.price || 0}
                             id="price"
                             label="Charges"
@@ -406,6 +407,7 @@ export default function AddEditJobs() {
                           <TextField
                             style={{ marginBottom: 15 }}
                             fullWidth
+                            disabled
                             onChange={handleChange}
                             value={values.profit || 0}
                             id="profit"

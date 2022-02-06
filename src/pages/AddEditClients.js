@@ -32,7 +32,7 @@ const UserSchemaValidations = Yup.object().shape({
   name: Yup.string().required('Required'),
   email: Yup.string().email('Invalid email').required('Required'),
   phone: Yup.number().required('Required'),
-  ndisNumber: Yup.number().required('Required'),
+  ndisNumber: Yup.string().required('Required'),
   dobNumber: Yup.string().required('Required'),
   planManagementDetail: Yup.number().required('Required')
 });
@@ -96,7 +96,7 @@ export default function AddEditClients() {
           postCode: values.postCode,
           phone: values.phone,
           ndisNumber: values.ndisNumber,
-          dobNumber: values?.dobNumber?.toString(),
+          dobNumber: values?.dobNumber ? values?.dobNumber?.toString() : new Date().toDateString(),
           address: `${values.streetNumber} ${values.streetAddress} ${values.suburb} ${values.state} ${values.postCode}`,
           clientSpec: values?.clientSpec || '',
           coordinator: values?.coordinator || '',
@@ -124,7 +124,7 @@ export default function AddEditClients() {
           postCode: values.postCode,
           phone: values?.phone,
           ndisNumber: values?.ndisNumber,
-          dobNumber: values?.dobNumber.toString(),
+          dobNumber: values?.dobNumber ? values?.dobNumber?.toString() : new Date().toDateString(),
           planDates: [values?.planDates[0].toString(), values?.planDates[1].toString()],
           address: `${values?.streetNumber} ${values?.streetAddress} ${values?.suburb} ${values?.state} ${values?.postCode}`,
           clientSpec: values?.clientSpec || '',
@@ -253,15 +253,15 @@ export default function AddEditClients() {
                             label="Street Number"
                           />
                           <TextField
-                            error={errors?.state && true}
+                            error={errors?.suburb && true}
                             required
                             style={{ marginBottom: 15 }}
                             fullWidth
-                            helperText={errors?.state}
+                            helperText={errors?.suburb}
                             onChange={handleChange}
-                            value={values.state}
-                            id="state"
-                            label="State"
+                            value={values.suburb}
+                            id="suburb"
+                            label="Suburb"
                           />
                         </Grid>
                         <Grid item xs={6}>
@@ -277,15 +277,15 @@ export default function AddEditClients() {
                             label="Street Address"
                           />
                           <TextField
-                            error={errors?.suburb && true}
+                            error={errors?.state && true}
                             required
                             style={{ marginBottom: 15 }}
                             fullWidth
-                            helperText={errors?.suburb}
+                            helperText={errors?.state}
                             onChange={handleChange}
-                            value={values.suburb}
-                            id="suburb"
-                            label="Suburb"
+                            value={values.state}
+                            id="state"
+                            label="State"
                           />
                         </Grid>
                       </Grid>
