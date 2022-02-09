@@ -14,6 +14,7 @@ import sidebarConfig from './SidebarConfig';
 import { authDataGet } from '../../utils/cache';
 import account from '../../_mocks_/account';
 import firebase from '../../firebase';
+import sidebarConfigAdmin from './SidebarConfigAdmin';
 // ----------------------------------------------------------------------
 
 const DRAWER_WIDTH = 280;
@@ -96,8 +97,11 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           </AccountStyle>
         </Link>
       </Box>
-
-      <NavSection navConfig={sidebarConfig} />
+      {filteredUser?.role === 'admin' && 'Admin' ? (
+        <NavSection navConfig={sidebarConfigAdmin} />
+      ) : (
+        <NavSection navConfig={sidebarConfig} />
+      )}
 
       <Box sx={{ flexGrow: 1 }} />
 

@@ -39,7 +39,8 @@ import {
   clientDataSet,
   jobDataGet,
   variableDataSet,
-  itemRateDataSet
+  itemRateDataSet,
+  authDataGet
 } from '../utils/cache';
 import {
   AppNewUsers,
@@ -158,6 +159,8 @@ export default function Job() {
   const [drivers, setDrivers] = useState([]);
   const [itemRate, setItemRate] = useState([]);
   const [variable, setVariable] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [auth, setAuth] = useState();
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(25);
@@ -173,6 +176,17 @@ export default function Job() {
   const [driverSearch, setDriverSearch] = useState(false);
 
   useEffect(() => {
+    setAuth(authDataGet());
+    firebase
+      .firestore()
+      .collection('users')
+      .onSnapshot((snapshot) => {
+        const newUser = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setUsers(newUser);
+      });
     firebase
       .firestore()
       .collection('jobs')
@@ -397,6 +411,8 @@ export default function Job() {
       });
     setOpenPaidModal(false);
   };
+
+  const filteredUser = users.filter((user) => user.email === auth.user.email)[0];
 
   const addToLocalStorage = () => {
     clientDataSet(clients);
@@ -632,13 +648,15 @@ export default function Job() {
                               {drivers?.filter((driverData) => driverData.id === driver)[0]?.name}
                             </RouterLink>
                           </TableCell>
-                          <TableCell>
-                            <Switch
-                              checked={paid}
-                              onChange={() => paidJobEach(id)}
-                              inputProps={{ 'aria-label': 'controlled' }}
-                            />
-                          </TableCell>
+                          {filteredUser?.role !== 'admin' && 'Admin' && (
+                            <TableCell>
+                              <Switch
+                                checked={paid}
+                                onChange={() => paidJobEach(id)}
+                                inputProps={{ 'aria-label': 'controlled' }}
+                              />
+                            </TableCell>
+                          )}
                           <TableCell align="left" width="150px">
                             {moment(bookingDate).format('DD-MM-YYYY')}
                           </TableCell>
@@ -666,6 +684,7 @@ export default function Job() {
                               <Grid container justifyContent="center" spacing={2}>
                                 <Grid item>
                                   <Button
+                                    disabled={filteredUser?.role === 'admin' && 'Admin'}
                                     onClick={() => cancelJob(id, true)}
                                     variant="contained"
                                     color="error"
@@ -674,7 +693,12 @@ export default function Job() {
                                   </Button>
                                 </Grid>
                                 <Grid item variant="contained">
-                                  <Button onClick={() => cancelJob(id, false)}>Decline</Button>
+                                  <Button
+                                    disabled={filteredUser?.role === 'admin' && 'Admin'}
+                                    onClick={() => cancelJob(id, false)}
+                                  >
+                                    Decline
+                                  </Button>
                                 </Grid>
                               </Grid>
                             )}
@@ -689,6 +713,7 @@ export default function Job() {
                               <Grid container justifyContent="center" spacing={2}>
                                 <Grid item>
                                   <Button
+                                    disabled={filteredUser?.role === 'admin' && 'Admin'}
                                     onClick={() => completedJob(id, true)}
                                     variant="contained"
                                     color="success"
@@ -697,7 +722,12 @@ export default function Job() {
                                   </Button>
                                 </Grid>
                                 <Grid item variant="contained">
-                                  <Button onClick={() => completedJob(id, false)}>Decline</Button>
+                                  <Button
+                                    disabled={filteredUser?.role === 'admin' && 'Admin'}
+                                    onClick={() => completedJob(id, false)}
+                                  >
+                                    Decline
+                                  </Button>
                                 </Grid>
                               </Grid>
                             )}

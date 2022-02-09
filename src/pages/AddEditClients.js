@@ -76,7 +76,7 @@ export default function AddEditClients() {
 
   const filteredClients = clients.filter((client) => id === client.id);
 
-  const filteredCoor = coor.filter((cor) => cor.id_client === id);
+  const filteredCoor = coor.filter((cor) => cor.id_client === filteredClients[0]?.email);
 
   console.log(coor);
 
@@ -109,6 +109,14 @@ export default function AddEditClients() {
           planManagerEmail: values?.planManagerEmail || '',
           status: 'active'
         });
+      firebase.firestore().collection('refferedby').add({
+        name: values?.nameCoor,
+        email: values?.emailCoor,
+        company: values?.companyCoor,
+        phone: values?.phoneCoor,
+        id_client: values?.email,
+        status: 'active'
+      });
     } else {
       firebase
         .firestore()
@@ -146,7 +154,7 @@ export default function AddEditClients() {
         email: values.email,
         company: values.company,
         phone: values.phone,
-        id_client: filteredClients[0].id,
+        id_client: filteredClients[0]?.email,
         status: 'active'
       });
     } else {
@@ -155,7 +163,7 @@ export default function AddEditClients() {
         email: values?.email,
         company: values?.company,
         phone: values?.phone,
-        id_client: filteredClients[0].id,
+        id_client: filteredClients[0]?.email,
         status: 'active'
       });
     }
@@ -437,6 +445,62 @@ export default function AddEditClients() {
                       />
                     </Grid>
                   </Grid>
+                  {act !== 'Edit' && (
+                    <>
+                      <Stack
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="space-between"
+                        mb={5}
+                        mt={5}
+                      >
+                        <Typography variant="h4" gutterBottom>
+                          Support Coordinator / Referred By
+                        </Typography>
+                      </Stack>
+                      <Grid container justifyContent="space-between" spacing={2}>
+                        <Grid item xs={6}>
+                          <TextField
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            onChange={handleChange}
+                            value={values.nameCoor}
+                            id="nameCoor"
+                            label="Name"
+                          />
+                          <TextField
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            onChange={handleChange}
+                            multiline
+                            maxRows={3}
+                            value={values.phoneCoor}
+                            type="number"
+                            id="phoneCoor"
+                            label="Contact Number"
+                          />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            onChange={handleChange}
+                            value={values.emailCoor}
+                            id="emailCoor"
+                            label="Email"
+                          />
+                          <TextField
+                            style={{ marginBottom: 15 }}
+                            fullWidth
+                            onChange={handleChange}
+                            value={values.companyCoor}
+                            id="companyCoor"
+                            label="Company"
+                          />
+                        </Grid>
+                      </Grid>
+                    </>
+                  )}
                   <Button type="submit" disabled={isSubmitting}>
                     {act === 'Add' ? 'Submit' : 'Save Changes'}
                   </Button>
@@ -514,9 +578,11 @@ export default function AddEditClients() {
                           />
                         </Grid>
                       </Grid>
-                      <Button type="submit" disabled={isSubmitting}>
-                        Submit
-                      </Button>
+                      {act === 'Edit' && (
+                        <Button type="submit" disabled={isSubmitting}>
+                          Submit
+                        </Button>
+                      )}
                     </form>
                   )}
                 </Formik>

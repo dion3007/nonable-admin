@@ -35,6 +35,19 @@ const MENU_OPTIONS = [
   }
 ];
 
+const MENU_OPTIONS_ADMIN = [
+  {
+    label: 'Home',
+    icon: homeFill,
+    linkTo: '/'
+  },
+  {
+    label: 'Profile',
+    icon: personFill,
+    linkTo: '#'
+  }
+];
+
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
@@ -113,28 +126,49 @@ export default function AccountPopover() {
         </Box>
 
         <Divider sx={{ my: 1 }} />
+        {filteredUser?.role === 'admin' && 'Admin'
+          ? MENU_OPTIONS_ADMIN.map((option) => (
+              <MenuItem
+                key={option.label}
+                to={option.linkTo}
+                component={RouterLink}
+                onClick={handleClose}
+                sx={{ typography: 'body2', py: 1, px: 2.5 }}
+              >
+                <Box
+                  component={Icon}
+                  icon={option.icon}
+                  sx={{
+                    mr: 2,
+                    width: 24,
+                    height: 24
+                  }}
+                />
 
-        {MENU_OPTIONS.map((option) => (
-          <MenuItem
-            key={option.label}
-            to={option.linkTo}
-            component={RouterLink}
-            onClick={handleClose}
-            sx={{ typography: 'body2', py: 1, px: 2.5 }}
-          >
-            <Box
-              component={Icon}
-              icon={option.icon}
-              sx={{
-                mr: 2,
-                width: 24,
-                height: 24
-              }}
-            />
+                {option.label}
+              </MenuItem>
+            ))
+          : MENU_OPTIONS.map((option) => (
+              <MenuItem
+                key={option.label}
+                to={option.linkTo}
+                component={RouterLink}
+                onClick={handleClose}
+                sx={{ typography: 'body2', py: 1, px: 2.5 }}
+              >
+                <Box
+                  component={Icon}
+                  icon={option.icon}
+                  sx={{
+                    mr: 2,
+                    width: 24,
+                    height: 24
+                  }}
+                />
 
-            {option.label}
-          </MenuItem>
-        ))}
+                {option.label}
+              </MenuItem>
+            ))}
 
         <Box sx={{ p: 2, pt: 1.5 }}>
           <Button onClick={handleLogout} fullWidth color="inherit" variant="outlined">

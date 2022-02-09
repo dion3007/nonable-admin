@@ -156,6 +156,7 @@ export default function AddEditJobs() {
         .add({
           customer: values.customer,
           driver: values.driver,
+          incentive: values.incentive,
           notes: values.notes,
           pickUp: values.pickUp,
           price: values.price,
@@ -182,6 +183,7 @@ export default function AddEditJobs() {
         .set({
           customer: values?.customer,
           driver: values?.driver,
+          incentive: values.incentive,
           notes: values?.notes,
           pickUp: values?.pickUp,
           price: values?.price,
@@ -432,6 +434,20 @@ export default function AddEditJobs() {
                               {drivermap.name}
                             </MenuItem>
                           ))}
+                      </TextField>
+                      <TextField
+                        select
+                        style={{ marginBottom: 15, textAlign: 'left' }}
+                        fullWidth
+                        onChange={handleChange('incentive')}
+                        onBlur={() => setRequested(values)}
+                        value={values.incentive}
+                        id="incentive"
+                        label="Incentive"
+                      >
+                        <MenuItem value={30}>30</MenuItem>
+                        <MenuItem value={35}>35</MenuItem>
+                        <MenuItem value={45}>45</MenuItem>
                       </TextField>
                       {filteredUser?.role === 'superadmin' && (
                         <TextField
