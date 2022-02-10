@@ -4,7 +4,6 @@ import peopleFill from '@iconify/icons-eva/people-fill';
 import personAddFill from '@iconify/icons-eva/person-add-fill';
 import pricetagsFill from '@iconify/icons-eva/pricetags-fill';
 import briefcaseOutline from '@iconify/icons-eva/bookmark-outline';
-import clipboardFill from '@iconify/icons-eva/clipboard-fill';
 // import fileTextFill from '@iconify/icons-eva/file-text-fill';
 // import lockFill from '@iconify/icons-eva/lock-fill';
 // import alertTriangleFill from '@iconify/icons-eva/alert-triangle-fill';
@@ -39,11 +38,6 @@ const sidebarConfigAdmin = [
     path: '/dashboard/client',
     icon: getIcon(pricetagsFill)
   }
-  // {
-  //   title: 'generate report',
-  //   path: '/dashboard/ndis-report',
-  //   icon: getIcon(clipboardFill)
-  // }
   // {
   //   title: 'login',
   //   path: '/login',
