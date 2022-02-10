@@ -443,7 +443,7 @@ export default function AddEditJobs() {
                         onBlur={() => setRequested(values)}
                         value={values.incentive}
                         id="incentive"
-                        label="Incentive"
+                        label="Driver's Rate"
                       >
                         <MenuItem value={30}>30</MenuItem>
                         <MenuItem value={35}>35</MenuItem>
