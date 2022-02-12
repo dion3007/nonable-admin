@@ -156,7 +156,7 @@ export default function AddEditJobs() {
         .add({
           customer: values.customer,
           driver: values.driver,
-          incentive: values.incentive,
+          incentive: values?.incentive,
           notes: values.notes,
           pickUp: values.pickUp,
           price: values.price,
@@ -183,7 +183,7 @@ export default function AddEditJobs() {
         .set({
           customer: values?.customer,
           driver: values?.driver,
-          incentive: values.incentive,
+          incentive: values?.incentive,
           notes: values?.notes,
           pickUp: values?.pickUp,
           price: values?.price,
