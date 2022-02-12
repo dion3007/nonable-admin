@@ -33,7 +33,6 @@ const UserSchemaValidations = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
   phone: Yup.number().required('Required'),
   ndisNumber: Yup.string().required('Required'),
-  dobNumber: Yup.string().required('Required'),
   planManagementDetail: Yup.number().required('Required')
 });
 
