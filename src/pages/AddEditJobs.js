@@ -134,7 +134,7 @@ export default function AddEditJobs() {
 
   const handleSubmit = async (values) => {
     const driverPaid = values?.incentive
-      ? values?.incentive
+      ? values?.incentive * values.hour + variable[0].driverKms * values.distance
       : variable[0].empRate * values.hour + variable[0].driverKms * values.distance;
     if (values.driver) {
       const driverDetail = await drivers.filter((driver) => driver.id === values.driver)[0];
@@ -150,7 +150,6 @@ export default function AddEditJobs() {
         status: 'active'
       });
     }
-
     if (act === 'Add') {
       firebase
         .firestore()
