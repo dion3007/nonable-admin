@@ -158,7 +158,7 @@ export default function AddEditJobs() {
         .add({
           customer: values.customer,
           driver: values.driver,
-          incentive: values?.incentive,
+          incentive: values?.incentive ? values?.incentive : variable[0].empRate,
           notes: values.notes,
           pickUp: values.pickUp,
           price: values.price,
@@ -185,7 +185,7 @@ export default function AddEditJobs() {
         .set({
           customer: values?.customer,
           driver: values?.driver,
-          incentive: values?.incentive,
+          incentive: values?.incentive ? values?.incentive : variable[0].empRate,
           notes: values?.notes,
           pickUp: values?.pickUp,
           price: values?.price,
@@ -458,7 +458,7 @@ export default function AddEditJobs() {
                                   variable[0]?.driverKms * values.distance)
                           );
                         }}
-                        value={values.incentive}
+                        value={values?.incentive ? values?.incentive : variable[0]?.empRate}
                         id="incentive"
                         label="Driver's Rate"
                       >
