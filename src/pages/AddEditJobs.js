@@ -458,7 +458,7 @@ export default function AddEditJobs() {
                                   variable[0]?.driverKms * values.distance)
                           );
                         }}
-                        value={values?.incentive ? values?.incentive : variable[0]?.empRate}
+                        value={values?.incentive}
                         id="incentive"
                         label="Driver's Rate"
                       >
