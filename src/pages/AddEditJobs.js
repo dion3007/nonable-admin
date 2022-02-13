@@ -133,7 +133,9 @@ export default function AddEditJobs() {
   const filteredJobs = jobs.filter((job) => id === job.id);
 
   const handleSubmit = async (values) => {
-    const driverPaid = variable[0].empRate * values.hour + variable[0].driverKms * values.distance;
+    const driverPaid = values?.incentive
+      ? values?.incentive
+      : variable[0].empRate * values.hour + variable[0].driverKms * values.distance;
     if (values.driver) {
       const driverDetail = await drivers.filter((driver) => driver.id === values.driver)[0];
       firebase.firestore().collection('drivers').doc(values.driver).set({
@@ -359,8 +361,10 @@ export default function AddEditJobs() {
                             setFieldValue(
                               'profit',
                               itemRates[0]?.rate * values.hour -
-                                (variable[0]?.empRate * values.hour +
-                                  variable[0]?.driverKms * values.distance)
+                                (values?.incentive
+                                  ? values?.incentive
+                                  : variable[0]?.empRate * values.hour +
+                                    variable[0]?.driverKms * values.distance)
                             );
                           }}
                           id="hour"
@@ -379,8 +383,10 @@ export default function AddEditJobs() {
                           setFieldValue(
                             'profit',
                             itemRates[0].rate * values.hour -
-                              (variable[0]?.empRate * values.hour +
-                                variable[0]?.driverKms * values.distance)
+                              (values?.incentive
+                                ? values?.incentive
+                                : variable[0]?.empRate * values.hour +
+                                  variable[0]?.driverKms * values.distance)
                           );
                         }}
                         value={values.item}
@@ -440,7 +446,18 @@ export default function AddEditJobs() {
                         style={{ marginBottom: 15, textAlign: 'left' }}
                         fullWidth
                         onChange={handleChange('incentive')}
-                        onBlur={() => setRequested(values)}
+                        onBlur={() => {
+                          const itemRates = itemRate.filter((items) => items.id === values.item);
+                          setFieldValue('price', itemRates[0].rate * values.hour);
+                          setFieldValue(
+                            'profit',
+                            itemRates[0].rate * values.hour -
+                              (values?.incentive
+                                ? values?.incentive
+                                : variable[0]?.empRate * values.hour +
+                                  variable[0]?.driverKms * values.distance)
+                          );
+                        }}
                         value={values.incentive}
                         id="incentive"
                         label="Driver's Rate"
