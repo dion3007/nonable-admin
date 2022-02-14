@@ -319,7 +319,7 @@ export default function AddEditDrivers() {
                         <MenuItem key="1" value={1}>
                           Permanent
                         </MenuItem>
-                        <MenuItem key="2" value={1}>
+                        <MenuItem key="2" value={2}>
                           Terminated
                         </MenuItem>
                       </TextField>
