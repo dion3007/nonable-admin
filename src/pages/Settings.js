@@ -126,7 +126,8 @@ export default function Settings() {
   const deleteDriver = () => {
     const itemRates = itemRateDataGet();
     const filteredDeleteItem = itemRates.filter((itemRate) => itemRate.id === uid)[0];
-    firebase.firestore().collection('itemrate').doc(filteredDeleteItem.id).set({
+    console.log(filteredDeleteItem);
+    firebase.firestore().collection('itemrate').doc(filteredDeleteItem.id).delete({
       name: filteredDeleteItem?.name,
       rate: filteredDeleteItem?.rate
     });
@@ -327,7 +328,7 @@ export default function Settings() {
                       </TableContainer>
                       <ModalComponents
                         title="Delete"
-                        message="Are you sure you wish to delete this driver?"
+                        message="Are you sure you wish to delete this item rate?"
                         open={openModal}
                         handleSubmit={deleteDriver}
                         handleClose={handleModalClose}
