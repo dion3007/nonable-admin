@@ -133,7 +133,6 @@ function applySortFilter(array, comparator, query, arrayClient) {
 export default function JobDetail({ idParams }) {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
-  const [selected, setSelected] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [jobsTemp, setJobsTemp] = useState([]);
   const [clients, setClients] = useState([]);
@@ -269,15 +268,6 @@ export default function JobDetail({ idParams }) {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = jobs?.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -325,7 +315,6 @@ export default function JobDetail({ idParams }) {
 
         <Card>
           <UserListToolbar
-            numSelected={selected.length}
             filterName={filterName}
             filterListClick={() => setFilterGrid(!filterGrid)}
             onFilterName={handleFilterByName}
@@ -389,10 +378,7 @@ export default function JobDetail({ idParams }) {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={jobs.length}
-                  numSelected={selected.length}
                   onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
                   {filterByIdParams
@@ -400,17 +386,9 @@ export default function JobDetail({ idParams }) {
                     .map((row) => {
                       const { id, customer, pickUp, dropOff, price, paid, bookingDate, driver } =
                         row;
-                      const isItemSelected = selected.indexOf(customer) !== -1;
 
                       return (
-                        <TableRow
-                          hover
-                          key={id}
-                          tabIndex={-1}
-                          role="checkbox"
-                          selected={isItemSelected}
-                          aria-checked={isItemSelected}
-                        >
+                        <TableRow hover key={id} tabIndex={-1} role="checkbox">
                           <TableCell padding="checkbox" />
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>

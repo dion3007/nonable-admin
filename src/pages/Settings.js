@@ -90,7 +90,6 @@ export default function Settings() {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
-  const [selected, setSelected] = useState([]);
   const [itemRate, setItemRate] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
@@ -138,15 +137,6 @@ export default function Settings() {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = itemRate?.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -281,11 +271,7 @@ export default function Settings() {
                   </Stack>
 
                   <Card>
-                    <UserListToolbar
-                      numSelected={selected.length}
-                      filterName={filterName}
-                      onFilterName={handleFilterByName}
-                    />
+                    <UserListToolbar filterName={filterName} onFilterName={handleFilterByName} />
 
                     <Scrollbar>
                       <TableContainer sx={{ minWidth: 800 }}>
@@ -294,27 +280,15 @@ export default function Settings() {
                             order={order}
                             orderBy={orderBy}
                             headLabel={TABLE_HEAD}
-                            rowCount={itemRate.length}
-                            numSelected={selected.length}
                             onRequestSort={handleRequestSort}
-                            onSelectAllClick={handleSelectAllClick}
                           />
                           <TableBody>
                             {filteredItemRate
                               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                               .map((row) => {
                                 const { id, name, rate, desc } = row;
-                                const isItemSelected = selected.indexOf(name) !== -1;
-
                                 return (
-                                  <TableRow
-                                    hover
-                                    key={id}
-                                    tabIndex={-1}
-                                    role="checkbox"
-                                    selected={isItemSelected}
-                                    aria-checked={isItemSelected}
-                                  >
+                                  <TableRow hover key={id} tabIndex={-1} role="checkbox">
                                     <TableCell padding="checkbox" />
                                     <TableCell component="th" scope="row" padding="none">
                                       <Stack direction="row" alignItems="center" spacing={2}>

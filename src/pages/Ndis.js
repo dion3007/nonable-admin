@@ -81,7 +81,6 @@ function applySortFilter(array, comparator, query, arrayClient) {
 export default function Ndis() {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
-  const [selected, setSelected] = useState([]);
   const [ndis, setNdis] = useState([]);
   const [itemRate, setItemRate] = useState(itemRateDataGet() || []);
   const [clients, setClients] = useState(clientDataGet() || []);
@@ -160,15 +159,6 @@ export default function Ndis() {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = ndis?.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -217,7 +207,6 @@ export default function Ndis() {
 
         <Card>
           <UserListToolbar
-            numSelected={selected.length}
             filterName={filterName}
             filterListClick={() => setFilterGrid(!filterGrid)}
             onFilterName={handleFilterByName}
@@ -281,27 +270,16 @@ export default function Ndis() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={ndis.length}
-                  numSelected={selected.length}
                   onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
                   {filteredNdis
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
                       const { id, bookingDate, hour, item, price, customer } = row;
-                      const isItemSelected = selected.indexOf(customer) !== -1;
 
                       return (
-                        <TableRow
-                          hover
-                          key={id}
-                          tabIndex={-1}
-                          role="checkbox"
-                          selected={isItemSelected}
-                          aria-checked={isItemSelected}
-                        >
+                        <TableRow hover key={id} tabIndex={-1} role="checkbox">
                           <TableCell padding="checkbox" />
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>

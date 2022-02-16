@@ -9,7 +9,6 @@ import DashboardApp from './pages/DashboardApp';
 import Products from './pages/Products';
 import Blog from './pages/Blog';
 import User from './pages/User';
-import Customers from './pages/Customers';
 import NotFound from './pages/Page404';
 import AddEditCustomers from './pages/AddEditCustomers';
 import AddEditUsers from './pages/AddEditUsers';
@@ -35,7 +34,6 @@ export default function Router() {
         { path: 'app', element: <DashboardApp /> },
         { path: 'user', element: <User /> },
         { path: 'driver', element: <Driver /> },
-        { path: 'customer', element: <Customers /> },
         { path: 'client', element: <Client /> },
         { path: 'booking', element: <Job /> },
         { path: 'ndis-report', element: <Ndis /> },
