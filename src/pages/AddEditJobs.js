@@ -134,8 +134,12 @@ export default function AddEditJobs() {
 
   const handleSubmit = async (values) => {
     const driverPaid = values?.incentive
-      ? values?.incentive * values.hour + variable[0].driverKms * values.distance
-      : variable[0].empRate * values.hour + variable[0].driverKms * values.distance;
+      ? values?.incentive * values.hour +
+        variable[0].driverKms * values.distance +
+        values.expensePrice
+      : variable[0].empRate * values.hour +
+        variable[0].driverKms * values.distance +
+        values.expensePrice;
     if (values.driver) {
       const driverDetail = await drivers.filter((driver) => driver.id === values.driver)[0];
       firebase.firestore().collection('drivers').doc(values.driver).set({
@@ -166,8 +170,8 @@ export default function AddEditJobs() {
           driverPaid,
           bookingDate: values.bookingDate.toString(),
           dropOff: values.dropOff,
-          expensePrice: 0,
-          expenseReason: 'none',
+          expensePrice: values.expensePrice,
+          expenseReason: values.expenseReason,
           hour: values.hour,
           item: values.item,
           distance: values.distance,
@@ -240,6 +244,8 @@ export default function AddEditJobs() {
                   price: '',
                   profit: '',
                   driverPaid: '',
+                  expensePrice: 0,
+                  expenseReason: '',
                   driver: '',
                   notes: '',
                   item: '',
@@ -491,6 +497,24 @@ export default function AddEditJobs() {
                           type="number"
                         />
                       )}
+                      <TextField
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        onChange={handleChange}
+                        value={values.expensePrice}
+                        id="expensePrice"
+                        label="Expense"
+                      />
+                      <TextField
+                        style={{ marginBottom: 15 }}
+                        fullWidth
+                        multiline
+                        onChange={handleChange}
+                        value={values.expenseReason}
+                        rows={4}
+                        id="expenseReason"
+                        label="Expense Notes"
+                      />
                       <TextField
                         style={{ marginBottom: 15 }}
                         fullWidth
