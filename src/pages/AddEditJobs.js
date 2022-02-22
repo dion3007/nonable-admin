@@ -500,6 +500,7 @@ export default function AddEditJobs() {
                       <TextField
                         style={{ marginBottom: 15 }}
                         fullWidth
+                        disabled={filteredUser?.role !== 'superadmin'}
                         onChange={handleChange}
                         value={values.expensePrice}
                         id="expensePrice"
@@ -509,6 +510,7 @@ export default function AddEditJobs() {
                         style={{ marginBottom: 15 }}
                         fullWidth
                         multiline
+                        disabled={filteredUser?.role !== 'superadmin'}
                         onChange={handleChange}
                         value={values.expenseReason}
                         rows={4}
