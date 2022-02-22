@@ -77,10 +77,7 @@ export default function AddEditClients() {
 
   const filteredCoor = coor.filter((cor) => cor.id_client === filteredClients[0]?.email);
 
-  console.log(coor);
-
   const handleSubmit = (values) => {
-    console.log(values);
     if (act === 'Add') {
       firebase
         .firestore()
@@ -148,7 +145,6 @@ export default function AddEditClients() {
   };
 
   const handleSubmitt = (values) => {
-    console.log(values);
     if (filteredCoor.length < 1) {
       firebase.firestore().collection('refferedby').add({
         name: values.name,

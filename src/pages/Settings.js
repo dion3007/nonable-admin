@@ -126,7 +126,6 @@ export default function Settings() {
   const deleteDriver = () => {
     const itemRates = itemRateDataGet();
     const filteredDeleteItem = itemRates.filter((itemRate) => itemRate.id === uid)[0];
-    console.log(filteredDeleteItem);
     firebase.firestore().collection('itemrate').doc(filteredDeleteItem.id).delete({
       name: filteredDeleteItem?.name,
       rate: filteredDeleteItem?.rate
