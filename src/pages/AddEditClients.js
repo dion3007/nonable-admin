@@ -132,7 +132,9 @@ export default function AddEditClients() {
           phone: values?.phone,
           ndisNumber: values?.ndisNumber,
           dobNumber: values?.dobNumber ? values?.dobNumber?.toString() : new Date().toDateString(),
-          planDates: [values?.planDates[0].toString(), values?.planDates[1].toString()],
+          planDates: values?.planDates[0]
+            ? [values?.planDates[0]?.toString(), values?.planDates[1]?.toString()]
+            : [null, null],
           address: `${values?.streetNumber} ${values?.streetAddress} ${values?.suburb} ${values?.state} ${values?.postCode}`,
           clientSpec: values?.clientSpec || '',
           coordinator: values?.coordinator || '',
