@@ -136,10 +136,10 @@ export default function AddEditJobs() {
     const driverPaid = values?.incentive
       ? values?.incentive * values.hour +
         variable[0].driverKms * values.distance +
-        values.expensePrice
+        Number(values.expensePrice)
       : variable[0].empRate * values.hour +
         variable[0].driverKms * values.distance +
-        values.expensePrice;
+        Number(values.expensePrice);
     if (values.driver) {
       const driverDetail = await drivers.filter((driver) => driver.id === values.driver)[0];
       firebase.firestore().collection('drivers').doc(values.driver).set({
@@ -367,7 +367,8 @@ export default function AddEditJobs() {
                               'profit',
                               itemRates[0]?.rate * values.hour -
                                 (values?.incentive
-                                  ? values?.incentive
+                                  ? values?.incentive * values.hour +
+                                    variable[0]?.driverKms * values.distance
                                   : variable[0]?.empRate * values.hour +
                                     variable[0]?.driverKms * values.distance)
                             );
@@ -384,12 +385,13 @@ export default function AddEditJobs() {
                         onChange={handleChange('item')}
                         onBlur={() => {
                           const itemRates = itemRate.filter((items) => items.id === values.item);
-                          setFieldValue('price', itemRates[0].rate * values.hour);
+                          setFieldValue('price', itemRates[0]?.rate * values.hour);
                           setFieldValue(
                             'profit',
-                            itemRates[0].rate * values.hour -
+                            itemRates[0]?.rate * values.hour -
                               (values?.incentive
-                                ? values?.incentive
+                                ? values?.incentive * values.hour +
+                                  variable[0]?.driverKms * values.distance
                                 : variable[0]?.empRate * values.hour +
                                   variable[0]?.driverKms * values.distance)
                           );
@@ -453,12 +455,13 @@ export default function AddEditJobs() {
                         onChange={handleChange('incentive')}
                         onBlur={() => {
                           const itemRates = itemRate.filter((items) => items.id === values.item);
-                          setFieldValue('price', itemRates[0].rate * values.hour);
+                          setFieldValue('price', itemRates[0]?.rate * values.hour);
                           setFieldValue(
                             'profit',
-                            itemRates[0].rate * values.hour -
+                            itemRates[0]?.rate * values.hour -
                               (values?.incentive
-                                ? values?.incentive
+                                ? values?.incentive * values.hour +
+                                  variable[0]?.driverKms * values.distance
                                 : variable[0]?.empRate * values.hour +
                                   variable[0]?.driverKms * values.distance)
                           );
@@ -487,8 +490,11 @@ export default function AddEditJobs() {
                             setFieldValue(
                               'profit',
                               itemRates[0]?.rate * values.hour -
-                                (variable[0]?.empRate * values.hour +
-                                  variable[0]?.driverKms * values.distance)
+                                (values?.incentive
+                                  ? values?.incentive * values.hour +
+                                    variable[0]?.driverKms * values.distance
+                                  : variable[0]?.empRate * values.hour +
+                                    variable[0]?.driverKms * values.distance)
                             );
                           }}
                           value={values.distance}
