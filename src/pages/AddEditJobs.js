@@ -517,6 +517,22 @@ export default function AddEditJobs() {
                         disabled={filteredUser?.role !== 'superadmin'}
                         onChange={handleChange}
                         value={values.expensePrice}
+                        onBlur={() => {
+                          const itemRates =
+                            itemRate.filter((items) => items.id === values.item) || 0;
+                          setFieldValue('price', itemRates[0]?.rate * values.hour);
+                          setFieldValue(
+                            'profit',
+                            itemRates[0]?.rate * values.hour -
+                              (values?.incentive
+                                ? values?.incentive * values.hour +
+                                  (variable[0]?.driverKms * values.distance +
+                                    Number(values.expensePrice))
+                                : variable[0]?.empRate * values.hour +
+                                  (variable[0]?.driverKms * values.distance +
+                                    Number(values.expensePrice)))
+                          );
+                        }}
                         id="expensePrice"
                         label="Expense"
                       />
