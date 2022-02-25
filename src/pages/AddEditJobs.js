@@ -368,9 +368,11 @@ export default function AddEditJobs() {
                               itemRates[0]?.rate * values.hour -
                                 (values?.incentive
                                   ? values?.incentive * values.hour +
-                                    variable[0]?.driverKms * values.distance
+                                    (variable[0]?.driverKms * values.distance +
+                                      Number(values.expensePrice))
                                   : variable[0]?.empRate * values.hour +
-                                    variable[0]?.driverKms * values.distance)
+                                    (variable[0]?.driverKms * values.distance +
+                                      Number(values.expensePrice)))
                             );
                           }}
                           id="hour"
@@ -391,9 +393,11 @@ export default function AddEditJobs() {
                             itemRates[0]?.rate * values.hour -
                               (values?.incentive
                                 ? values?.incentive * values.hour +
-                                  variable[0]?.driverKms * values.distance
+                                  (variable[0]?.driverKms * values.distance +
+                                    Number(values.expensePrice))
                                 : variable[0]?.empRate * values.hour +
-                                  variable[0]?.driverKms * values.distance)
+                                  (variable[0]?.driverKms * values.distance +
+                                    Number(values.expensePrice)))
                           );
                         }}
                         value={values.item}
@@ -461,9 +465,11 @@ export default function AddEditJobs() {
                             itemRates[0]?.rate * values.hour -
                               (values?.incentive
                                 ? values?.incentive * values.hour +
-                                  variable[0]?.driverKms * values.distance
+                                  (variable[0]?.driverKms * values.distance +
+                                    Number(values.expensePrice))
                                 : variable[0]?.empRate * values.hour +
-                                  variable[0]?.driverKms * values.distance)
+                                  (variable[0]?.driverKms * values.distance +
+                                    Number(values.expensePrice)))
                           );
                         }}
                         value={values?.incentive}
@@ -492,9 +498,11 @@ export default function AddEditJobs() {
                               itemRates[0]?.rate * values.hour -
                                 (values?.incentive
                                   ? values?.incentive * values.hour +
-                                    variable[0]?.driverKms * values.distance
+                                    (variable[0]?.driverKms * values.distance +
+                                      Number(values.expensePrice))
                                   : variable[0]?.empRate * values.hour +
-                                    variable[0]?.driverKms * values.distance)
+                                    (variable[0]?.driverKms * values.distance +
+                                      Number(values.expensePrice)))
                             );
                           }}
                           value={values.distance}
