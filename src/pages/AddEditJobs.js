@@ -362,10 +362,15 @@ export default function AddEditJobs() {
                           onBlur={() => {
                             const itemRates =
                               itemRate.filter((items) => items.id === values.item) || 0;
-                            setFieldValue('price', itemRates[0]?.rate * values.hour);
+                            setFieldValue(
+                              'price',
+                              itemRates[0]?.rate * values.hour +
+                                variable[0]?.nonableKms * values.distance
+                            );
                             setFieldValue(
                               'profit',
-                              itemRates[0]?.rate * values.hour -
+                              itemRates[0]?.rate * values.hour +
+                                variable[0]?.nonableKms * values.distance -
                                 (values?.incentive
                                   ? values?.incentive * values.hour +
                                     (variable[0]?.driverKms * values.distance +
@@ -387,10 +392,15 @@ export default function AddEditJobs() {
                         onChange={handleChange('item')}
                         onBlur={() => {
                           const itemRates = itemRate.filter((items) => items.id === values.item);
-                          setFieldValue('price', itemRates[0]?.rate * values.hour);
+                          setFieldValue(
+                            'price',
+                            itemRates[0]?.rate * values.hour +
+                              variable[0]?.nonableKms * values.distance
+                          );
                           setFieldValue(
                             'profit',
-                            itemRates[0]?.rate * values.hour -
+                            itemRates[0]?.rate * values.hour +
+                              variable[0]?.nonableKms * values.distance -
                               (values?.incentive
                                 ? values?.incentive * values.hour +
                                   (variable[0]?.driverKms * values.distance +
@@ -459,10 +469,15 @@ export default function AddEditJobs() {
                         onChange={handleChange('incentive')}
                         onBlur={() => {
                           const itemRates = itemRate.filter((items) => items.id === values.item);
-                          setFieldValue('price', itemRates[0]?.rate * values.hour);
+                          setFieldValue(
+                            'price',
+                            itemRates[0]?.rate * values.hour +
+                              variable[0]?.nonableKms * values.distance
+                          );
                           setFieldValue(
                             'profit',
-                            itemRates[0]?.rate * values.hour -
+                            itemRates[0]?.rate * values.hour +
+                              variable[0]?.nonableKms * values.distance -
                               (values?.incentive
                                 ? values?.incentive * values.hour +
                                   (variable[0]?.driverKms * values.distance +
@@ -492,10 +507,15 @@ export default function AddEditJobs() {
                           onBlur={() => {
                             const itemRates =
                               itemRate.filter((items) => items.id === values.item) || 0;
-                            setFieldValue('price', itemRates[0]?.rate * values.hour);
+                            setFieldValue(
+                              'price',
+                              itemRates[0]?.rate * values.hour +
+                                variable[0]?.nonableKms * values.distance
+                            );
                             setFieldValue(
                               'profit',
-                              itemRates[0]?.rate * values.hour -
+                              itemRates[0]?.rate * values.hour +
+                                variable[0]?.nonableKms * values.distance -
                                 (values?.incentive
                                   ? values?.incentive * values.hour +
                                     (variable[0]?.driverKms * values.distance +
@@ -520,10 +540,15 @@ export default function AddEditJobs() {
                         onBlur={() => {
                           const itemRates =
                             itemRate.filter((items) => items.id === values.item) || 0;
-                          setFieldValue('price', itemRates[0]?.rate * values.hour);
+                          setFieldValue(
+                            'price',
+                            itemRates[0]?.rate * values.hour +
+                              variable[0]?.nonableKms * values.distance
+                          );
                           setFieldValue(
                             'profit',
-                            itemRates[0]?.rate * values.hour -
+                            itemRates[0]?.rate * values.hour +
+                              variable[0]?.nonableKms * values.distance -
                               (values?.incentive
                                 ? values?.incentive * values.hour +
                                   (variable[0]?.driverKms * values.distance +
