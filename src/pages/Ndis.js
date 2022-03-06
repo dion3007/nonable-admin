@@ -298,7 +298,12 @@ export default function Ndis() {
                           <TableCell align="left">
                             {moment(bookingDate).format('DD-MM-YYYY hh:mm a')}
                           </TableCell>
-                          <TableCell align="left">{(price / profit).toFixed(2)}h</TableCell>
+                          <TableCell align="left">
+                            {(
+                              price / itemRate.filter((items) => items.id === item)[0]?.rate
+                            ).toFixed(2)}
+                            h
+                          </TableCell>
                           <TableCell align="left">
                             {clients.filter((client) => client.id === customer)[0]
                               ?.planManagementDetail === 1 && 'Plan Management'}
