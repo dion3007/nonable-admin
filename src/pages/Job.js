@@ -610,7 +610,7 @@ export default function Job() {
                           <TableCell align="left">{pickUp}</TableCell>
                           <TableCell align="left">{dropOff}</TableCell>
                           <TableCell align="left" width="100px">
-                            $ {Math.round(price).toFixed(2)}
+                            $ {price.toFixed(2)}
                           </TableCell>
                           <TableCell align="left" width="100px">
                             $ {driverPaid}

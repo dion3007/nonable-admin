@@ -294,13 +294,11 @@ export default function Ndis() {
                           <TableCell align="left">
                             {itemRate.filter((items) => items.id === item)[0]?.rate}
                           </TableCell>
-                          <TableCell align="left">{Math.round(price).toFixed(2)}</TableCell>
+                          <TableCell align="left">{price.toFixed(2)}</TableCell>
                           <TableCell align="left">
                             {moment(bookingDate).format('DD-MM-YYYY hh:mm a')}
                           </TableCell>
-                          <TableCell align="left">
-                            {Math.round(price / profit).toFixed(2)}h
-                          </TableCell>
+                          <TableCell align="left">{(price / profit).toFixed(2)}h</TableCell>
                           <TableCell align="left">
                             {clients.filter((client) => client.id === customer)[0]
                               ?.planManagementDetail === 1 && 'Plan Management'}

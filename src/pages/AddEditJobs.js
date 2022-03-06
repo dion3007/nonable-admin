@@ -422,7 +422,7 @@ export default function AddEditJobs() {
                             fullWidth
                             onChange={handleChange}
                             disabled
-                            value={Math.round(values.price).toFixed(2) || 0}
+                            value={values.price.toFixed(2) || 0}
                             id="price"
                             label="Charges"
                           />
@@ -431,7 +431,7 @@ export default function AddEditJobs() {
                             fullWidth
                             disabled
                             onChange={handleChange}
-                            value={Math.round(values.profit).toFixed(2) || 0}
+                            value={values.profit.toFixed(2) || 0}
                             id="profit"
                             label="Profit"
                           />
