@@ -56,7 +56,7 @@
     "date-fns": "^2.23.0",
     "faker": "^5.5.3",
     "file-saver": "^2.0.5",
-    "firebase": "^8.9.1",
+    "firebase": "^9.6.7",
     "formik": "^2.2.9",
     "framer-motion": "^4.1.17",
     "history": "^5.0.0",

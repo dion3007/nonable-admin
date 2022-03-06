@@ -276,7 +276,7 @@ export default function Ndis() {
                   {filteredNdis
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, bookingDate, hour, item, price, customer } = row;
+                      const { id, bookingDate, hour, item, price, customer, profit } = row;
 
                       return (
                         <TableRow hover key={id} tabIndex={-1} role="checkbox">
@@ -294,11 +294,13 @@ export default function Ndis() {
                           <TableCell align="left">
                             {itemRate.filter((items) => items.id === item)[0]?.rate}
                           </TableCell>
-                          <TableCell align="left">{price}</TableCell>
+                          <TableCell align="left">{Math.round(price).toFixed(2)}</TableCell>
                           <TableCell align="left">
                             {moment(bookingDate).format('DD-MM-YYYY hh:mm a')}
                           </TableCell>
-                          <TableCell align="left">{hour}h</TableCell>
+                          <TableCell align="left">
+                            {Math.round(price / profit).toFixed(2)}h
+                          </TableCell>
                           <TableCell align="left">
                             {clients.filter((client) => client.id === customer)[0]
                               ?.planManagementDetail === 1 && 'Plan Management'}

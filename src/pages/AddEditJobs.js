@@ -216,7 +216,7 @@ export default function AddEditJobs() {
     }
   };
 
-  const filteredUser = users.filter((user) => user.email === auth.user.email)[0];
+  // const filteredUser = users.filter((user) => user.email === auth.user.email)[0];
 
   return (
     <Page title="Bookings | Minimal-UI">
@@ -350,7 +350,7 @@ export default function AddEditJobs() {
                         id="dropOff"
                         label="Drop Off"
                       />
-                      {filteredUser?.role === 'superadmin' && (
+                      {auth?.role === 'superadmin' && (
                         <TextField
                           error={errors?.hour && true}
                           style={{ marginBottom: 15 }}
@@ -365,12 +365,14 @@ export default function AddEditJobs() {
                             setFieldValue(
                               'price',
                               itemRates[0]?.rate * values.hour +
-                                variable[0]?.nonableKms * values.distance
+                                variable[0]?.nonableKms * values.distance +
+                                Number(values.expensePrice)
                             );
                             setFieldValue(
                               'profit',
                               itemRates[0]?.rate * values.hour +
-                                variable[0]?.nonableKms * values.distance -
+                                variable[0]?.nonableKms * values.distance +
+                                Number(values.expensePrice) -
                                 (values?.incentive
                                   ? values?.incentive * values.hour +
                                     (variable[0]?.driverKms * values.distance +
@@ -395,12 +397,14 @@ export default function AddEditJobs() {
                           setFieldValue(
                             'price',
                             itemRates[0]?.rate * values.hour +
-                              variable[0]?.nonableKms * values.distance
+                              variable[0]?.nonableKms * values.distance +
+                              Number(values.expensePrice)
                           );
                           setFieldValue(
                             'profit',
                             itemRates[0]?.rate * values.hour +
-                              variable[0]?.nonableKms * values.distance -
+                              variable[0]?.nonableKms * values.distance +
+                              Number(values.expensePrice) -
                               (values?.incentive
                                 ? values?.incentive * values.hour +
                                   (variable[0]?.driverKms * values.distance +
@@ -422,14 +426,14 @@ export default function AddEditJobs() {
                       </TextField>
                     </Grid>
                     <Grid item xs={6}>
-                      {filteredUser?.role === 'superadmin' && (
+                      {auth?.role === 'superadmin' && (
                         <>
                           <TextField
                             style={{ marginBottom: 15 }}
                             fullWidth
                             onChange={handleChange}
                             disabled
-                            value={values.price || 0}
+                            value={Math.round(values.price).toFixed(2) || 0}
                             id="price"
                             label="Charges"
                           />
@@ -438,7 +442,7 @@ export default function AddEditJobs() {
                             fullWidth
                             disabled
                             onChange={handleChange}
-                            value={values.profit || 0}
+                            value={Math.round(values.profit).toFixed(2) || 0}
                             id="profit"
                             label="Profit"
                           />
@@ -472,12 +476,14 @@ export default function AddEditJobs() {
                           setFieldValue(
                             'price',
                             itemRates[0]?.rate * values.hour +
-                              variable[0]?.nonableKms * values.distance
+                              variable[0]?.nonableKms * values.distance +
+                              Number(values.expensePrice)
                           );
                           setFieldValue(
                             'profit',
                             itemRates[0]?.rate * values.hour +
-                              variable[0]?.nonableKms * values.distance -
+                              variable[0]?.nonableKms * values.distance +
+                              Number(values.expensePrice) -
                               (values?.incentive
                                 ? values?.incentive * values.hour +
                                   (variable[0]?.driverKms * values.distance +
@@ -495,7 +501,7 @@ export default function AddEditJobs() {
                         <MenuItem value={35}>35</MenuItem>
                         <MenuItem value={45}>45</MenuItem>
                       </TextField>
-                      {filteredUser?.role === 'superadmin' && (
+                      {auth?.role === 'superadmin' && (
                         <TextField
                           required
                           error={errors?.distance && true}
@@ -510,12 +516,14 @@ export default function AddEditJobs() {
                             setFieldValue(
                               'price',
                               itemRates[0]?.rate * values.hour +
-                                variable[0]?.nonableKms * values.distance
+                                variable[0]?.nonableKms * values.distance +
+                                Number(values.expensePrice)
                             );
                             setFieldValue(
                               'profit',
                               itemRates[0]?.rate * values.hour +
-                                variable[0]?.nonableKms * values.distance -
+                                variable[0]?.nonableKms * values.distance +
+                                Number(values.expensePrice) -
                                 (values?.incentive
                                   ? values?.incentive * values.hour +
                                     (variable[0]?.driverKms * values.distance +
@@ -534,7 +542,7 @@ export default function AddEditJobs() {
                       <TextField
                         style={{ marginBottom: 15 }}
                         fullWidth
-                        disabled={filteredUser?.role !== 'superadmin'}
+                        disabled={auth?.role !== 'superadmin'}
                         onChange={handleChange}
                         value={values.expensePrice}
                         onBlur={() => {
@@ -543,12 +551,14 @@ export default function AddEditJobs() {
                           setFieldValue(
                             'price',
                             itemRates[0]?.rate * values.hour +
-                              variable[0]?.nonableKms * values.distance
+                              variable[0]?.nonableKms * values.distance +
+                              Number(values.expensePrice)
                           );
                           setFieldValue(
                             'profit',
                             itemRates[0]?.rate * values.hour +
-                              variable[0]?.nonableKms * values.distance -
+                              variable[0]?.nonableKms * values.distance +
+                              Number(values.expensePrice) -
                               (values?.incentive
                                 ? values?.incentive * values.hour +
                                   (variable[0]?.driverKms * values.distance +
@@ -565,7 +575,7 @@ export default function AddEditJobs() {
                         style={{ marginBottom: 15 }}
                         fullWidth
                         multiline
-                        disabled={filteredUser?.role !== 'superadmin'}
+                        disabled={auth?.role !== 'superadmin'}
                         onChange={handleChange}
                         value={values.expenseReason}
                         rows={4}

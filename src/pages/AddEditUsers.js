@@ -29,7 +29,7 @@ import useQuery from '../utils/useQuery';
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
 import firebase from '../firebase';
-import { userDataGet } from '../utils/cache';
+import { authDataGet, userDataGet } from '../utils/cache';
 
 const UserSchemaValidations = Yup.object().shape({
   name: Yup.string().required('Required'),
@@ -44,11 +44,13 @@ export default function AddEditUsers() {
   const queryString = useQuery(location.search);
   const act = queryString.get('act');
   const id = queryString.get('id');
+  const [auth, setAuth] = useState();
   const [users, setUsers] = useState(userDataGet() || []);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
+    setAuth(authDataGet());
     if (act === 'Edit') {
       firebase
         .firestore()

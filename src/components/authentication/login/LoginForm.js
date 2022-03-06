@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { Icon } from '@iconify/react';
@@ -28,6 +28,20 @@ export default function LoginForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [alertState, setAlertState] = useState(false);
+  const [users, setUsers] = useState(false);
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection('users')
+      .onSnapshot((snapshot) => {
+        const newUsers = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setUsers(newUsers);
+      });
+  }, []);
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
@@ -42,10 +56,18 @@ export default function LoginForm() {
     },
     validationSchema: LoginSchema,
     onSubmit: async () => {
-      const login = await firebase.auth().signInWithEmailAndPassword(values.email, values.password);
-      authDataSet(login);
-      authDataGet();
-      navigate('/', { replace: true });
+      // const login = await firebase.auth().signInWithEmailAndPassword(values.email, values.password);
+      const filteredUsers = users.filter(
+        (user) =>
+          values.email === user.email &&
+          values.password === user.password &&
+          user.status === 'active'
+      );
+      if (filteredUsers) {
+        authDataSet(filteredUsers[0]);
+        authDataGet();
+        navigate('/', { replace: true });
+      }
     }
   });
 

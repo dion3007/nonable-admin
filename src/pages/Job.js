@@ -414,7 +414,7 @@ export default function Job() {
     setOpenPaidModal(false);
   };
 
-  const filteredUser = users.filter((user) => user.email === auth.user.email)[0];
+  // const filteredUser = users.filter((user) => user.email === auth.user.email)[0];
 
   const addToLocalStorage = () => {
     clientDataSet(clients);
@@ -621,7 +621,7 @@ export default function Job() {
                           <TableCell align="left">{pickUp}</TableCell>
                           <TableCell align="left">{dropOff}</TableCell>
                           <TableCell align="left" width="100px">
-                            $ {price}
+                            $ {Math.round(price).toFixed(2)}
                           </TableCell>
                           <TableCell align="left" width="100px">
                             $ {driverPaid}
@@ -634,7 +634,7 @@ export default function Job() {
                               {drivers?.filter((driverData) => driverData.id === driver)[0]?.name}
                             </RouterLink>
                           </TableCell>
-                          {filteredUser?.role !== 'admin' && 'Admin' && (
+                          {auth?.role !== 'admin' && 'Admin' && (
                             <TableCell>
                               <Switch
                                 checked={paid}
@@ -670,7 +670,7 @@ export default function Job() {
                               <Grid container justifyContent="center" spacing={2}>
                                 <Grid item>
                                   <Button
-                                    disabled={filteredUser?.role === 'admin' && 'Admin'}
+                                    disabled={auth?.role === 'admin' && 'Admin'}
                                     onClick={() => cancelJob(id, true)}
                                     variant="contained"
                                     color="error"
@@ -680,7 +680,7 @@ export default function Job() {
                                 </Grid>
                                 <Grid item variant="contained">
                                   <Button
-                                    disabled={filteredUser?.role === 'admin' && 'Admin'}
+                                    disabled={auth?.role === 'admin' && 'Admin'}
                                     onClick={() => cancelJob(id, false)}
                                   >
                                     Decline
@@ -699,7 +699,7 @@ export default function Job() {
                               <Grid container justifyContent="center" spacing={2}>
                                 <Grid item>
                                   <Button
-                                    disabled={filteredUser?.role === 'admin' && 'Admin'}
+                                    disabled={auth?.role === 'admin' && 'Admin'}
                                     onClick={() => completedJob(id, true)}
                                     variant="contained"
                                     color="success"
@@ -709,7 +709,7 @@ export default function Job() {
                                 </Grid>
                                 <Grid item variant="contained">
                                   <Button
-                                    disabled={filteredUser?.role === 'admin' && 'Admin'}
+                                    disabled={auth?.role === 'admin' && 'Admin'}
                                     onClick={() => completedJob(id, false)}
                                   >
                                     Decline

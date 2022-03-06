@@ -47,18 +47,8 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const [auth, setAuth] = useState();
 
   useEffect(() => {
-    setAuth(authDataGet());
-    firebase
-      .firestore()
-      .collection('users')
-      .onSnapshot((snapshot) => {
-        const newUser = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        setUsers(newUser);
-      });
-  }, []);
+    if (!auth) setAuth(authDataGet());
+  }, [auth]);
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -67,7 +57,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  const filteredUser = users.filter((user) => user.email === auth.user.email)[0];
+  // const filteredUser = users.filter((user) => user.email === auth.user.email)[0];
 
   const renderContent = (
     <Scrollbar
@@ -88,7 +78,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
             <Avatar src={account.photoURL} alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {filteredUser?.name}
+                {auth?.name}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 {account.role}
@@ -97,7 +87,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           </AccountStyle>
         </Link>
       </Box>
-      {filteredUser?.role === 'admin' && 'Admin' ? (
+      {auth?.role === 'admin' && 'Admin' ? (
         <NavSection navConfig={sidebarConfigAdmin} />
       ) : (
         <NavSection navConfig={sidebarConfig} />

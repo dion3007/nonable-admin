@@ -54,7 +54,6 @@ export default function AccountPopover() {
   const anchorRef = useRef(null);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [users, setUsers] = useState([]);
   const [auth, setAuth] = useState();
 
   const handleOpen = () => {
@@ -65,25 +64,13 @@ export default function AccountPopover() {
   };
 
   useEffect(() => {
-    setAuth(authDataGet());
-    firebase
-      .firestore()
-      .collection('users')
-      .onSnapshot((snapshot) => {
-        const newUser = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        setUsers(newUser);
-      });
-  }, []);
+    if (!auth) setAuth(authDataGet());
+  }, [auth]);
 
   const handleLogout = () => {
     authLogout();
     navigate('/login', { replace: true });
   };
-
-  const filteredUser = users.filter((user) => user.email === auth.user.email)[0];
 
   return (
     <>
@@ -118,15 +105,15 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
-            {filteredUser?.name}
+            {auth?.name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {filteredUser?.email}
+            {auth?.email}
           </Typography>
         </Box>
 
         <Divider sx={{ my: 1 }} />
-        {filteredUser?.role === 'admin' && 'Admin'
+        {auth?.role === 'admin' && 'Admin'
           ? MENU_OPTIONS_ADMIN.map((option) => (
               <MenuItem
                 key={option.label}

@@ -137,7 +137,7 @@ export default function User() {
 
   const isUserNotFound = filteredUsers.length === 0;
 
-  const filteredUser = users.filter((user) => user.email === auth.user.email)[0];
+  // const filteredUser = users.filter((user) => user.email === auth.user.email)[0];
 
   return (
     <Page title="User | Minimal-UI">
@@ -146,7 +146,7 @@ export default function User() {
           <Typography variant="h4" gutterBottom>
             User
           </Typography>
-          {filteredUser?.role === 'superadmin' && (
+          {auth?.role === 'superadmin' && (
             <Button
               variant="contained"
               component={RouterLink}
@@ -204,7 +204,7 @@ export default function User() {
                               {sentenceCase(status)}
                             </Label>
                           </TableCell>
-                          {filteredUser?.role === 'superadmin' && (
+                          {auth?.role === 'superadmin' && (
                             <TableCell align="right">
                               <UserMoreMenu
                                 deleteFunction={() => deleteUserEach(id)}
