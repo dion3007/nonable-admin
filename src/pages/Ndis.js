@@ -276,7 +276,7 @@ export default function Ndis() {
                   {filteredNdis
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, bookingDate, hour, item, price, customer, profit } = row;
+                      const { id, bookingDate, item, price, customer, profit } = row;
 
                       return (
                         <TableRow hover key={id} tabIndex={-1} role="checkbox">

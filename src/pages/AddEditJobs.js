@@ -50,7 +50,6 @@ const UserSchemaValidations = Yup.object().shape({
 export default function AddEditJobs() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [users, setUsers] = useState([]);
   const [auth, setAuth] = useState();
   const queryString = useQuery(location.search);
   const act = queryString.get('act');
@@ -66,16 +65,6 @@ export default function AddEditJobs() {
 
   useEffect(() => {
     setAuth(authDataGet());
-    firebase
-      .firestore()
-      .collection('users')
-      .onSnapshot((snapshot) => {
-        const newUser = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        setUsers(newUser);
-      });
     if (act === 'Edit') {
       firebase
         .firestore()

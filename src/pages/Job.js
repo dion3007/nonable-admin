@@ -158,7 +158,6 @@ export default function Job() {
   const [drivers, setDrivers] = useState([]);
   const [itemRate, setItemRate] = useState([]);
   const [variable, setVariable] = useState([]);
-  const [users, setUsers] = useState([]);
   const [auth, setAuth] = useState();
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
@@ -176,16 +175,6 @@ export default function Job() {
 
   useEffect(() => {
     setAuth(authDataGet());
-    firebase
-      .firestore()
-      .collection('users')
-      .onSnapshot((snapshot) => {
-        const newUser = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        setUsers(newUser);
-      });
     firebase
       .firestore()
       .collection('jobs')

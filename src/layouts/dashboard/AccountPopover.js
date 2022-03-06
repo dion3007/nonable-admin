@@ -12,7 +12,6 @@ import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '
 import MenuPopover from '../../components/MenuPopover';
 //
 import account from '../../_mocks_/account';
-import firebase from '../../firebase';
 import { authDataGet, authLogout } from '../../utils/cache';
 
 // ----------------------------------------------------------------------

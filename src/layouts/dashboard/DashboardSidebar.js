@@ -13,7 +13,6 @@ import { MHidden } from '../../components/@material-extend';
 import sidebarConfig from './SidebarConfig';
 import { authDataGet } from '../../utils/cache';
 import account from '../../_mocks_/account';
-import firebase from '../../firebase';
 import sidebarConfigAdmin from './SidebarConfigAdmin';
 // ----------------------------------------------------------------------
 
@@ -43,7 +42,6 @@ DashboardSidebar.propTypes = {
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
-  const [users, setUsers] = useState([]);
   const [auth, setAuth] = useState();
 
   useEffect(() => {
