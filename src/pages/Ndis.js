@@ -300,7 +300,9 @@ export default function Ndis() {
                           </TableCell>
                           <TableCell align="left">
                             {(
-                              price / itemRate.filter((items) => items.id === item)[0]?.rate
+                              Math.round(
+                                (price / itemRate.filter((items) => items.id === item)[0]?.rate) * 4
+                              ) / 4
                             ).toFixed(2)}
                             h
                           </TableCell>
