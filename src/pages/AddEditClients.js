@@ -103,6 +103,7 @@ export default function AddEditClients() {
           planManagementDetail: values.planManagementDetail,
           planManager: values?.planManager || '',
           planManagerEmail: values?.planManagerEmail || '',
+          notes: values?.notes || '',
           status: 'active'
         });
       firebase.firestore().collection('refferedby').add({
@@ -139,6 +140,7 @@ export default function AddEditClients() {
           planManagementDetail: values?.planManagementDetail,
           planManager: values?.planManager || '',
           planManagerEmail: values?.planManagerEmail || '',
+          notes: values?.notes || '',
           status: 'active'
         });
     }
