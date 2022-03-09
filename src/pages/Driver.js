@@ -225,6 +225,7 @@ export default function Driver() {
                           <TableCell align="left">{regoNumber}</TableCell>
                           <TableCell align="left">{licenseNumber}</TableCell>
                           <TableCell align="left">
+                            {employeeType === 3 && 'Casual'}
                             {employeeType === 2 && 'Terminate'}
                             {employeeType === 1 && 'Permanent'}
                             {employeeType === 0 && 'Part Time'}

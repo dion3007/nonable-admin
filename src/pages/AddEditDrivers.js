@@ -322,6 +322,9 @@ export default function AddEditDrivers() {
                         <MenuItem key="2" value={2}>
                           Terminated
                         </MenuItem>
+                        <MenuItem key="3" value={2}>
+                          Casual
+                        </MenuItem>
                       </TextField>
                       <FormControl variant="outlined" fullWidth>
                         <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
