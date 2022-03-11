@@ -322,7 +322,7 @@ export default function AddEditDrivers() {
                         <MenuItem key="2" value={2}>
                           Terminated
                         </MenuItem>
-                        <MenuItem key="3" value={2}>
+                        <MenuItem key="3" value={3}>
                           Casual
                         </MenuItem>
                       </TextField>
